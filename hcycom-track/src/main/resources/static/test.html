@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <form method="post" id="file" action="" enctype="multipart/form-data">
+        <input type="text" id="text"/>
+            <h3>选择文件:</h3>
+            <input id="excelFile1" type="file" multiple="multiple"/>
+        <input id="excelFile2" type="file" />
+        <input id="excelFile3" type="file" />
+        <input id="excelFile4" type="file" />
+        <input id="excelFile5" type="file" />
+        <input id="excelFile6" type="file" />
+        <input id="excelFile7" type="file" />
+        <br/><br/>
+        <input type="button" value="上传" onclick="uploadFiles();"/>
+    </form>
+</div>
+
+</body>
+
+<script type="text/javascript" src="http://localhost:17112/hcycom-track/static/jquery-1.8.0.js
+"></script>
+
+<script>
+    function uploadFiles(){
+        var formData = new FormData();
+        var file1= document.getElementById("excelFile1").valueOf().files[0];
+        //var file1= $("#excelFile1")[0].files[0];
+        /*   var file2= $("#excelFile2")[0].files[0];
+           var file3= $("#excelFile3")[0].files[0];
+           var file4= $("#excelFile4")[0].files[0];
+           var file5= $("#excelFile5")[0].files[0];
+           var file6= $("#excelFile6")[0].files[0];
+           var file7= $("#excelFile7")[0].files[0];*/
+        var text = $("#text").val();
+
+        formData.append("uploadFiles",file1);
+        /*  formData.append("uploadFiles",file2);
+          formData.append("uploadFiles",file3);
+          formData.append("uploadFiles",file4);
+          formData.append("uploadFiles",file5);
+          formData.append("uploadFiles",file6);
+          formData.append("uploadFiles",file7);*/
+
+        formData.append("fmurl", "新建文本文档.txt");
+        /*  formData.append("fmurl", "222.txt");
+          formData.append("fmurl", "333.txt");
+          formData.append("fmurl", "5555.txt");
+          formData.append("fmurl", "666.txt");
+          formData.append("fmurl", "777.txt");
+          formData.append("fmurl", "888.txt");*/
+        // console.log(uploadFiles.length);
+        // if(uploadFiles.length>0){
+        console.log(formData.get("medical_examination_report"))
+        $.ajax({
+            url:'http://192.168.0.150:8080/hcycom-track/api/File-upload-and-file-download/InsertUpFileAll',
+            type:'POST',
+            //headers:{'Content-Type': 'application/json'},
+            data:formData,
+            async: false,
+            cache: false,
+            contentType: false, //不设置内容类型
+            processData: false, //不处理数据
+            success:function(data){
+                console.log(data);
+                alert(data.message);
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Accept", "application/json");
+                xhr.setRequestHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiIvc3dhZ2dlci1yZXNvdXJjZXM7QUxMLFJPTEVfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNTYwODIwMDAxfQ.rC_SnaqHbJKvN74cNHO1JBAGdm30Yvzq-LiYUD6mgwlJs3iPXuSmg-YM4ga3KgWeOTJJzSa85q8LDYnDo_aCYQ");
+            },
+            error:function(){
+                alert("上传失败！");
+            }
+        })
+        // }else {
+        //     alert("选择的文件无效！请重新选择");
+        // }
+    }
+</script>
+</html>

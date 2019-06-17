@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.ResearcherMapper" >
+
+    <!--查询全部 按照事件编码-->
+    <select id="selectEventAll" resultType="com.hcycom.ctginms.domain.Researcher">
+       select * from researcher where eventcode=#{eventcode}
+    </select>
+
+    <!--删除-->
+    <delete id="delete" parameterType="int">
+        delete from researcher where id=#{id}
+    </delete>
+
+    <!--添加-->
+    <insert id="addOnePerson" useGeneratedKeys="true" parameterType="com.hcycom.ctginms.domain.Researcher">
+       insert into researcher(eventcode,researchcode,age,sex,researchname,position,projectcode) values (#{researcher.eventcode},#{researcher.researchcode},#{researcher.age},#{researcher.sex},#{researcher.researchname},#{researcher.position},#{researcher.projectcode})
+    </insert>
+
+
+    <!--&lt;!&ndash;按照事件编码进行分页&ndash;&gt;
+    <select id="findUserListByPage" parameterType="com.hcycom.ctginms.domain.Researcher" resultType="com.hcycom.ctginms.domain.Researcher">
+        select  * from  researcher where eventcode=#{eventcode} limit #{page},#{pageSize}
+    </select>
+
+    &lt;!&ndash;按照事件编码对调查对象编号以及姓名进行查询&ndash;&gt;
+    <select id="findUserListByPage" parameterType="com.hcycom.ctginms.domain.Researcher" resultType="com.hcycom.ctginms.domain.Researcher">
+        <if test="researchname == null and researchcode == null">
+            SELECT * FROM researcher WHERE eventcode=#{eventcode} or researchname LIKE concat('%',#{researchname},'%') or researchcode LIKE concat('%',#{researchcode},'%') limit #{page},#{pageSize}
+        </if>
+        <if test="researchcode != null and researchname ==null">
+            SELECT * FROM researcher WHERE eventcode=#{eventcode} AND (researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE CONCAT('%',#{researchname},'%')) limit #{page},#{pageSize}
+        </if>
+        <if test="researchname != null and researchcode ==null">
+            SELECT * FROM researcher WHERE eventcode=#{eventcode} AND (researchname LIKE CONCAT('%',#{researchname},'%') OR researchcode LIKE CONCAT('%',#{researchcode},'%')) limit #{page},#{pageSize}
+        </if>
+        <if test="researchname != null and researchcode != null">
+            SELECT * FROM researcher WHERE eventcode=#{eventcode} and (researchname LIKE concat('%',#{researchname},'%') and researchcode LIKE concat('%',#{researchcode},'%')) limit #{page},#{pageSize}
+        </if>
+    </select>-->
+
+
+    <!--查询，按照事件编码模糊查询对象编码和对象名称并分页-->
+    <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.Researcher" resultType="com.hcycom.ctginms.domain.Researcher">
+        <if test="researchname == null and researchcode == null">
+            SELECT * FROM researcher WHERE eventcode=#{eventcode} or researchname LIKE concat('%',#{researchname},'%') or researchcode LIKE concat('%',#{researchcode},'%') limit #{page},#{pageSize}
+        </if>
+        <if test="researchcode != null and researchname ==null">
+             SELECT * FROM researcher WHERE eventcode=#{eventcode} AND (researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE CONCAT('%',#{researchname},'%')) limit #{page},#{pageSize}
+        </if>
+        <if test="researchname != null and researchcode ==null">
+            SELECT * FROM researcher WHERE eventcode=#{eventcode} AND (researchname LIKE CONCAT('%',#{researchname},'%') OR researchcode LIKE CONCAT('%',#{researchcode},'%')) limit #{page},#{pageSize}
+        </if>
+        <if test="researchname != null and researchcode != null">
+            SELECT * FROM researcher WHERE eventcode=#{eventcode} and (researchname LIKE concat('%',#{researchname},'%') and researchcode LIKE concat('%',#{researchcode},'%')) limit #{page},#{pageSize}
+        </if>
+    </select>
+
+    <!--查询，按照事件编码模糊查询对象编码和对象名称并分页 总条数-->
+    <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.Researcher" resultType="int">
+        <if test="researchname == null and researchcode == null">
+            SELECT count(*) FROM researcher WHERE eventcode=#{eventcode} or researchname LIKE concat('%',#{researchname},'%') or researchcode LIKE concat('%',#{researchcode},'%')
+        </if>
+        <if test="researchcode != null and researchname ==null">
+             SELECT count(*) FROM researcher WHERE eventcode=#{eventcode} AND (researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE CONCAT('%',#{researchname},'%'))
+        </if>
+        <if test="researchname != null and researchcode ==null">
+            SELECT count(*) FROM researcher WHERE eventcode=#{eventcode} AND (researchname LIKE CONCAT('%',#{researchname},'%') OR researchcode LIKE CONCAT('%',#{researchcode},'%'))
+        </if>
+        <if test="researchname != null and researchcode != null">
+            SELECT count(*) FROM researcher WHERE eventcode=#{eventcode} and (researchname LIKE concat('%',#{researchname},'%') and researchcode LIKE concat('%',#{researchcode},'%'))
+        </if>
+    </select>
+    
+    <!--查询人员应该上传文件的总数-->
+    <select id="uploadingAll" resultType="int" parameterType="com.hcycom.ctginms.domain.Researcher">
+        SELECT COUNT(*) FROM researcher WHERE eventcode=#{eventcode} and position=#{position}
+    </select>
+    <!--查询上传数量-->
+    <select id="uploading" resultType="int" parameterType="com.hcycom.ctginms.domain.Pt">
+        SELECT count(*) FROM level_management WHERE pid=#{pid}
+    </select>
+</mapper>

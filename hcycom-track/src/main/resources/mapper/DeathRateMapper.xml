@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.DeathRateMapper" >
+
+
+   <resultMap id="DeathRateResultMap" type="com.hcycom.ctginms.domain.DeathRate" >
+    <result column="death_id" property="deathid" jdbcType="INTEGER" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="deathrate_name" property="deathratename" jdbcType="VARCHAR" />
+    <result column="deathrate_value" property="deathratevalue" jdbcType="INTEGER" />
+    <result column="deathrate_source" property="deathratesource" jdbcType="VARCHAR" />
+    <result column="if_dispaly" property="ifdispaly" jdbcType="INTEGER" />
+    <result column="deathrate_date" property="deathratedate" jdbcType="VARCHAR" />
+    <result column="deathrate_author" property="deathrateauthor" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <select id="selectDeathRateByArea" resultType="com.hcycom.ctginms.domain.DeathRate" resultMap="DeathRateResultMap">
+  select * from death_rate where province=#{province} and city=#{city} and area=#{area}
+  </select>
+  
+  
+  
+  
+<!--   <select id="selectLinkInfos" resultMap="BaseLinkInfoResultMap" parameterType="java.lang.Integer" statementType="STATEMENT">
+    select 
+    	link_id,delay_threshold,device_a_id,device_z_id,link_category
+    from
+    	hcy_mn_link_info
+    
+   	<if test="category!=null">
+    	where link_category = ${category}
+    </if>
+  </select> -->
+  
+</mapper>

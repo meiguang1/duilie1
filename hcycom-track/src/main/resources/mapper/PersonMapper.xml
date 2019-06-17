@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.PersonMapper" >
+
+
+
+
+    <select id="selectPersonByProjectcode" resultType="com.hcycom.ctginms.domain.Person">
+  select id,researchcode,researchname,position,projectcode,state,creattime,sex,age from person where projectcode=#{projectcode} and state=1
+  </select>
+
+
+
+    <select id="selectPersonByEventCode" resultType="com.hcycom.ctginms.domain.Person">
+  select p.id,p.researchcode,p.researchname,p.position,p.projectcode,p.state,p.creattime,p.sex,p.age from person p,personevent e where p.id=e.pid and p.state=1 and e.eventcode=#{eventcode}
+  </select>
+
+
+    <update id="updateOnePersonById">
+  update person set researchcode=#{person.researchcode},researchname=#{person.researchname},position=#{person.position},sex=#{person.sex} where id=#{person.id}
+  </update>
+
+
+    <update id="deleteOnePersonById">
+  update person set state=2 where id=#{id}
+  </update>
+
+
+    <insert id="addOnePerson" useGeneratedKeys="true" keyProperty="person.id" parameterType="com.hcycom.ctginms.domain.Person">
+  insert into person(researchcode,researchname,position,projectcode,state,creattime,sex,age) values (#{person.researchcode},#{person.researchname},#{person.position},#{person.projectcode},1,now(),#{person.sex},#{person.age})
+  </insert>
+
+
+    <!--&lt;!&ndash;按照事件编码对调查对象编号以及姓名进行查询&ndash;&gt;
+    <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.Person" resultType="com.hcycom.ctginms.domain.Person">
+  SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) AND researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE ('%',#{researchname },'%')
+  </select>
+
+    &lt;!&ndash;分页，按照项目编码并进行分页&ndash;&gt;
+    <select id="findUserListByPage" parameterType="com.hcycom.ctginms.domain.Person" resultType="com.hcycom.ctginms.domain.Person">
+  SELECT * FROM person WHERE projectcode=#{projectcode} and state=1 limit #{page},#{pageSize}
+  </select>-->
+
+
+
+    <!--按照项目编码对调查对象编号以及姓名进行查询并进行分页-->
+    <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.Person" resultType="com.hcycom.ctginms.domain.Person">
+        <if test="researchname == null and researchcode == null">
+            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) or researchname LIKE concat('%',#{researchname},'%') or researchcode LIKE concat('%',#{researchcode},'%') limit #{page},#{pageSize}
+        </if>
+        <if test="researchcode != null and researchname ==null">
+            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE CONCAT('%',#{researchname},'%')) limit #{page},#{pageSize}
+        </if>
+        <if test="researchname != null and researchcode ==null">
+            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchname LIKE CONCAT('%',#{researchname},'%') OR researchcode LIKE CONCAT('%',#{researchcode},'%')) limit #{page},#{pageSize}
+        </if>
+        <if test="researchname != null and researchcode != null">
+            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) and (researchname LIKE concat('%',#{researchname},'%') and researchcode LIKE concat('%',#{researchcode},'%')) limit #{page},#{pageSize}
+        </if>
+    </select>
+
+    <!--按照项目编码对调查对象编号以及姓名进行查询并进行分页 总条数-->
+    <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.Person" resultType="int">
+        <if test="researchname == null and researchcode == null">
+            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) or researchname LIKE concat('%',#{researchname},'%') or researchcode LIKE concat('%',#{researchcode},'%')
+        </if>
+        <if test="researchcode != null and researchname ==null">
+            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE CONCAT('%',#{researchname},'%'))
+        </if>
+        <if test="researchname != null and researchcode ==null">
+            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchname LIKE CONCAT('%',#{researchname},'%') OR researchcode LIKE CONCAT('%',#{researchcode},'%'))
+        </if>
+        <if test="researchname != null and researchcode != null">
+            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) and (researchname LIKE concat('%',#{researchname},'%') and researchcode LIKE concat('%',#{researchcode},'%'))
+        </if>
+    </select>
+    <!--
+    <select id="selectEventById" resultType="com.hcycom.ctginms.domain.Event">
+    select id,eventcode,eventname,eventdescribes,projectcode,creatusername,creattime from event where id=#{id}
+    </select>
+
+
+    <insert id="insertEventOne" useGeneratedKeys="true" keyProperty="event.id" parameterType="com.hcycom.ctginms.domain.Event">
+    insert into Event(eventcode,eventname,eventdescribes,projectcode,creatusername,creattime) values (UUID(),#{event.eventname},#{event.eventdescribes},#{event.projectcode},#{event.creatusername},now())
+    </insert>
+
+
+    <select id="selectEventTableAndFunctonTable" resultType="com.hcycom.ctginms.web.rest.vm.EventFunctionReturn">
+    select e.eventcode,e.projectcode,f.ry,f.dw,f.yb,f.rk,f.ck from event e,function f where e.projectcode=f.projectcode and eventcode=#{eventcode}
+    </select>
+     -->
+
+
+    <!-- <select id="selectOneByUsernameNoPassword" resultType="com.hcycom.ctginms.domain.User">
+    select id,username,role,name,state,creattime,image,logintime,describes from user where username=#{username}
+    </select>
+
+
+    <update id="updateLogintimeById" parameterType="java.lang.String">
+          update user set logintime=#{logintime} where id=#{id}
+    </update>
+
+
+
+    <update id="updatePasswordByUsername" parameterType="java.lang.String">
+          update user set password=#{password} where username=#{username}
+    </update>
+
+
+    <update id="updateUserMessageByUsername" parameterType="java.lang.String">
+          update user set name=#{name},describes=#{describes} where username=#{username}
+    </update> -->
+
+    <!--   <select id="selectLinkInfos" resultMap="BaseLinkInfoResultMap" parameterType="java.lang.Integer" statementType="STATEMENT">
+        select
+            link_id,delay_threshold,device_a_id,device_z_id,link_category
+        from
+            hcy_mn_link_info
+
+           <if test="category!=null">
+            where link_category = ${category}
+        </if>
+      </select> -->
+
+</mapper>

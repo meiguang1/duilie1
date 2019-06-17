@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.ExposeRelationMapper" >
+
+
+   <resultMap id="ExposeRelationResultMap" type="com.hcycom.ctginms.domain.ExposeRelation" >
+    <result column="expose_id" property="exposeid" jdbcType="INTEGER" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="expose_sort_id" property="exposesortid" jdbcType="INTEGER" />
+    <result column="expose_name" property="exposename" jdbcType="INTEGER" />
+    <result column="expose_ratio" property="exposeratio" jdbcType="VARCHAR" />
+    <result column="upper_limit" property="upperlimit" jdbcType="VARCHAR" />
+    <result column="low_limit" property="lowlimit" jdbcType="VARCHAR" />
+    <result column="expose_source" property="exposesource" jdbcType="VARCHAR" />
+    <result column="if_dispaly" property="ifdispaly" jdbcType="INTEGER" />
+    <result column="author_time" property="authortime" jdbcType="VARCHAR" />
+    <result column="disease" property="disease" jdbcType="VARCHAR" />
+    <result column="expose_type_r" property="exposetyper" jdbcType="VARCHAR" />
+    <result column="lagging" property="lagging" jdbcType="VARCHAR" />
+    <result column="reference" property="reference" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="expose_author" property="exposeauthor" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <select id="selectExposeRelationByArea" resultType="com.hcycom.ctginms.domain.ExposeRelation" resultMap="ExposeRelationResultMap">
+  select * from expose_relation where province=#{province} and city=#{city} and area=#{area} and disease=#{disease}
+  </select>
+  
+  
+  
+  
+<!--   <select id="selectLinkInfos" resultMap="BaseLinkInfoResultMap" parameterType="java.lang.Integer" statementType="STATEMENT">
+    select 
+    	link_id,delay_threshold,device_a_id,device_z_id,link_category
+    from
+    	hcy_mn_link_info
+    
+   	<if test="category!=null">
+    	where link_category = ${category}
+    </if>
+  </select> -->
+  
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.FmMapper">
+
+    <!--查询其他文件中的文件类型-->
+    <select id="selectReport" parameterType="com.hcycom.ctginms.domain.Report" resultType="com.hcycom.ctginms.domain.Report">
+          select * from report where pid=#{pid}
+    </select>
+
+
+    <!--查询文件总条数-->
+    <select id="likeSelectfm" resultType="int">
+        SELECT COUNT(*) FROM report where pid=#{pid}
+    </select>
+    <!--查询文件的未上传条数-->
+    <select id="likeSelectOne" resultType="int">
+        SELECT COUNT(*) FROM other_files where pid=#{pid}
+    </select>
+
+
+
+
+    <!--文件上传-->
+    <insert id="InsertUpFile"  parameterType="com.hcycom.ctginms.domain.Fm">
+       insert into other_files (pid,fnName,fnUrl,time,reportcode) values (#{pid},#{fnName},#{fnUrl},now(),#{reportcode})
+    </insert>
+
+
+    <!--文件下载-->
+    <select id="fileDownload" resultType="com.hcycom.ctginms.domain.Fm">
+        <if test="pid != null and reportcode!= null">
+            SELECT fnUrl FROM other_files WHERE pid=#{pid} AND reportcode=#{reportcode}
+        </if>
+        <if test="pid !=null and reportcode == null">
+            SELECT fnUrl FROM other_files WHERE pid=#{pid}
+        </if>
+    </select>
+
+
+    <!--文件类型添加 添加到report表-->
+    <insert id="addOnereport"  parameterType="com.hcycom.ctginms.domain.Report">
+       INSERT INTO report (reportcode,reportname,pid) VALUES(UUID(),#{reportname},#{pid})
+    </insert>
+
+    <!--文件类型删除 删除report表的文件类型-->
+    <delete id="deleteFile" parameterType="int">
+        delete from report where id=#{id}
+    </delete>
+    <!--删除fm表和report表有关的一些数据-->
+    <delete id="deleteFm" parameterType="com.hcycom.ctginms.domain.Fm">
+        delete from other_files where pid=#{pid} and reportcode=#{reportcode}
+    </delete>
+
+
+    <!--查询某个文件类型下的文件-->
+    <select id="selectAll" parameterType="com.hcycom.ctginms.web.rest.vm.FmReport" resultType="com.hcycom.ctginms.web.rest.vm.FmReport">
+       SELECT other_files.*,report.`reportname` FROM other_files,report WHERE other_files.`reportcode`=report.`reportcode`
+       AND other_files.pid=#{pid}
+       and other_files.`reportcode`=#{reportcode}
+    </select>
+    <!--查询某个文件类型下的文件总数-->
+    <select id="eFiles" parameterType="com.hcycom.ctginms.web.rest.vm.FmReport" resultType="int">
+        SELECT COUNT(*) FROM other_files WHERE pid=#{pid} AND reportcode=#{reportcode}
+    </select>
+
+
+
+    <!--查询全部 按照点位编码-->
+    <!--<select id="FmselectEventAll" resultType="com.hcycom.ctginms.web.rest.vm.FmReport">
+       select fm.*,report.`reportname` from fm,report where fm.`reportcode`=report.`reportcode`
+       and pid=#{pid}
+    </select>-->
+
+
+
+
+    <!--查询上传文件是否为空-->
+    <!--<select id="FmhealthForm" resultType="string">
+       SELECT fnUrl FROM fm WHERE pid=#{pid} and id=#{id}
+   </select>-->
+</mapper>

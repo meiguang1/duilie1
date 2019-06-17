@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.ProjectMapper" >
+
+   <!-- <resultMap id="ValueResultMap" type="com.hcycom.ctginms.domain.Value" >
+    <result column="ID_NEW" property="idnew" jdbcType="VARCHAR" />
+    <result column="AQI" property="aqi" jdbcType="VARCHAR" />
+    <result column="AREA" property="area" jdbcType="VARCHAR" />
+    <result column="PM25" property="pm25" jdbcType="VARCHAR" />
+    <result column="O3" property="o3" jdbcType="VARCHAR" />
+    <result column="CO" property="co" jdbcType="VARCHAR" />
+    <result column="PM10" property="pm10" jdbcType="VARCHAR" />
+    <result column="SO2" property="so2" jdbcType="VARCHAR" />
+    <result column="NO2" property="no2" jdbcType="VARCHAR" />
+    <result column="O3_8H" property="o38h" jdbcType="VARCHAR" />
+    <result column="POSITION_NAME" property="positionname" jdbcType="VARCHAR" />
+    <result column="PRIMARY_POLLUTANT" property="primarypollutant" jdbcType="VARCHAR" />
+    <result column="QUALITY" property="quality" jdbcType="VARCHAR" />
+    <result column="STATION_CODE" property="stationcode" jdbcType="VARCHAR" />
+    <result column="TIME_POINT" property="timepoint" jdbcType="VARCHAR" />
+    <result column="LEVELS" property="levels" jdbcType="VARCHAR" />
+    <result column="CURRENTYEAR" property="currentyear" jdbcType="VARCHAR" />
+    <result column="LATITUDE" property="latitude" jdbcType="VARCHAR" />
+    <result column="LONGITUDE" property="longitude" jdbcType="VARCHAR" />
+    <result column="CURRENT_TIME" property="currenttime" jdbcType="VARCHAR" />
+    <result column="AREA_CODE" property="areacode" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+    
+  </resultMap> -->
+  
+  
+  <select id="selectAllProject" resultType="com.hcycom.ctginms.domain.Project">
+  select id,projectcode,projectname,projecttype,projectdescribes,creatusername,creattime,projectstate from project where projectstate=1 ORDER BY creattime ASC
+  </select>
+  
+  
+  
+  
+  
+  <insert id="insertProjectOne" useGeneratedKeys="true" keyProperty="project.id" parameterType="com.hcycom.ctginms.domain.Project">
+  insert into project(projectcode,projectname,projecttype,projectdescribes,creatusername,creattime,projectstate) values (UUID(),#{project.projectname},1,#{project.projectdescribes},#{project.creatusername},now(),1)
+  </insert>
+  
+  
+  <select id="selectOneProjectById" resultType="com.hcycom.ctginms.domain.Project">
+  select id,projectcode,projectname,projecttype,projectdescribes,creatusername,creattime,projectstate from project where id=#{id}
+  </select>
+  
+  
+  <select id="selectOneProjectByProjectcode" resultType="com.hcycom.ctginms.domain.Project">
+  select id,projectcode,projectname,projecttype,projectdescribes,creatusername,creattime,projectstate from project where projectcode=#{projectcode}
+  </select>
+  
+  
+  <select id="selectISDeleteProject" resultType="com.hcycom.ctginms.domain.Project">
+  select id,projectcode,projectname,projecttype,projectdescribes,creatusername,creattime,projectstate from project where projectstate=2 ORDER BY creattime ASC
+  </select>
+  
+  <select id="selectUpdateProjectMessage" resultType="com.hcycom.ctginms.web.rest.vm.UpdateProjectMessage">
+  select p.projectcode as projectcode,p.projectname as projectname,p.projectdescribes as projectdescribes,
+   f.ry as ry,f.dw as dw,f.yb as yb,f.rk as rk,f.ck as ck 
+   from function f,project p where f.projectcode=p.projectcode 
+   and p.projectcode=#{projectcode}
+  </select>
+  
+  
+  
+  <update id="updateProject" parameterType="com.hcycom.ctginms.domain.Project">
+  update project set projectname=#{project.projectname},projectdescribes=#{project.projectdescribes} where projectcode=#{project.projectcode}
+  </update>
+  
+  
+  <update id="updateProjectState" parameterType="com.hcycom.ctginms.domain.Project">
+  update project set projectstate=#{project.projectstate} where projectcode=#{project.projectcode}
+  </update>
+  
+  <!-- <select id="selectOneByUsernameNoPassword" resultType="com.hcycom.ctginms.domain.User">
+  select id,username,role,name,state,creattime,image,logintime,describes from user where username=#{username}
+  </select>
+  
+  
+  <update id="updateLogintimeById" parameterType="java.lang.String">
+		update user set logintime=#{logintime} where id=#{id}
+  </update>
+  
+  
+  
+  <update id="updatePasswordByUsername" parameterType="java.lang.String">
+		update user set password=#{password} where username=#{username}
+  </update>
+  
+  
+  <update id="updateUserMessageByUsername" parameterType="java.lang.String">
+		update user set name=#{name},describes=#{describes} where username=#{username}
+  </update> -->
+  
+<!--   <select id="selectLinkInfos" resultMap="BaseLinkInfoResultMap" parameterType="java.lang.Integer" statementType="STATEMENT">
+    select 
+    	link_id,delay_threshold,device_a_id,device_z_id,link_category
+    from
+    	hcy_mn_link_info
+    
+   	<if test="category!=null">
+    	where link_category = ${category}
+    </if>
+  </select> -->
+  
+</mapper>

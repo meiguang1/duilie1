@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.RegionPopulationMapper" >
+
+
+   <resultMap id="RegionPopulationResultMap" type="com.hcycom.ctginms.domain.RegionPopulation" >
+    <result column="pop_id" property="popid" jdbcType="INTEGER" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="pop_name" property="popname" jdbcType="VARCHAR" />
+    <result column="pop_number" property="popnumber" jdbcType="INTEGER" />
+    <result column="pop_source" property="popsource" jdbcType="VARCHAR" />
+    <result column="if_dispaly" property="ifdispaly" jdbcType="INTEGER" />
+    <result column="pop_date" property="popdate" jdbcType="VARCHAR" />
+    <result column="pop_author" property="popauthor" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <select id="selectregionpopulationByArea" resultType="com.hcycom.ctginms.domain.RegionPopulation" resultMap="RegionPopulationResultMap">
+  select * from region_population where province=#{province} and city=#{city} and area=#{area}
+  </select>
+  
+  
+  
+  
+<!--   <select id="selectLinkInfos" resultMap="BaseLinkInfoResultMap" parameterType="java.lang.Integer" statementType="STATEMENT">
+    select 
+    	link_id,delay_threshold,device_a_id,device_z_id,link_category
+    from
+    	hcy_mn_link_info
+    
+   	<if test="category!=null">
+    	where link_category = ${category}
+    </if>
+  </select> -->
+  
+</mapper>

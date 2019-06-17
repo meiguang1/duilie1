@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.OperationlogMapper" >
+
+    <select id="findByPage" resultType="com.hcycom.ctginms.domain.OperationLog" parameterType="Map">
+        SELECT project_name,event_name,operation_name,operation_time,operation_txt
+        from operation_log
+        ORDER BY operation_time DESC LIMIT #{start},#{size}
+    </select>
+
+    <select id="getAll" resultType="com.hcycom.ctginms.domain.OperationLog">
+        SELECT * from operation_log
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" >
+        SELECT COUNT(*) from operation_log
+    </select>
+
+    <select id="getQueryPage" resultType="com.hcycom.ctginms.domain.OperationLog" >
+        SELECT project_name,event_name,operation_name,operation_time,operation_txt
+        from operation_log
+        WHERE
+            <if test="operationname!=null and operationname!=''">operation_name LIKE concat('%',#{operationname},'%') </if>
+            <if test="operationname!=null and operationname!='' and projectname!=null and projectname!=''"> AND </if>
+            <if test="projectname!=null and projectname!=''">project_name LIKE concat('%',#{projectname},'%') </if>
+        ORDER BY operation_time DESC LIMIT #{start},#{size}
+    </select>
+
+</mapper>

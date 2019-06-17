@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.FunctionMapper" >
+
+   <!-- <resultMap id="ValueResultMap" type="com.hcycom.ctginms.domain.Value" >
+    <result column="ID_NEW" property="idnew" jdbcType="VARCHAR" />
+    <result column="AQI" property="aqi" jdbcType="VARCHAR" />
+    <result column="AREA" property="area" jdbcType="VARCHAR" />
+    <result column="PM25" property="pm25" jdbcType="VARCHAR" />
+    <result column="O3" property="o3" jdbcType="VARCHAR" />
+    <result column="CO" property="co" jdbcType="VARCHAR" />
+    <result column="PM10" property="pm10" jdbcType="VARCHAR" />
+    <result column="SO2" property="so2" jdbcType="VARCHAR" />
+    <result column="NO2" property="no2" jdbcType="VARCHAR" />
+    <result column="O3_8H" property="o38h" jdbcType="VARCHAR" />
+    <result column="POSITION_NAME" property="positionname" jdbcType="VARCHAR" />
+    <result column="PRIMARY_POLLUTANT" property="primarypollutant" jdbcType="VARCHAR" />
+    <result column="QUALITY" property="quality" jdbcType="VARCHAR" />
+    <result column="STATION_CODE" property="stationcode" jdbcType="VARCHAR" />
+    <result column="TIME_POINT" property="timepoint" jdbcType="VARCHAR" />
+    <result column="LEVELS" property="levels" jdbcType="VARCHAR" />
+    <result column="CURRENTYEAR" property="currentyear" jdbcType="VARCHAR" />
+    <result column="LATITUDE" property="latitude" jdbcType="VARCHAR" />
+    <result column="LONGITUDE" property="longitude" jdbcType="VARCHAR" />
+    <result column="CURRENT_TIME" property="currenttime" jdbcType="VARCHAR" />
+    <result column="AREA_CODE" property="areacode" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+    
+  </resultMap> -->
+  
+  
+  <select id="selectOneFunctionByProjectcode" resultType="com.hcycom.ctginms.domain.Function">
+  select id,ry,dw,yb,rk,ck,projectcode,projectid from function where projectcode=#{projectcode}
+  </select>
+  
+  
+  <select id="selectOneFunctionByProjectid" resultType="com.hcycom.ctginms.domain.User">
+  select id,ry,dw,yb,rk,ck,projectcode,projectid from function where projectid=#{projectid}
+  </select>
+  
+  
+  <insert id="insertOneFunctionNewProject" parameterType="com.hcycom.ctginms.domain.Function">
+  insert into function(ry,dw,yb,rk,ck,projectcode,projectid) values (#{function.ry},#{function.dw},#{function.yb},#{function.rk},#{function.ck},#{function.projectcode},#{function.projectid})
+  </insert>
+  
+  
+  <update id="updateFunctionByProjectcode" parameterType="com.hcycom.ctginms.domain.Function">
+  update function set ry=#{function.ry},dw=#{function.dw},yb=#{function.yb},rk=#{function.rk},ck=#{function.ck} where projectcode=#{function.projectcode}
+  </update>
+  
+  
+  
+  
+  <!-- <update id="updateLogintimeById" parameterType="java.lang.String">
+		update user set logintime=#{logintime} where id=#{id}
+  </update> -->
+  
+  
+  
+  
+  
+<!--   <select id="selectLinkInfos" resultMap="BaseLinkInfoResultMap" parameterType="java.lang.Integer" statementType="STATEMENT">
+    select 
+    	link_id,delay_threshold,device_a_id,device_z_id,link_category
+    from
+    	hcy_mn_link_info
+    
+   	<if test="category!=null">
+    	where link_category = ${category}
+    </if>
+  </select> -->
+  
+</mapper>

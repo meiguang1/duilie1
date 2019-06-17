@@ -1,0 +1,213 @@
+/*
+子查询: 
+     1.无关 父查询与子查询查询机制不相关  子查询优先执行
+     |-子查询查询结果作为父查询的条件或表结构
+     |-表现形式 父查询的列不与子查询的列 相关联/比较
+     2.相关 父查询与子查询查询机制相关联，互为条件
+     |-     父查询执行一次  子查询执行一遍 其结果作为父查询查询的条件或表结构
+     |-表现形式 父查询的列与子查询的列相关联
+*/
+
+
+SELECT s.`studentNo`,studentName,sub.`subjectName`, 
+       (SELECT gradeName FROM grade WHERE gradeid=sub.`gradeID`)AS '年级',
+examDate,studentResult
+FROM `result` AS r
+INNER JOIN `student` AS s ON s.`studentNo`=r.`studentNo`
+INNER JOIN `subject` AS sub ON sub.`subjectNo`=r.`subjectNo`
+WHERE examDate=(
+      SELECT MAX(examDate) FROM result AS re
+      WHERE re.`studentNo`=r.`studentNo` AND re.`subjectNo`=r.`subjectNo`
+)#相关子查询
+
+
+
+
+#union 联合查询将多个结果集合并成一个  要求表头一致
+SELECT QUARTER(NOW())
+SELECT 
+FROM`hos_house`
+groupp BY QUARTER(htime)
+
+
+
+SELECT t.`hTName`,d.`dName`,s.`sName`
+FROM `hos_house` AS h
+INNER JOIN `hos_type` AS t ON t.htid=h.htid
+INNER JOIN `hos_street` AS s ON s.sid=h.sid
+INNER JOIN `hos_district` AS d ON d.did=s.sdid
+WHERE d.did IN(
+    SELECT sdid
+    FROM `hos_street` 
+    WHERE sid IN (
+    SELECT sid
+    FROM `hos_house`
+    GROUP BY sid 
+)
+GROUP BY sdid
+HAVING COUNT(*)>1
+)
+
+
+//新增数据
+INSERT INTO hos_house(
+	  `UID`,
+	  `SID`,
+	  `hTID`,
+	  `price`,
+	  `topic`,
+	  `contents`,
+	  `hTime`,
+	  `copy`
+  )
+SELECT 
+  `UID`,
+  `SID`,
+  `hTID`,
+  `price`,
+  `topic`,
+  `contents`,
+  `hTime`,
+  `copy`  
+FROM `house`.`hos_house`
+
+
+
+/*查出来季度的总计*/
+SELECT QUARTER(htime)AS '季度','总计' AS'区县',
+''AS '街道',''AS'户型',COUNT(*) AS '房屋数量'
+FROM `hos_house`
+GROUP BY QUARTER(htime)
+
+
+/*查出来季度的总计并显示在什么区县(第一季度)*/
+SELECT QUARTER(htime)AS '季度',`dName` AS'区县',
+'小计'AS '街道',''AS'户型',COUNT(*) AS '房屋数量'
+FROM `hos_house` AS h
+INNER JOIN `hos_street` AS s ON s.sid=h.sid
+INNER JOIN `hos_district` AS d ON s.`sDID`=d.did
+GROUP BY QUARTER(htime),`dName`
+
+
+
+/*查出来季度的总计并显示在什么区县,在其下面具体到某街道的什么户型的房子(第一季度)*/
+SELECT QUARTER(htime)AS '季度',`dName` AS'区县',
+`sName`AS '街道',`hTName`AS'户型',COUNT(*) AS '房屋数量'
+FROM `hos_house` AS h
+INNER JOIN `hos_street` AS s ON s.sid=h.sid
+INNER JOIN `hos_district` AS d ON s.`sDID`=d.did
+INNER JOIN `hos_type` AS t ON t.`hTID`=h.`hTID`
+GROUP BY QUARTER(htime),`dName`,`sName`,`hTName`
+
+
+/*查出来季度的总计并显示在什么区县,在其下面具体到某街道的什么户型的房子(第一季度),并排列在一起*/
+SELECT QUARTER(htime)AS '季度','总计' AS'区县',
+''AS '街道',''AS'户型',COUNT(*) AS '房屋数量'
+FROM `hos_house`
+GROUP BY QUARTER(htime)
+UNION
+SELECT QUARTER(htime)AS '季度',`dName` AS'区县',
+' 小计'AS '街道',''AS'户型',COUNT(*) AS '房屋数量'
+FROM `hos_house` AS h
+INNER JOIN `hos_street` AS s ON s.sid=h.sid
+INNER JOIN `hos_district` AS d ON s.`sDID`=d.did
+GROUP BY QUARTER(htime),`dName`
+
+UNION
+SELECT QUARTER(htime)AS '季度',`dName` AS'区县',
+`sName`AS '街道',`hTName`AS'户型',COUNT(*) AS '房屋数量'
+FROM `hos_house` AS h
+INNER JOIN `hos_street` AS s ON s.sid=h.sid
+INNER JOIN `hos_district` AS d ON s.`sDID`=d.did
+INNER JOIN `hos_type` AS t ON t.`hTID`=h.`hTID`
+GROUP BY QUARTER(htime),`dName`,`sName`,`hTName`
+ORDER BY 1,2,3,4
+
+
+
+
+什么是代理 
+       在不改变源代码的基础上 进行对原功能的完善/优化/升级
+	   结果：对源（原）代码的调用改成了对代码的调用
+	   代理对象应得知被代理对象(目标对象)有哪些行为
+	   
+代理的分类
+    1.静态代理(不常用)
+	   代理对象与被代理对象具有相同的方法/实现了相同的接口
+	   1.1创建一个接口
+	   1.2创建目标对象即被代理对象
+	   1.3创建代理对象
+	2.动态代理(常用)
+	   2.1要求被代理对象必须实现接口
+	   2.2java.lang.reflect.Proxy
+	   2.3Proxy.newProxyInstance(1,2,3)//创建代理对象
+	     2.3.1implements InvocationHandler
+		     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable 
+	     2.3.2new InvocationHandler(){lambda},
+	3.cglib(不常用)
+	   1.代理对象去继承被代理对象==>多态
+	   2.导包cglib-2.2.2.jar
+	   3.创建代理对象类 编写代理方法(放行)
+	   4.编码
+	     4.1new Enhancer();//帮创建代理对象的
+		 4.2setSuperclass(代理对象.class);
+		 4.3setCallback(Callback c)
+		   4.3.@Override 1intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy)
+           4.3.2methodProxy.invokeSuper(o,objects);
+		   //o 原对象  objects参数  methodProxy 代理对象
+		   
+		   
+		   
+		   
+		   
+		   C:\Program Files\Java\jdk1.8.0_152
+		   C:\Program Files\Java\jdk1.8.0_152\bin
+		   
+		   
+		   
+存储过程：
+   sql执行的问题：
+                 1.语法检查   
+				 2.库、表、列的检查
+				 3.编译
+				 4.执行查询(自主优化)
+				 java-> mysql
+	存储过程储存在某个数据库里，通过java调用存储过程(写法很简单，自行百度)		 
+	就相当于一个函数(java)
+	  名字  参数  返回值
+   轻服务端
+       作用:减轻压力
+	   
+	   
+   语句:
+       1.删除: DROP PROCEDURE 方法名随意
+	   2.创建:
+	   DELIMITER$$                        
+           CREATE PROCEDURE 方法名随意
+             BEGIN
+                 SELECT * FROM `表名` WHERE 条件;
+             END$$
+	   3.CALL 存储过程名字(参数)
+	   proc_parameter:
+	   [ IN | OUT |INOUT | param_name type]
+	    只入 只出  可进可出
+		
+		
+		
+		
+		              Spring    数据库
+一.什么是spring(百搭)
+    spring是一个轻量级框架,java EE 当前主流框架(内容ioc容器、AOP实现)
+	      数据支持:1.简化JDBC/ORM框架
+		           2.声明式事物
+	Spring设计理念
+	      spring是面向Bean的编程
+	Spring两大核心技术
+	     1.控制反转(IOC)/依赖注入
+		 2.面向切面编程(AOP)
+    Spring的优点
+	     1.低侵入式设计
+		 2.独立于各种应用服务器
+		 3.依赖注入特性将组件关系透明化，降低耦合度
+		 4.面向切面编程可行允许将通用任务进行集中式处理(filter过滤器,servlet)
+		 5.与第三方框架良好整合

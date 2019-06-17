@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.SampleMapper" >
+    <select id="getSampleByEventtcode" resultType="map">
+        SELECT s.`code`,s.person_code,p.researchname,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_column,s.cryopreserved_line,s.head,
+                s.offset_number,s.refrigerator_code,s.refrigerator_layer,s.sample_shelf,s.samplebox_code,s.state,s.subpackage_time,s.box_place
+        from sample s
+        LEFT JOIN person p on s.person_code=p.researchcode
+        WHERE s.event_code=#{eventcode}
+    </select>
+
+    <select id="getOperationlog" resultType="com.hcycom.ctginms.domain.OperationLog">
+        SELECT operation_time,operation_code,operation_name
+        from operation_log o
+        WHERE o.describe=#{describe}
+        ORDER BY operation_time DESC LIMIT 1
+    </select>
+
+    <select id="getQueryPageone" resultType="String" >
+        SELECT person_code
+        from sample s LEFT JOIN person p ON s.person_code=p.researchcode
+        WHERE s.id!=''
+        <if test="samplecode!=null and samplecode!=''">AND s.`code` LIKE concat('%',#{samplecode},'%') </if>
+        <if test="personcode!=null and personcode!=''">AND s.person_code LIKE concat('%',#{personcode},'%') </if>
+        <if test="researchname!=null and researchname!=''">AND p.researchname LIKE concat('%',#{researchname},'%') </if>
+        <if test="cryopreservedcode!=null and cryopreservedcode!=''">AND s.cryopreserved_code LIKE concat('%',#{cryopreservedcode},'%') </if>
+        GROUP BY person_code LIMIT #{start},#{size}
+    </select>
+
+    <select id="getQueryPagetwo" resultType="map">
+        SELECT s.`code`,s.person_code,p.researchname,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_column,s.cryopreserved_line,s.head,
+                s.offset_number,s.refrigerator_code,s.refrigerator_layer,s.sample_shelf,s.samplebox_code,s.state,s.subpackage_time,s.box_place
+        from sample s
+        LEFT JOIN person p on s.person_code=p.researchcode
+        WHERE s.person_code IN
+        <foreach item="item" collection="queryList" separator="," open="(" close=")" index="index">
+            '${item}'
+        </foreach>
+        AND s.event_code=#{eventcode}
+        <if test="starttime!=null and starttime!='' and endtime!=null and endtime!=''">AND s.subpackage_time &gt;= #{starttime} AND s.subpackage_time &lt;= #{endtime}</if>
+    </select>
+
+    <select id="getAll" resultType="com.hcycom.ctginms.domain.Sample">
+        SELECT * from sample
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer" >
+        SELECT COUNT(*) from sample
+    </select>
+
+    <select id="getStatistics" resultType="map">
+        SELECT
+            s.person_code,p.researchname,
+            COUNT(s.type = 'B' OR NULL) AS B,
+            COUNT(s.type = 'U' OR NULL) AS U,
+            COUNT(s.type = 'S' OR NULL) AS S,
+            COUNT(s.type = 'H' OR NULL) AS H,
+            COUNT(s.type = 'M' OR NULL) AS M,
+            COUNT(s.type = 'P' OR NULL) AS P,
+            COUNT(s.type) AS sums
+        FROM sample s LEFT JOIN person p ON s.person_code=p.researchcode
+        WHERE s.event_code=#{eventcode} GROUP BY s.person_code
+    </select>
+
+    <insert id="importSample" parameterType="java.util.List">
+        INSERT INTO import_sample_model
+        VALUES
+        <foreach item="item" collection="payFeeList" separator=","  index="index">
+            (${item.id},'${item.person_code}','${item.person_name}','${item.sample_code}','${item.sample_type}','${item.capacity}','${item.cryopreserved_code}',
+            ${item.cryopreserved_line},${item.cryopreserved_column},'${item.subpackage_time}',${item.offset_number},'${item.refrigerator_code}',${item.refrigerator_layer},
+            '${item.sample_shelf}','${item.samplebox_code}','${item.box_place}','${item.head}')
+        </foreach>
+    </insert>
+</mapper>

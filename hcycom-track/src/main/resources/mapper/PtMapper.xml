@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.PtMapper" >
+
+    <!--查询全部 按照事件编码-->
+    <!--select * from pt where eventcode=#{eventcode}-->
+    <select id="selectEventAll" resultType="com.hcycom.ctginms.domain.Pt">
+       SELECT *, COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} GROUP BY countyname
+    </select>
+
+
+    <!--查询已上传文件的路劲和名字-->
+    <select id="healthForm" resultType="com.hcycom.ctginms.domain.Pt">
+        SELECT personCount,healthForm FROM level_management WHERE eventcode=#{eventcode} and pid=#{pid}
+    </select>
+
+    <!--添加-->
+    <insert id="addPoint" useGeneratedKeys="true" parameterType="com.hcycom.ctginms.domain.Pt">
+       insert into level_management(pid,countycode,countyname,eventcode,personCount,healthForm,creattime) values (UUid(),#{pt.countycode},#{pt.countyname},#{pt.eventcode},#{pt.personCount},#{pt.healthForm},now())
+    </insert>
+
+
+    <!--删除-->
+    <delete id="delete" parameterType="int">
+        delete from level_management where id=#{id}
+    </delete>
+
+    <!--查询，按照事件编码对点位编码以及点位名称进行模糊查询并进行分页
+       SELECT *,COUNT(DISTINCT countyname)
+       FROM pt WHERE eventcode=#{eventcode}
+       or countyname LIKE concat('%',#{countyname},'%')
+       or countycode LIKE concat('%',#{countycode},'%')
+       GROUP BY countyname
+       limit #{page},#{pageSize}-->
+
+    <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.Pt" resultType="com.hcycom.ctginms.domain.Pt">
+        <if test="countyname == null and countycode == null">
+            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode}  GROUP BY countyname limit #{page},#{pageSize}
+        </if>
+        <if test="countycode != null and countyname ==null">
+            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countycode LIKE CONCAT('%',#{countycode},'%') GROUP BY countyname limit #{page},#{pageSize}
+        </if>
+        <if test="countyname != null and countycode ==null">
+            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countyname LIKE CONCAT('%',#{countyname},'%')  GROUP BY countyname limit #{page},#{pageSize}
+        </if>
+        <if test="countyname != null and countycode != null">
+            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} and (countyname LIKE concat('%',#{countyname},'%') and countycode LIKE concat('%',#{countycode},'%')) GROUP BY countyname limit #{page},#{pageSize}
+        </if>
+    </select>
+
+    <!--查询，按照事件编码对点位编码以及点位名称进行模糊查询并进行分页 总条数-->
+   <!-- <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.Pt" resultType="int">
+        <if test="countyname == null and countycode == null">
+            SELECT count(*) FROM pt WHERE eventcode=#{eventcode} or countyname LIKE concat('%',#{countyname},'%') or countycode LIKE concat('%',#{countycode},'%')
+        </if>
+        <if test="countycode != null and countyname ==null">
+            SELECT count(*) FROM pt WHERE eventcode=#{eventcode} AND (countycode LIKE CONCAT('%',#{countycode},'%') OR countyname LIKE CONCAT('%',#{countyname},'%'))
+        </if>
+        <if test="countyname != null and countycode ==null">
+            SELECT count(*) FROM pt WHERE eventcode=#{eventcode} AND (countyname LIKE CONCAT('%',#{countyname},'%') OR countycode LIKE CONCAT('%',#{countycode},'%'))
+        </if>
+        <if test="countyname != null and countycode != null">
+            SELECT count(*) FROM pt WHERE eventcode=#{eventcode} and (countyname LIKE concat('%',#{countyname},'%') and countycode LIKE concat('%',#{countycode},'%'))
+        </if>
+    </select>-->
+    <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.Pt" resultType="int">
+        <if test="countyname == null and countycode == null">
+            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode}
+        </if>
+        <if test="countycode != null and countyname ==null">
+            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countycode LIKE CONCAT('%',#{countycode},'%')
+        </if>
+        <if test="countyname != null and countycode ==null">
+            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countyname LIKE CONCAT('%',#{countyname},'%')
+        </if>
+        <if test="countyname != null and countycode != null">
+            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} and (countyname LIKE concat('%',#{countyname},'%') and countycode LIKE concat('%',#{countycode},'%'))
+        </if>
+    </select>
+
+
+    <!--文件上传-->
+    <!--<insert id="InsertUpFile"  parameterType="com.hcycom.ctginms.domain.Pt">
+       insert into fm (pid,fnName,fnUrl,time,reportcode) values (#{pid},#{fnName},#{fnUrl},now(),#{reportcode})
+    </insert>-->
+
+    <!--文件上传-->
+    <insert id="filesUpload" parameterType="com.hcycom.ctginms.domain.Pt">
+        INSERT INTO level_management(pid,countycode,countyname,eventcode,personCount,healthForm,creattime) VALUES(#{pid},#{countycode},#{countyname},#{eventcode},#{personCount},#{healthForm},now())
+    </insert>
+    <!--<update id="filesUpload" parameterType="com.hcycom.ctginms.domain.Pt">
+       UPDATE pt SET personCount=#{personCount},healthForm=#{healthForm},creattime=NOW() WHERE pid=#{pid} AND eventcode=#{eventcode};
+    </update>-->
+    <!--文件下载-->
+    <select id="selectAllFile" resultType="com.hcycom.ctginms.domain.Pt">
+       select healthForm from  level_management where pid=#{pid}
+    </select>
+
+
+    <!--查询数据库中要添加的字段是否已存在-->
+    <select id="selectByIds" parameterType="java.util.List" resultType="Integer">
+        select  count(*)
+        from level_management
+        where  countyname in (
+        <foreach collection="list" item="countyname" separator=",">
+            #{countyname}
+        </foreach>
+        )
+    </select>
+
+    <!--多个文件添加并且不允许添加重复的-->
+    <insert id="insetPersons"  parameterType="java.util.List" >
+     insert into level_management(pid,countycode,countyname,eventcode,personCount)
+     values
+        <foreach collection="list" item="pt" separator=",">
+            (
+            UUid(),
+            #{pt.countycode},
+            #{pt.countyname},
+            #{pt.eventcode},
+            #{pt.personCount}
+            )
+        </foreach>
+
+    </insert>
+
+</mapper>
