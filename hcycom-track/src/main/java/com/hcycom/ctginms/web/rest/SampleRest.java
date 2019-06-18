@@ -70,78 +70,67 @@ public class SampleRest {
         return samplelist;
     }
 
-    /**
-     * 删除
-     *
-     * @param files
-     */
-    private void deleteFile(File... files) {
-        for (File file : files) {
-            if (file.exists()) {
-                file.delete();
-            }
-        }
-    }
 
-    @PostMapping("/files")
-    @ApiOperation(value="查询调查对象的各样本数", notes="查询调查对象的各样本数")
-    public List<String> files(@RequestParam(value="multipartFile",required=false)MultipartFile multipartFile,String paths,HttpServletRequest request) throws Exception{
-//        String path = request.getSession().getServletContext().getResource("/upload").toString();
-        File directory = new File(".");
-        String path = directory.getCanonicalPath();
-        System.out.println("文件保存的路径"+path);
-        File filePath = new File(path);
-        if(!filePath.exists()&&!filePath.isDirectory()) {
 
-            System.out.println("目录不存在，创建路径"+filePath);
-            filePath.mkdir();
-        }
-        //获取原始文件名称
-        String originalFileName = multipartFile.getOriginalFilename();
-        System.out.println("原始文件的名称"+originalFileName);
-
-        System.out.println(paths);
-
-        //获取文件的类型，以“.”作为标识
-        String type = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
-        System.out.println("文件类型"+type);
-        //在指定的路径下面创建一个新的文件
-        File targerFile = new File(path,originalFileName);
-
-        multipartFile.transferTo(targerFile);
-
-        CsvUtils csvUtils=new CsvUtils();
-        List<String> samplelist =csvUtils.importCsv(targerFile);
-        List<ImportSampleModel> importList=new ArrayList<ImportSampleModel>();
-        if(samplelist!=null && !samplelist.isEmpty()){
-            for(String data : samplelist){
-                ImportSampleModel importModel=new ImportSampleModel();
-                String[] aa = data.split(",");
-                importModel.setId(Integer.parseInt(aa[0]));
-                importModel.setPerson_code(aa[1]);
-                importModel.setPerson_name(aa[2]);
-                importModel.setSample_code(aa[3]);
-                importModel.setSample_type(aa[4]);
-                importModel.setCapacity(aa[5]);
-                importModel.setCryopreserved_code(aa[6]);
-                importModel.setCryopreserved_line(Integer.parseInt(aa[7]));
-                importModel.setCryopreserved_column(Integer.parseInt(aa[8]));
-                importModel.setSubpackage_time(aa[9]);
-                importModel.setOffset_number(Integer.parseInt(aa[10]));
-                importModel.setRefrigerator_code(aa[11]);
-                importModel.setRefrigerator_layer(Integer.parseInt(aa[12]));
-                importModel.setSample_shelf(aa[13]);
-                importModel.setSamplebox_code(aa[14]);
-                String bb = (aa[15]+','+aa[16]).replace("\"", "");
-                importModel.setBox_place(bb);
-                importModel.setHead(aa[17]);
-                importList.add(importModel);
-                System.out.println(importModel);
-            }
-        }
-        int aa = sampleService.importSample(importList);
-        deleteFile(targerFile);
-        return samplelist;
-    }
+//    @PostMapping("/files")
+//    @ApiOperation(value="查询调查对象的各样本数", notes="查询调查对象的各样本数")
+//    public List<String> files(@RequestParam(value="multipartFile",required=false)MultipartFile multipartFile) throws Exception{
+////        String path = request.getSession().getServletContext().getResource("/upload").toString();
+//        File directory = new File(".");
+//        String path = directory.getCanonicalPath();
+//        System.out.println("文件保存的路径"+path);
+//        File filePath = new File(path);
+//        if(!filePath.exists()&&!filePath.isDirectory()) {
+//
+//            System.out.println("目录不存在，创建路径"+filePath);
+//            filePath.mkdir();
+//        }
+//        //获取原始文件名称
+//        String originalFileName = multipartFile.getOriginalFilename();
+//        System.out.println("原始文件的名称"+originalFileName);
+//
+//        System.out.println(path);
+//
+//        //获取文件的类型，以“.”作为标识
+//        String type = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+//        System.out.println("文件类型"+type);
+//        //在指定的路径下面创建一个新的文件
+//        File targerFile = new File(path,originalFileName);
+//
+//        multipartFile.transferTo(targerFile);
+//
+//        CsvUtils csvUtils=new CsvUtils();
+//        List<String> samplelist =csvUtils.importCsv(targerFile);
+//        List<ImportSampleModel> importList=new ArrayList<ImportSampleModel>();
+//        if(samplelist!=null && !samplelist.isEmpty()){
+//            for(String data : samplelist){
+//                ImportSampleModel importModel=new ImportSampleModel();
+//                String[] aa = data.split(",");
+//                importModel.setId(Integer.parseInt(aa[0]));
+//                importModel.setPerson_code(aa[1]);
+//                importModel.setPerson_name(aa[2]);
+//                importModel.setSample_code(aa[3]);
+//                importModel.setSample_type(aa[4]);
+//                importModel.setCapacity(aa[5]);
+//                importModel.setCryopreserved_code(aa[6]);
+//                importModel.setCryopreserved_line(Integer.parseInt(aa[7]));
+//                importModel.setCryopreserved_column(Integer.parseInt(aa[8]));
+//                importModel.setSubpackage_time(aa[9]);
+//                importModel.setOffset_number(Integer.parseInt(aa[10]));
+//                importModel.setRefrigerator_code(aa[11]);
+//                importModel.setRefrigerator_layer(Integer.parseInt(aa[12]));
+//                importModel.setSample_shelf(aa[13]);
+//                importModel.setSamplebox_code(aa[14]);
+//                String bb = (aa[15]+','+aa[16]).replace("\"", "");
+//                importModel.setBox_place(bb);
+//                importModel.setHead(aa[17]);
+//                importList.add(importModel);
+//                System.out.println(importModel);
+//            }
+//        }
+//        int aa = sampleService.importSample(importList);
+//        deleteFile(targerFile);
+//        return samplelist;
+//    }
 
 }

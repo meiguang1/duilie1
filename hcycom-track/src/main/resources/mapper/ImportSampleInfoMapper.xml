@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.ImportSampleInfoMapper" >
+    <insert id="addSampleInfo" parameterType="com.hcycom.ctginms.domain.ImportSampleInfo">
+        INSERT INTO import_sample_info
+        VALUES(0,#{importSampleInfo.sample_info_code},#{importSampleInfo.entrepot_name},#{importSampleInfo.point_name},#{importSampleInfo.import_name},#{importSampleInfo.operator_name},
+                #{importSampleInfo.import_time},#{importSampleInfo.state},#{importSampleInfo.event_code})
+    </insert>
+
+    <select id="getSampleInfo" resultType="com.hcycom.ctginms.domain.ImportSampleInfo">
+        SELECT entrepot_name,point_name,import_name,operator_name,import_time,state,sample_info_code
+        FROM import_sample_info
+        WHERE event_code=#{eventCode}
+        ORDER BY import_time DESC
+    </select>
+</mapper>

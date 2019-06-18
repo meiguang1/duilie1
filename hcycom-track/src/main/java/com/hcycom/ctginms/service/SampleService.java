@@ -4,6 +4,7 @@ import com.hcycom.ctginms.domain.ImportSampleModel;
 import com.hcycom.ctginms.domain.OperationLog;
 import com.hcycom.ctginms.domain.Sample;
 import com.hcycom.ctginms.postdomain.PostSample;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -30,5 +31,5 @@ public interface SampleService {
 
    List<Map<String,?>> getStatistics(String eventcode);
 
-   int  importSample(List<ImportSampleModel> payFeeList);
+   int  importSample(MultipartFile multipartFile,String sample_info_code) throws Exception;
 }

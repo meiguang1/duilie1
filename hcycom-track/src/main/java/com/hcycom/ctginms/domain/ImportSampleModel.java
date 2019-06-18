@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @ClassName: ImportSampleModel
@@ -13,6 +14,7 @@ import javax.persistence.Id;
  * @Date: 2019/6/13 17:16
  **/
 @Entity
+@Table(name = "import_sample_model")
 public class ImportSampleModel {
 
     @Id
@@ -75,6 +77,7 @@ public class ImportSampleModel {
             ", sample_shelf='" + sample_shelf + '\'' +
             ", samplebox_code='" + samplebox_code + '\'' +
             ", box_place='" + box_place + '\'' +
+            ", sample_info_code='" + sample_info_code + '\'' +
             ", head='" + head + '\'' +
             '}';
     }
@@ -95,13 +98,26 @@ public class ImportSampleModel {
     @ApiModelProperty(value="样本架")
     private String sample_shelf;
 
+    public String getSample_info_code() {
+        return sample_info_code;
+    }
+
+    public void setSample_info_code(String sample_info_code) {
+        this.sample_info_code = sample_info_code;
+    }
+
     @Column(name="samplebox_code")
+
     @ApiModelProperty(value="样本盒编号")
     private String samplebox_code;
 
     @Column(name="box_place")
     @ApiModelProperty(value="盒内位置（行,列）")
     private String box_place;
+
+    @Column(name="sample_info_code")
+    @ApiModelProperty(value="入库信息编码")
+    private String sample_info_code;
 
     public int getId() {
         return id;
