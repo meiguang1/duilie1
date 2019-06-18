@@ -1,7 +1,6 @@
 package com.hcycom.ctginms.web.rest;
 
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.hcycom.ctginms.domain.ImportSampleModel;
 import com.hcycom.ctginms.domain.OperationLog;
 import com.hcycom.ctginms.postdomain.PostSample;
@@ -11,20 +10,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @ClassName: SampleRest
@@ -92,9 +86,11 @@ public class SampleRest {
     @PostMapping("/files")
     @ApiOperation(value="查询调查对象的各样本数", notes="查询调查对象的各样本数")
     public List<String> files(@RequestParam(value="multipartFile",required=false)MultipartFile multipartFile,String paths,HttpServletRequest request) throws Exception{
-        String path = request.getSession().getServletContext().getRealPath("/upload");
-        File filePath = new File(path);
+//        String path = request.getSession().getServletContext().getResource("/upload").toString();
+        File directory = new File(".");
+        String path = directory.getCanonicalPath();
         System.out.println("文件保存的路径"+path);
+        File filePath = new File(path);
         if(!filePath.exists()&&!filePath.isDirectory()) {
 
             System.out.println("目录不存在，创建路径"+filePath);
