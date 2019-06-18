@@ -27,7 +27,7 @@ public class ResearcherRest {
 
     @GetMapping("/getEventAll")
     @Timed
-    @ApiOperation(value="获取该事件下的人员列表（已激活状态）", notes="获取该事件下的人员列表（已激活状态）")
+    @ApiOperation(value="获取人员管理中某事件下的人员列表（已激活状态）", notes="(数据库researcher人员表的相关操作)")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
     })
@@ -44,7 +44,7 @@ public class ResearcherRest {
 
     @GetMapping("/delete")
     @Timed
-    @ApiOperation(value="删除，通过id删除单个人员", notes="删除，通过id删除单个人员")
+    @ApiOperation(value="删除，通过人员id删除单个人员", notes="(researcher表的相关操作)")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value = "人员id", required = true, dataType = "String",paramType="query"),
     })
@@ -65,7 +65,7 @@ public class ResearcherRest {
 
     @PostMapping("/addOnePerson")
     @Timed
-    @ApiOperation(value="增加，添加单个以及添加多条",notes="添加单个以及添加多条)")
+    @ApiOperation(value="增加，人员管理模块添加单个以及添加多条",notes="(researcher表的相关操作)")
   /*  @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value = "人员id", required = true, dataType = "rcList",paramType="query"),
     })*/
@@ -94,7 +94,14 @@ public class ResearcherRest {
     //按照事件编码模糊查询对象编码和对象名称并分页以及返回总条数
     @GetMapping("/likeSelect")
     @Timed
-    @ApiOperation(value="查询，按照事件编码模糊查询对象编码和对象名称并分页以及返回总条数(前台返回值为空的时候需为null,不能是空字符串)")
+    @ApiOperation(value="查询，在人员管理模块进行模糊查询以及分页并返回总条数",notes ="(数据库researcher表的操作)" )
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "researchname", value = "人员名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "researchcode", value = "人员编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, dataType = "int",paramType="query"),
+    })
     public  ResponseEntity<Object> likeSelect(String eventcode,String researchname,String researchcode, int page ,int pageSize){
         PostResearcher tada = pm.likeSelect(eventcode, researchname, researchcode, page, pageSize);
         return new ResponseEntity<Object>(tada, HttpStatus.OK);
@@ -102,7 +109,12 @@ public class ResearcherRest {
 
     @GetMapping("/uploadingAll")
     @Timed
-    @ApiOperation(value="获取所有的文件类型总数以及文件上传个数(pt点位管理表的操作)")
+    @ApiOperation(value="点位管理中体检报告上传状态",notes = "通过researcher表查询某区县下具体人数以及level_management表的文件上传数量来判断体检报告上传状态")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "position", value = "区县名称", required = true, dataType = "String",paramType="query"),
+    })
     public PostFm uploadingAll(String pid,String eventcode,String position){
         PostFm postFm = pm.uploadingAll(pid,eventcode,position);
         return postFm;

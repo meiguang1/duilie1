@@ -67,6 +67,14 @@ public class  FmServiceImpl implements FmService {
     public List<Fm> fileDownload(String pid, String reportcode) {
         return fm.fileDownload(pid,reportcode);
     }
+    @Override
+    public Fm selectFileById(int id) {
+        // TODO Auto-generated method stub
+        return fm.selectFileById(id);
+    }
+
+
+
 
     //查询其他文件中的文件类型
     @Override

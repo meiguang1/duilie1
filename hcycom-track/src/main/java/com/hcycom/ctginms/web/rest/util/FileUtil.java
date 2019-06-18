@@ -237,4 +237,14 @@ public class FileUtil {
         fos.close();
     }
 
+
+
+    /*public static byte[] readFileToByteArray(String fileUrl) throws FileNotFoundException{
+        FileInputStream fis = new FileInputStream(new File(fileUrl));
+        byte[] bytes = new byte[1024];
+        return bytes;
+    }*/
+
+
+
 }

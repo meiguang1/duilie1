@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/api/Pt")
-@Api(tags={"pt"},description="pt、fm表的相关操作，做点位管理的相关操作")
+@RequestMapping(value="/api/level_management")
+@Api(tags={"level_management"},description="level_management和other_files表的相关操作，做点位管理的相关操作")
 public class PtRest {
     @Autowired
     private PtServiceImpl ps;
@@ -40,7 +40,7 @@ public class PtRest {
 
     @GetMapping("/getEventAll")
     @Timed
-    @ApiOperation(value="获取该事件(暂定pt时间表)下的点位列表", notes="获取该事件下的点位列表")
+    @ApiOperation(value="获取点位管理模块中某个事件下的点位列表", notes="(数据库level_management点位管理表的相关操作)")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
     })
@@ -53,7 +53,10 @@ public class PtRest {
 
     @GetMapping("/selectReport")
     @Timed
-    @ApiOperation(value="获取所有的文件类型(report文件类型表的操作)")
+    @ApiOperation(value="获取其他文件管理中所有的文件类型(report文件类型表的操作)")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
+    })
     public List<Report> selectReport(String pid){
         List<Report> reports=fm.selectReport(pid);
         return reports;
@@ -61,7 +64,10 @@ public class PtRest {
 
     @GetMapping("/likeSelectfm")
     @Timed
-    @ApiOperation(value="获取所有的文件类型总数以及文件上传个数(report文件类型表的操作)")
+    @ApiOperation(value="获取其他文件管理中所有的文件类型总数以及文件上传个数(report文件类型表的操作)")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
+    })
     public PostFm likeSelect(String pid){
         PostFm postFm = fm.likeSelectfm(pid);
         return postFm;
@@ -71,7 +77,7 @@ public class PtRest {
 
     @PostMapping("/addOnePerson")
     @Timed
-    @ApiOperation(value="增加，(向pt事件表)添加单个以及添加多条",notes="添加单个以及添加多条)")
+    @ApiOperation(value="增加，点位管理模块添加单个以及添加多条",notes="(数据库level_management点位管理表的操作)")
    /* @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value = "人员id", required = true, dataType = "rcList",paramType="query"),
     })*/
@@ -101,7 +107,7 @@ public class PtRest {
 
     @GetMapping("/delete")
     @Timed
-    @ApiOperation(value="删除，通过id删除单个点位(pt事件表的操作)", notes="删除，通过id删除单个点位")
+    @ApiOperation(value="删除，通过id删除点位管理模块的单个点位", notes="(level_management点位管理表的操作)")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value = "点位id", required = true, dataType = "int",paramType="query"),
     })
@@ -123,7 +129,14 @@ public class PtRest {
     //查询，按照事件编码对点位编码以及点位名称进行模糊查询并进行分页
     @GetMapping("/likeSelect")
     @Timed
-    @ApiOperation(value="查询，按照事件编码对点位编码以及点位名称进行模糊查询并进行分页以及返回总条数(前台返回值为空的时候需为null,不能是空字符串,pt事件表的操作)")
+    @ApiOperation(value="查询,按照事件编码对点位管理模块进行进行模糊查询以及分页并返回总条数",notes="(level_management点位管理表的相关操作)")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "pageSize", value = "每页的条数", required = true, dataType = "int",paramType="query"),
+    })
     public  ResponseEntity<Object> likeSelect(String eventcode,String countyname,String countycode, int page,int pageSize){
         PostPt tada = ps.likeSelect(eventcode, countyname, countycode, page, pageSize);
         return new ResponseEntity<Object>(tada, HttpStatus.OK);
@@ -134,7 +147,14 @@ public class PtRest {
 
     @PostMapping("/doUploadOne")
     @Timed
-    @ApiOperation(value = "文件上传(pt表的文件上传操作)")
+    @ApiOperation(value = "点位管理模块的单文件上传",notes = "(level_management点位管理表的相关操作)")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "fmurl", value = "文件名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
+    })
     public ResponseEntity<Pt> filesUpload(MultipartFile uploadFile, HttpServletRequest request, String fmurl, String pid, String eventcode,String countycode,String countyname) throws IOException {
         /*System.out.println("uploadFile = " + uploadFile);
         //获得文件
@@ -173,7 +193,10 @@ public class PtRest {
 
     @GetMapping("/selectAllFile")
     @Timed
-    @ApiOperation(value = "文件下载,(pt表的操作，在其他文件中进行下载)")
+    @ApiOperation(value = "点位管理模块的单文件下载",notes="(pt表的操作，在其他文件中进行下载)")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "pid", value = "事件编码", required = true, dataType = "String",paramType="query"),
+    })
     public ResponseEntity<List<Pt>> selectAllFile(String pid){
 
         List<Pt> listUsers =ps.selectAllFile(pid);
@@ -183,7 +206,7 @@ public class PtRest {
 
     @GetMapping("/selectAll")
     @Timed
-    @ApiOperation(value="该文件类型下文件的详情以及总条数(暂定fm其他文件表的操作)")
+    @ApiOperation(value="查询其他文件模块中某个文件类型下文件的详情以及总条数",notes = "(other_files其他文件表的操作)")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "reportcode", value = "文件编码", required = true, dataType = "String",paramType="query"),
@@ -196,7 +219,7 @@ public class PtRest {
 
     @PostMapping("/addOnereport")
     @Timed
-    @ApiOperation(value="增加，添加文件类型单个以及添加多条(report文件类型表的操作)")
+    @ApiOperation(value="增加，添加文件类型(单个以及添加多条)",notes = "(report文件类型表的操作)")
    /* @ApiImplicitParams({
         @ApiImplicitParam(name = "reportname", value = "文件名称", required = true, dataType = "String",paramType="query"),
     })*/
@@ -214,9 +237,11 @@ public class PtRest {
 
     @GetMapping("/deleteFile")
     @Timed
-    @ApiOperation(value="删除，通过id删除单个文件类型")
+    @ApiOperation(value="删除,在其他文件模块中通过id删除单个文件类型",notes ="(report文件类型表的操作)")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "人员id", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "id", value = "人员id", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "pid", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "reportcode", value = "文件类型编码", required = true, dataType = "String",paramType="query"),
     })
     public boolean deleteFile(int id,String pid,String reportcode) {
         boolean flag=false;
@@ -233,7 +258,7 @@ public class PtRest {
 
      @GetMapping("/healthForm")
     @Timed
-    @ApiOperation(value="查询已上传文件的路劲和名字")
+    @ApiOperation(value="查询点位管理模块已上传文件的路劲和名字")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),

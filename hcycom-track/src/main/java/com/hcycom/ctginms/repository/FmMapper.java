@@ -37,6 +37,7 @@ public interface FmMapper {
 
     /*文件下载*/
     List<Fm> fileDownload(@Param("pid")String pid,@Param("reportcode")String reportcode);
+    Fm selectFileById(int id);
 
     //查询某文件类型下文件的详情
     List<Report> selectReport(String pid);
