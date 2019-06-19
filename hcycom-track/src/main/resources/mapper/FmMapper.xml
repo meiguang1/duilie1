@@ -24,9 +24,9 @@
     <insert id="InsertUpFile"  parameterType="com.hcycom.ctginms.domain.Fm">
        insert into other_files (pid,fnName,fnUrl,time,reportcode) values (#{pid},#{fnName},#{fnUrl},now(),#{reportcode})
     </insert>
-    <select id="selectFileById" resultMap="com.hcycom.ctginms.domain.Fm">
+   <!-- <select id="selectFileById" resultType="com.hcycom.ctginms.domain.Fm">
         select * from other_files where id=#{id}
-    </select>
+    </select>-->
 
 
     <!--文件下载-->
