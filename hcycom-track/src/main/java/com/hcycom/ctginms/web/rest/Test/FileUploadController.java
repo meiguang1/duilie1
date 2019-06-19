@@ -9,6 +9,8 @@ import com.hcycom.ctginms.web.rest.util.FileUtil;
 import com.hcycom.ctginms.web.rest.util.TimeUtil;
 import com.hcycom.ctginms.web.rest.util.ZipUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.ZipFile;
-
 @RestController
 @RequestMapping(value="/api/File-upload-and-file-download")
-@Api(tags={"File-upload-and-file-download"},description="fm表的文件上传功能和文件下载功能")
+@Api(tags={"File-upload-and-file-download"},description="点位管理和其他文件管理中的文件上传与下载")
 public class FileUploadController {
     @Autowired
     private PtServiceImpl ps;
@@ -32,8 +34,16 @@ public class FileUploadController {
 
     @PostMapping("/InsertUpFileAll")
     @Timed
-    @ApiOperation(value = "多文件上传,(pt表的操作，在其他文件中进行上传)")
+    @ApiOperation(value = "点位管理模块的多文件上传",notes = "(level_management表的操作)")
     @ResponseBody
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "uploadFiles", value = "文件路劲"),
+        @ApiImplicitParam(name = "fmurl", value = "文件名称"),
+        @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
+    })
     public ResponseEntity<Pt> InsertUpFileAll(@RequestParam("uploadFiles")List<MultipartFile> uploadFiles,@RequestParam("fmurl")List<String> fmurl,String pid,String eventcode, String countyname, String countycode) throws IOException {
         //时间戳
         List<Pt> list = new ArrayList<>();
@@ -84,7 +94,7 @@ public class FileUploadController {
 
 
     @RequestMapping(value = "/packTodownload", method = RequestMethod.POST)
-    @ApiOperation(value="pt表的打包下载")
+    @ApiOperation(value="点位管理模块中的打包下载",notes = "(level_management表的操作)")
     @ResponseBody
     public JSONObject packTodownload(@RequestBody JSONArray jsonArray, HttpServletRequest request,
                                      HttpServletResponse response) {
@@ -177,5 +187,8 @@ public class FileUploadController {
 
         System.out.print(c-1);
     }*/
+
+
+
 
 }

@@ -23,7 +23,7 @@ public interface FmService {
 
     /*文件下载*/
     List<Fm> fileDownload(String pid,String reportcode);
-
+    Fm selectFileById(int id);
 
 
     /*查询所有文件类型*/

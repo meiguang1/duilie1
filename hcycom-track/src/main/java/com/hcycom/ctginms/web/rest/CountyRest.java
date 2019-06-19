@@ -70,9 +70,17 @@ public class CountyRest {
     }
 
 
+    /*查询，按照项目编码对区县编码和区县名称进行模糊查询、分页以及返回总条数(前台返回值为空的时候需为null,不能是空字符串)*/
     @GetMapping("/likeSelect")
     @Timed
-    @ApiOperation(value="查询，按照项目编码对区县编码和区县名称进行模糊查询、分页以及返回总条数(前台返回值为空的时候需为null,不能是空字符串)")
+    @ApiOperation(value="查询,按照项目编码进行模糊分页以及模糊查询并返回总条数")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "projectcode", value = "页数", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "projectcode", value = "每页条数", required = true, dataType = "int",paramType="query"),
+    })
     public  ResponseEntity<Object> likeSelect(String projectcode,String countyname,String countycode, int page ,int pageSize){
         Tada tada = countyService.likeSelect(projectcode, countyname, countycode, page, pageSize);
         return new ResponseEntity<Object>(tada, HttpStatus.OK);
@@ -83,6 +91,9 @@ public class CountyRest {
     @GetMapping("/getCountyBy")
     @Timed
     @ApiOperation(value="对符合条件的区县进行全部查询")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
+    })
     public ResponseEntity<List<County>> getCountyBy(String projectcode){
         List<County> countylist=countyService.getCountyBy(projectcode);
         return new ResponseEntity<List<County>>(countylist, HttpStatus.OK);
@@ -91,6 +102,13 @@ public class CountyRest {
     @GetMapping("/likeCountyBy")
     @Timed
     @ApiOperation(value="对符合条件的区县进行模糊查询并且返回总条数 ")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, dataType = "int",paramType="query"),
+    })
     public  ResponseEntity<Object> likeCountyBy(String projectcode,String countyname,String countycode, int page ,int pageSize){
         Tada tada = countyService.likeCountyBy(projectcode, countyname, countycode, page, pageSize);
         return new ResponseEntity<Object>(tada, HttpStatus.OK);
