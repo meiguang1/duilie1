@@ -2,6 +2,7 @@ package com.hcycom.ctginms.repository;
 
 import com.hcycom.ctginms.domain.OperationLog;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,4 +40,11 @@ public interface OperationlogMapper {
      * @return
      */
     List<OperationLog> getQueryPage(HashMap<String,Object> map);
+
+    /**
+     * 插入日志
+     * @param operationlog
+     * @return
+     */
+    int addOperationLog(@Param("operationlog") OperationLog operationlog);
 }

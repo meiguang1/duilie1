@@ -144,4 +144,5 @@ public class ImportSampleInfo {
     @ApiModelProperty(value="入库信息编码")
     private String sample_info_code;
 
+
 }

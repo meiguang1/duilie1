@@ -18,4 +18,6 @@ public interface OperationlogService {
     List<OperationLog> getAll();
 
     PageBean<OperationLog> getQueryPage(int currentPage,int pageSize,String projectname,String operationname);
+
+    int addOperationLog(OperationLog operationLog);
 }

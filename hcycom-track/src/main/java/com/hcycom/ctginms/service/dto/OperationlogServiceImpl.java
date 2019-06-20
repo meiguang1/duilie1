@@ -70,4 +70,9 @@ public class OperationlogServiceImpl implements OperationlogService{
         return pageBean;
     }
 
+    @Override
+    public int addOperationLog(OperationLog operationLog){
+        return operationlogMapper.addOperationLog(operationLog);
+    }
+
 }

@@ -27,61 +27,66 @@
     <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
     <result column="CITY" property="city" jdbcType="VARCHAR" />
     <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
-    
+
   </resultMap> -->
-  
-  
+
+
   <select id="selectEventByProjectcode" resultType="com.hcycom.ctginms.domain.Event">
   select id,eventcode,eventname,eventdescribes,projectcode,creatusername,creattime from event where projectcode=#{projectcode} ORDER BY creattime ASC
   </select>
-  
-  
-  
+
+
+
   <select id="selectEventById" resultType="com.hcycom.ctginms.domain.Event">
   select id,eventcode,eventname,eventdescribes,projectcode,creatusername,creattime from event where id=#{id}
   </select>
-  
-  
+
+
   <insert id="insertEventOne" useGeneratedKeys="true" keyProperty="event.id" parameterType="com.hcycom.ctginms.domain.Event">
   insert into event(eventcode,eventname,eventdescribes,projectcode,creatusername,creattime) values (UUID(),#{event.eventname},#{event.eventdescribes},#{event.projectcode},#{event.creatusername},now())
   </insert>
-  
-  
+
+
   <select id="selectEventTableAndFunctonTable" resultType="com.hcycom.ctginms.web.rest.vm.EventFunctionReturn">
   select e.eventcode,e.projectcode,f.ry,f.dw,f.yb,f.rk,f.ck from event e,function f where e.projectcode=f.projectcode and eventcode=#{eventcode}
   </select>
-  
-  
-  
+
+    <select id="findeventAndproject" resultType="Map" parameterType="String">
+        SELECT e.eventcode,e.eventname,p.projectcode,p.projectname
+        FROM `event` e LEFT JOIN project p ON e.projectcode=p.projectcode
+        WHERE e.eventcode=#{eventcode}
+    </select>
+
+
   <!-- <select id="selectOneByUsernameNoPassword" resultType="com.hcycom.ctginms.domain.User">
   select id,username,role,name,state,creattime,image,logintime,describes from user where username=#{username}
   </select>
-  
-  
+
+
   <update id="updateLogintimeById" parameterType="java.lang.String">
 		update user set logintime=#{logintime} where id=#{id}
   </update>
-  
-  
-  
+
+
+
   <update id="updatePasswordByUsername" parameterType="java.lang.String">
 		update user set password=#{password} where username=#{username}
   </update>
-  
-  
+
+
   <update id="updateUserMessageByUsername" parameterType="java.lang.String">
 		update user set name=#{name},describes=#{describes} where username=#{username}
   </update> -->
-  
+
 <!--   <select id="selectLinkInfos" resultMap="BaseLinkInfoResultMap" parameterType="java.lang.Integer" statementType="STATEMENT">
-    select 
+    select
     	link_id,delay_threshold,device_a_id,device_z_id,link_category
     from
     	hcy_mn_link_info
-    
+
    	<if test="category!=null">
     	where link_category = ${category}
     </if>
   </select> -->
-  
+
 </mapper>
