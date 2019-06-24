@@ -84,8 +84,9 @@ public class CsvUtils {
         try {
             InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "GBK");
             br = new BufferedReader(isr);
+            br.readLine();
             String line = "";
-            while ((line = br.readLine()) != null) {
+            while (!(line = br.readLine()).equals("")) {
                 dataList.add(line);
             }
         }catch (Exception e) {

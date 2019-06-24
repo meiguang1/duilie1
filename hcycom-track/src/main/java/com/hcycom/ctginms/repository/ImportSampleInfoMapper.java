@@ -1,10 +1,12 @@
 package com.hcycom.ctginms.repository;
 
 import com.hcycom.ctginms.domain.ImportSampleInfo;
+import com.netflix.ribbon.proxy.annotation.ClientProperties;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: ImportSampleInfoMapper
@@ -27,4 +29,18 @@ public interface ImportSampleInfoMapper {
      * @return
      */
     List<ImportSampleInfo> getSampleInfo(@Param("eventCode")String eventCode);
+
+    /**
+     * 根据入库信息编码删除虚拟库import_sample_model中的数据
+     * @param sampleInfoCode
+     * @return
+     */
+    int delSampleModelByCode(@Param("sampleInfoCode")String sampleInfoCode);
+
+    /**
+     * 根据入库信息编码，查询已入到正式样本sample库中的数据
+     * @param sampleInfoCode
+     * @return
+     */
+    List<Map<String,?>> findSampleByxnCode(@Param("sampleInfoCode")String sampleInfoCode);
 }

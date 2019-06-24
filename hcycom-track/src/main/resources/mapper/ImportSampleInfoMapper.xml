@@ -13,4 +13,17 @@
         WHERE event_code=#{eventCode}
         ORDER BY import_time DESC
     </select>
+
+    <delete id="delSampleModelByCode" parameterType="String">
+        DELETE FROM import_sample_model WHERE sample_info_code=#{sampleInfoCode}
+    </delete>
+
+    <select id="findSampleByxnCode" parameterType="String" resultType="Map">
+        SELECT
+            s.person_code,p.researchname AS person_name,s.code AS sample_code,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_line,s.cryopreserved_column,s.subpackage_time,s.offset_number,s.refrigerator_code,s.refrigerator_layer,s.sample_shelf,s.samplebox_code,s.box_place,s.head
+        FROM
+            sample s LEFT JOIN person p ON s.person_code=p.researchcode
+        WHERE
+            s.sample_info_code=#{sampleInfoCode}
+    </select>
 </mapper>

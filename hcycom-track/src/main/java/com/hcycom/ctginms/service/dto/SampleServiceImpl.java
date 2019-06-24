@@ -5,19 +5,17 @@ import com.hcycom.ctginms.domain.OperationLog;
 import com.hcycom.ctginms.domain.PageBean;
 import com.hcycom.ctginms.domain.Sample;
 import com.hcycom.ctginms.postdomain.PostSample;
+import com.hcycom.ctginms.postdomain.PostSampletwo;
 import com.hcycom.ctginms.repository.SampleMapper;
 import com.hcycom.ctginms.service.SampleService;
 import com.hcycom.ctginms.web.rest.util.CsvUtils;
-import groovy.beans.Vetoable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @ClassName: SampleServiceImpl
@@ -111,7 +109,7 @@ public class SampleServiceImpl implements SampleService {
     }
 
     @Override
-    public int importSample(MultipartFile multipartFile,String sample_info_code) throws Exception{
+    public int importSampleModel(MultipartFile multipartFile,String sample_info_code) throws Exception{
         File directory = new File(".");
         String path = directory.getCanonicalPath();
         System.out.println("文件保存的路径"+path);
@@ -123,7 +121,13 @@ public class SampleServiceImpl implements SampleService {
         }
         //获取原始文件名称
         String originalFileName = multipartFile.getOriginalFilename();
+        //转义拆分重命名文件
         System.out.println("原始文件的名称"+originalFileName);
+        String[] strArr=originalFileName.split("\\.");
+        SimpleDateFormat sdf=new SimpleDateFormat("YYYYMMDDHHmmss");
+        String strName=sdf.format(new Date());
+        originalFileName=strName+"."+strArr[1];
+        System.out.println("重命名文件的名称"+originalFileName);
 
         System.out.println(path);
 
@@ -142,22 +146,22 @@ public class SampleServiceImpl implements SampleService {
             for(String data : samplelist){
                 ImportSampleModel importModel=new ImportSampleModel();
                 String[] aa = data.split(",");
-                importModel.setId(Integer.parseInt(aa[0]));
-                importModel.setPerson_code(aa[1]);
-                importModel.setPerson_name(aa[2]);
-                importModel.setSample_code(aa[3]);
-                importModel.setSample_type(aa[4]);
-                importModel.setCapacity(aa[5]);
-                importModel.setCryopreserved_code(aa[6]);
-                importModel.setCryopreserved_line(Integer.parseInt(aa[7]));
-                importModel.setCryopreserved_column(Integer.parseInt(aa[8]));
-                importModel.setSubpackage_time(aa[9]);
-                importModel.setOffset_number(Integer.parseInt(aa[10]));
-                importModel.setRefrigerator_code(aa[11]);
-                importModel.setRefrigerator_layer(Integer.parseInt(aa[12]));
-                importModel.setSample_shelf(aa[13]);
-                importModel.setSamplebox_code(aa[14]);
-                String bb = (aa[15]+','+aa[16]).replace("\"", "");
+                importModel.setId(0);
+                importModel.setPerson_code(aa[0]);
+                importModel.setPerson_name(aa[1]);
+                importModel.setSample_code(aa[2]);
+                importModel.setSample_type(aa[3]);
+                importModel.setCapacity(aa[4]);
+                importModel.setCryopreserved_code(aa[5]);
+                importModel.setCryopreserved_line(Integer.parseInt(aa[6]));
+                importModel.setCryopreserved_column(Integer.parseInt(aa[7]));
+                importModel.setSubpackage_time(aa[8]);
+                importModel.setOffset_number(Integer.parseInt(aa[9]));
+                importModel.setRefrigerator_code(aa[10]);
+                importModel.setRefrigerator_layer(Integer.parseInt(aa[11]));
+                importModel.setSample_shelf(aa[12]);
+                importModel.setSamplebox_code(aa[13]);
+                String bb = (aa[14]+','+aa[15]).replace("\"", "");
                 importModel.setBox_place(bb);
                 importModel.setHead(aa[17]);
                 importModel.setSample_info_code(sample_info_code);
@@ -165,8 +169,18 @@ public class SampleServiceImpl implements SampleService {
                 System.out.println(importModel);
             }
         }
-        int aa = sampleMapper.importSample(importList);
+        int aa = sampleMapper.importSampleModel(importList);
         deleteFile(targerFile);
         return aa;
+    }
+
+    @Override
+    public List<ImportSampleModel> findSampleModelByCode(String sampleModeCode){
+        return sampleMapper.findSampleModelByCode(sampleModeCode);
+    }
+
+    @Override
+    public int addSample(List<PostSampletwo> sampleList){
+        return sampleMapper.addSample(sampleList);
     }
 }

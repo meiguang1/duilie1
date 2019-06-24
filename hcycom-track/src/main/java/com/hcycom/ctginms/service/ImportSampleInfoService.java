@@ -3,6 +3,7 @@ package com.hcycom.ctginms.service;
 import com.hcycom.ctginms.domain.ImportSampleInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: ImportSampleInfoService
@@ -15,4 +16,8 @@ public interface ImportSampleInfoService {
     int addSampleInfo(ImportSampleInfo importSampleInfo);
 
     List<ImportSampleInfo> getSampleInfo(String eventCode);
+
+    int delSampleModelByCode(String sampleInfoCode);
+
+    List<Map<String,?>> findSampleByxnCode(String sampleInfoCode);
 }

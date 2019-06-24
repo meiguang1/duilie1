@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @ClassName: ImportSampleInfo
@@ -74,11 +75,11 @@ public class ImportSampleInfo {
         this.operator_name = operator_name;
     }
 
-    public String getImport_time() {
+    public Date getImport_time() {
         return import_time;
     }
 
-    public void setImport_time(String import_time) {
+    public void setImport_time(Date import_time) {
         this.import_time = import_time;
     }
 
@@ -97,7 +98,7 @@ public class ImportSampleInfo {
 
     @Column(name="import_time")
     @ApiModelProperty(value="上传时间")
-    private String import_time;
+    private Date import_time;
 
     public String getEvent_code() {
 

@@ -1,17 +1,23 @@
 package com.hcycom.ctginms.web.rest;
 
-import com.hcycom.ctginms.domain.ImportSampleInfo;
-import com.hcycom.ctginms.domain.OperationLog;
-import com.hcycom.ctginms.domain.User;
+import com.hcycom.ctginms.domain.*;
+import com.hcycom.ctginms.postdomain.PostOperationLog;
+import com.hcycom.ctginms.postdomain.PostSample;
+import com.hcycom.ctginms.postdomain.PostSampletwo;
 import com.hcycom.ctginms.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,7 +45,7 @@ public class ImportSampleInfoRest {
     private EventService eventService;
 
     @GetMapping("/getSampleInfo")
-    @ApiOperation(value="根据事件编码查询import_sample_info表", notes="获取入库操作信息")
+    @ApiOperation(value="获取入库操作信息", notes="根据事件编码查询import_sample_info表")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
     })
@@ -55,16 +61,18 @@ public class ImportSampleInfoRest {
     }
 
     @PostMapping("/importSample")
-    @ApiOperation(value="插入import_sample_info表及import_sample_model表", notes="入库操作")
+    @ApiOperation(value="新建入库操作", notes="插入import_sample_info表及import_sample_model表")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "entrepot_name", value = "入库名称", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "point_name", value = "点位名称", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "import_time", value = "上传时间", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "import_time", value = "上传时间", required = true, dataType = "String.",paramType="query"),
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
     })
     public boolean importSample(@RequestParam(value="multipartFile",required=false)MultipartFile multipartFile,
-                                String entrepot_name,String point_name,String username,String import_time,String eventcode){
+                                String entrepot_name, String point_name, String username, String import_time, String eventcode) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date import_time1=sdf.parse(import_time);
         String fileName=multipartFile.getOriginalFilename().substring(0,multipartFile.getOriginalFilename().indexOf("."));
         String uuid=getGUID();
         List<User> user=userService.getOneUserByUsername(username);
@@ -74,38 +82,84 @@ public class ImportSampleInfoRest {
         importSampleInfo.setPoint_name(point_name);
         importSampleInfo.setImport_name(fileName);
         importSampleInfo.setOperator_name(user.get(0).getName());
-        importSampleInfo.setImport_time(import_time);
+        importSampleInfo.setImport_time(import_time1);
         importSampleInfo.setState("0");
         importSampleInfo.setEvent_code(eventcode);
-        int a=importSampleInfoService.addSampleInfo(importSampleInfo);
-        OperationLog operationLog=getoperationLog(import_time,user.get(0).getId(),user.get(0).getName(),eventcode);
+        OperationLog operationLog=getoperationLog(import_time1,user.get(0).getId(),user.get(0).getName(),eventcode);
+        operationLog.setOperation_txt("样本预入库");
+        int a=sampleService.importSampleModel(multipartFile,uuid);
         if(a!=0){
-            try {
-                int b=sampleService.importSample(multipartFile,uuid);
-                if(b!=0){
-                    operationlogService.addOperationLog(operationLog);
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+            int b=importSampleInfoService.addSampleInfo(importSampleInfo);
+            if(b!=0){
+                operationlogService.addOperationLog(operationLog);
             }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @GetMapping("/findSampleModelByCode")
+    @ApiOperation(value="根据入库信息编码查询虚拟库数据", notes="虚拟库import_sample_model数据查询")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sampleModeCode", value = "入库信息编码", required = true, dataType = "String",paramType="query"),
+    })
+    public ResponseEntity<List<ImportSampleModel>> findSampleModelByCode(String sampleModeCode){
+        List<ImportSampleModel> list=sampleService.findSampleModelByCode(sampleModeCode);
+        return new ResponseEntity<List<ImportSampleModel>>(list, HttpStatus.OK);
+    }
+
+    @PostMapping("/addSample")
+    @ApiOperation(value="修改上传文件数据，插入数据至正式样本库中", notes="插入数据至sample表中")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "notes", value = "备注信息", required = false, dataType = "String",paramType="query"),
+    })
+    public boolean addSample(@RequestBody List<PostSampletwo> sampleList,PostOperationLog postOperationLog,String notes) throws Exception{
+        List<User> user=userService.getOneUserByUsername(postOperationLog.getLoginname());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date import_time1=sdf.parse(postOperationLog.getNowtime());
+        String usercode=user.get(0).getId();
+        String username=user.get(0).getName();
+        String eventcode=postOperationLog.getEventcode();
+        //获取日志信息
+        OperationLog operationLog=getoperationLog(import_time1,usercode,username,eventcode);
+        operationLog.setNotes(notes);
+        operationLog.setOperation_txt("样本正式入库");
+        //添加数据至样本正式库
+        int a=sampleService.addSample(sampleList);
+            if(a!=0){
+            //添加一条日志
+            operationlogService.addOperationLog(operationLog);
+            //从虚拟库中删除已经正式入库的数据
+            importSampleInfoService.delSampleModelByCode(sampleList.get(0).getSample_info_code());
+            return true;
         }else{
 
             return false;
         }
     }
 
+    @GetMapping("/findSampleByxnCode")
+    @ApiOperation(value="根据入库信息编码查询已录入正式库中的数据", notes="根据sample_info_code查询sample表")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "sampleInfoCode", value = "入库信息编码", required = true, dataType = "String",paramType="query"),
+    })
+    public List<Map<String,?>> findSampleByxnCode(String sampleInfoCode){
+        System.out.println("__________________________________");
+        List<Map<String,?>> samplelist=importSampleInfoService.findSampleByxnCode(sampleInfoCode);
+        return samplelist;
+    }
+
+
     /**
      * 渲染日志信息
      * @return
      */
-    public OperationLog getoperationLog(String time,String userid,String name,String eventcode){
+    public OperationLog getoperationLog(Date time, String userid, String name, String eventcode){
         List<Map<String,?>> list=eventService.findeventAndproject(eventcode);
         OperationLog operationLog=new OperationLog();
         operationLog.setDescribe("sample");
         operationLog.setOperation_time(time);
-        operationLog.setOperation_txt("样本预入库");
         operationLog.setOperation_code(userid);
         operationLog.setOperation_name(name);
         operationLog.setProject_code(list.get(0).get("projectcode").toString());

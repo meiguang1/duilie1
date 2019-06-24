@@ -62,13 +62,27 @@
         WHERE s.event_code=#{eventcode} GROUP BY s.person_code
     </select>
 
-    <insert id="importSample" parameterType="java.util.List">
+    <insert id="importSampleModel" parameterType="java.util.List">
         INSERT INTO import_sample_model
         VALUES
         <foreach item="item" collection="payFeeList" separator=","  index="index">
             (${item.id},'${item.person_code}','${item.person_name}','${item.sample_code}','${item.sample_type}','${item.capacity}','${item.cryopreserved_code}',
             ${item.cryopreserved_line},${item.cryopreserved_column},'${item.subpackage_time}',${item.offset_number},'${item.refrigerator_code}',${item.refrigerator_layer},
             '${item.sample_shelf}','${item.samplebox_code}','${item.box_place}','${item.head}','${item.sample_info_code}')
+        </foreach>
+    </insert>
+
+    <select id="findSampleModelByCode" parameterType="String" resultType="com.hcycom.ctginms.domain.ImportSampleModel">
+        SELECT * FROM import_sample_model WHERE sample_info_code=#{sampleModeCode}
+    </select>
+
+    <insert id="addSample" parameterType="java.util.List">
+        INSERT INTO sample
+        VALUES
+        <foreach collection="sampleList" item="item" separator="," index="index">
+            (${item.id},'${item.samplecode}','${item.type}','${item.capacity}','${item.cryopreservedcode}',${item.cryopreservedline},${item.cryopreservedcolumn},
+            '${item.subpackagetime}',${item.offsetnumber},'${item.refrigeratorcode}',${item.refrigeratorlayer},'${item.sampleshelf}','${item.sampleboxcode}','${item.boxplace}',
+            '${item.state}','${item.head}','${item.createtime}','${item.personcode}','${item.eventcode}','${item.sample_info_code}')
         </foreach>
     </insert>
 </mapper>

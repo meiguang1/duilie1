@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @ClassName: operationLog
@@ -28,7 +29,7 @@ public class OperationLog {
 
     @Column(name="operation_time")
     @ApiModelProperty(value="操作时间")
-    private String operation_time;
+    private Date operation_time;
 
     @Column(name="operation_code")
     @ApiModelProperty(value="操作员编号")
@@ -62,11 +63,11 @@ public class OperationLog {
         this.describe = describe;
     }
 
-    public String getOperation_time() {
+    public Date getOperation_time() {
         return operation_time;
     }
 
-    public void setOperation_time(String operation_time) {
+    public void setOperation_time(Date operation_time) {
         this.operation_time = operation_time;
     }
 
@@ -134,8 +135,21 @@ public class OperationLog {
     @ApiModelProperty(value="事件编码")
     private String event_code;
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     @Column(name="event_name")
+
     @ApiModelProperty(value="事件名称")
     private String event_name;
+
+    @Column(name = "notes")
+    @ApiModelProperty(value = "备注信息")
+    private String notes;
 
 }

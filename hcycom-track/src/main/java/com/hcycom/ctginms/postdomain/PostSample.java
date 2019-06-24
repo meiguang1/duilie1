@@ -98,7 +98,6 @@ public class PostSample {
     }
 
     @ApiModelProperty(value="调查对象编码",name="personcode",required=false)
-
     private String personcode;
 
     @ApiModelProperty(value="调查对象姓名",name="researchname",required=false)

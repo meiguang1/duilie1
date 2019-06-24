@@ -19,7 +19,7 @@
     <insert id="addOperationLog" parameterType="com.hcycom.ctginms.domain.OperationLog">
         INSERT INTO operation_log
         VALUES (0,#{operationlog.describe},#{operationlog.operation_time},#{operationlog.operation_txt},#{operationlog.operation_code},
-        #{operationlog.operation_name},#{operationlog.project_code},#{operationlog.project_name},#{operationlog.event_code},#{operationlog.event_name})
+        #{operationlog.operation_name},#{operationlog.project_code},#{operationlog.project_name},#{operationlog.event_code},#{operationlog.event_name},#{operationlog.notes})
     </insert>
 
     <select id="getQueryPage" resultType="com.hcycom.ctginms.domain.OperationLog" >

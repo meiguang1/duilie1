@@ -3,6 +3,7 @@ package com.hcycom.ctginms.repository;
 import com.hcycom.ctginms.domain.ImportSampleModel;
 import com.hcycom.ctginms.domain.OperationLog;
 import com.hcycom.ctginms.domain.Sample;
+import com.hcycom.ctginms.postdomain.PostSampletwo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -71,8 +72,21 @@ public interface SampleMapper {
      * @param payFeeList
      * @return
      */
-    int  importSample(@Param("payFeeList")List payFeeList);
+    int  importSampleModel(@Param("payFeeList")List payFeeList);
     //int  importSample(List<ImportSampleModel> payFeeList);
 
 
+    /**
+     * 根据入库信息编码查询虚拟库数据
+     * @param sampleModeCode
+     * @return
+     */
+    List<ImportSampleModel> findSampleModelByCode(@Param("sampleModeCode")String sampleModeCode);
+
+    /**
+     * 插入数据至正式的样本表sample中
+     * @param sampleList
+     * @return
+     */
+    int addSample(@Param("sampleList")List<PostSampletwo> sampleList);
 }

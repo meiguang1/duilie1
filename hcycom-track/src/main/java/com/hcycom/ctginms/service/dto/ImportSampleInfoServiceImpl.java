@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: ImportSampleInfoServiceImpl
@@ -26,5 +27,13 @@ public class ImportSampleInfoServiceImpl implements ImportSampleInfoService{
 
     public List<ImportSampleInfo> getSampleInfo(String eventCode){
         return importSampleInfoMapper.getSampleInfo(eventCode);
+    }
+
+    public int delSampleModelByCode(String sampleInfoCode){
+        return importSampleInfoMapper.delSampleModelByCode(sampleInfoCode);
+    }
+
+    public List<Map<String,?>> findSampleByxnCode(String sampleInfoCode){
+        return importSampleInfoMapper.findSampleByxnCode(sampleInfoCode);
     }
 }

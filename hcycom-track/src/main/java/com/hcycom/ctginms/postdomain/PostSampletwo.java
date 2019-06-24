@@ -1,35 +1,33 @@
-package com.hcycom.ctginms.domain;
+package com.hcycom.ctginms.postdomain;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
- * @ClassName: Sample
+ * @ClassName: PostSample
  * @Description: TODO
  * @Author: 白敏
- * @Date: 2019/6/11 16:28
+ * @Date: 2019/6/12 17:12
  **/
-@Entity
-@Table(name = "Sample")
-public class Sample {
+@ApiModel(value = "虚拟库数据正式入库传参",description = "虚拟库数据正式入库传参")
+public class PostSampletwo {
+
+    public String getSamplecode() {
+        return samplecode;
+    }
+
+    public void setSamplecode(String samplecode) {
+        this.samplecode = samplecode;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getType() {
@@ -39,13 +37,81 @@ public class Sample {
     public void setType(String type) {
         this.type = type;
     }
+    @ApiModelProperty(value="id主键",name="id",example="0",required=true)
+    private int id;
+
+    @ApiModelProperty(value="样本编号",name="samplecode",required=true)
+    private String samplecode;
+
+    @ApiModelProperty(value="调查对象编号",name="personcode",required=true)
+    private String personcode;
+
+    @ApiModelProperty(value="样本类型",name="type",required=true)
+    private String type;
+
+    @ApiModelProperty(value="容量/ml",name="capacity",required=true)
+    private String capacity;
+
+    @ApiModelProperty(value="冻存盒编号",name="cryopreservedcode",required=true)
+    private String cryopreservedcode;
+
+    @ApiModelProperty(value="冻存盒内坐标/行",name="cryopreservedline",required=true)
+    private int cryopreservedline;
+
+    @ApiModelProperty(value="冻存盒内坐标/列",name="cryopreservedcolumn",required=true)
+    private int cryopreservedcolumn;
+
+    @ApiModelProperty(value="分装时间",name="subpackagetime",required=true)
+    private String subpackagetime;
+
+    @ApiModelProperty(value="分管号",name="offsetnumber",required=true)
+    private int offsetnumber;
+
+    @ApiModelProperty(value="冰箱编号",name="refrigeratorcode",required=true)
+    private String refrigeratorcode;
+
+    @ApiModelProperty(value="冰箱层",name="refrigeratorlayer",required=true)
+    private int refrigeratorlayer;
+
+    @ApiModelProperty(value="样本架",name="sampleshelf",required=true)
+    private String sampleshelf;
+
+    @ApiModelProperty(value="样本盒编号",name="sampleboxcode",required=true)
+    private String sampleboxcode;
+
+    @ApiModelProperty(value="盒内位置（行,列）",name="boxplace",required=true)
+    private String boxplace;
+
+    @ApiModelProperty(value="样品状态",name="state",example="1",required=true)
+    private String state;
+
+    @ApiModelProperty(value="样品负责人",name="head",required=true)
+    private String head;
+
+    @ApiModelProperty(value="创建时间",name="createtime",required=false)
+    private String createtime;
+
+    @ApiModelProperty(value="事件编号",name="eventcode",required=true)
+    private String eventcode;
+
+    @ApiModelProperty(value="入库信息编码",name="sample_info_code",required=true)
+    private String sample_info_code;
 
     public String getCapacity() {
         return capacity;
     }
 
+    public String getSample_info_code() {
+        return sample_info_code;
+    }
+
+    public void setSample_info_code(String sample_info_code) {
+        this.sample_info_code = sample_info_code;
+    }
+
     public void setCapacity(String capacity) {
         this.capacity = capacity;
+
     }
 
     public String getCryopreservedcode() {
@@ -167,94 +233,4 @@ public class Sample {
     public void setEventcode(String eventcode) {
         this.eventcode = eventcode;
     }
-
-    @Id
-    @Column(name="id")
-    @ApiModelProperty(value="id主键")
-    private int id;
-
-    @Column(name="code")
-    @ApiModelProperty(value="样本编号")
-    private String code;
-
-    @Column(name="type")
-    @ApiModelProperty(value="样本类型")
-    private String type;
-
-    @Column(name="capacity")
-    @ApiModelProperty(value="容量/ml")
-    private String capacity;
-
-    @Column(name="cryopreserved_code")
-    @ApiModelProperty(value="冻存盒编号")
-    private String cryopreservedcode;
-
-    @Column(name="cryopreserved_line")
-    @ApiModelProperty(value="冻存盒内坐标/行")
-    private int cryopreservedline;
-
-    @Column(name="cryopreserved_column")
-    @ApiModelProperty(value="冻存盒内坐标/列")
-    private int cryopreservedcolumn;
-
-    @Column(name="subpackage_time")
-    @ApiModelProperty(value="分装时间")
-    private String subpackagetime;
-
-    @Column(name="offset_number")
-    @ApiModelProperty(value="分管号")
-    private int offsetnumber;
-
-    @Column(name="refrigerator_code")
-    @ApiModelProperty(value="冰箱编号")
-    private String refrigeratorcode;
-
-    @Column(name="refrigerator_layer")
-    @ApiModelProperty(value="冰箱层")
-    private int refrigeratorlayer;
-
-    @Column(name="sample_shelf")
-    @ApiModelProperty(value="样本架")
-    private String sampleshelf;
-
-    @Column(name="samplebox_code")
-    @ApiModelProperty(value="样本盒编号")
-    private String sampleboxcode;
-
-    @Column(name="box_place")
-    @ApiModelProperty(value="盒内位置（行,列）")
-    private String boxplace;
-
-    @Column(name="state")
-    @ApiModelProperty(value="样品状态")
-    private String state;
-
-    @Column(name="head")
-    @ApiModelProperty(value="样品负责人")
-    private String head;
-
-    @Column(name="create_time")
-    @ApiModelProperty(value="创建时间")
-    private String createtime;
-
-    public String getSample_info_code() {
-        return sample_info_code;
-    }
-
-    public void setSample_info_code(String sample_info_code) {
-        this.sample_info_code = sample_info_code;
-    }
-
-    @Column(name="person_code")
-    @ApiModelProperty(value="调查对象编号")
-
-    private String personcode;
-
-    @Column(name="event_code")
-    @ApiModelProperty(value="事件编号")
-    private String eventcode;
-
-    @Column(name="sample_info_code")
-    @ApiModelProperty(value="入库信息编号")
-    private String sample_info_code;
 }
