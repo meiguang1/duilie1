@@ -9,6 +9,7 @@ import com.hcycom.ctginms.service.PtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 @Service
 public class PtServiceImpl implements PtService {
@@ -35,10 +36,11 @@ public class PtServiceImpl implements PtService {
 
     }
 
-    //旧的添加方式
+    //多文件上传
     @Override
     public int addPoint(Pt pt) {
         Pt pt1=new Pt();
+        pt1.setPid(pt.getPid());
         pt1.setCountycode(pt.getCountycode());
         pt1.setCountyname(pt.getCountyname());
         pt1.setEventcode(pt.getEventcode());
@@ -51,10 +53,13 @@ public class PtServiceImpl implements PtService {
 
     //按照id进行删除
     @Override
-    public boolean delete(int id) {
+    @Transactional
+    public boolean delete(String pid) {
         boolean flag=false;
         try{
-            pm.delete(id);
+            pm.delete(pid);
+            pm.deleteFile(pid);
+            pm.deleteFm(pid);
             flag=true;
         }catch(Exception e){
             System.out.println("删除失败!");

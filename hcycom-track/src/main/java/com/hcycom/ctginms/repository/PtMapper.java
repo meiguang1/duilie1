@@ -20,8 +20,10 @@ public interface PtMapper {
     //新增一个点位（该方法仅单个添加）返回新增点位的id
     int addPoint(@Param("pt") Pt pt);
 
-    //通过id，删除单个人员信息（逻辑删除，更改状态）
-    boolean delete(int id);
+    //通过id，删除单个人员信息
+    boolean delete(String pid);
+    boolean deleteFile(String pid);
+    boolean deleteFm(String pid);
 
     //按照事件编码对点位编号以及姓名进行查询
     List<Pt> likeSelect(@Param("eventcode")String eventcode,

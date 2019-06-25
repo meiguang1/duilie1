@@ -65,7 +65,7 @@ public class PersonServiceImpl implements PersonService {
         person1.setPosition(person.getPosition());
         person1.setProjectcode(person.getProjectcode());
         person1.setSex(person.getSex());
-        person1.setSex(person.getSex());
+        person1.setAge(person.getAge());
 
         int a = pm.updateOnePersonById(person1);
 
@@ -93,6 +93,7 @@ public class PersonServiceImpl implements PersonService {
         person1.setPosition(person.getPosition());
         person1.setProjectcode(person.getProjectcode());
         person1.setSex(person.getSex());
+        person1.setAge(person.getAge());
 
 
 

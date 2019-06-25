@@ -12,7 +12,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,10 @@ import java.util.zip.ZipFile;
 @RequestMapping(value="/api/File-upload-and-file-download")
 @Api(tags={"File-upload-and-file-download"},description="点位管理和其他文件管理中的文件上传与下载")
 public class FileUploadController {
+    @Value("${pointpath}")
+    String pointpath;
+    @Value("${downloadpath}")
+    String downloadpath;
     @Autowired
     private PtServiceImpl ps;
 
@@ -44,51 +50,64 @@ public class FileUploadController {
         @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
     })
-    public ResponseEntity<Pt> InsertUpFileAll(@RequestParam("uploadFiles")List<MultipartFile> uploadFiles,@RequestParam("fmurl")List<String> fmurl,String pid,String eventcode, String countyname, String countycode) throws IOException {
-        //时间戳
-        List<Pt> list = new ArrayList<>();
+    public boolean InsertUpFileAll(@RequestParam("uploadFiles")List<MultipartFile> uploadFiles,@RequestParam("fmurl")List<String> fmurl,String pid,String eventcode, String countyname, String countycode) throws IOException {
+        boolean flag=false;
+        try{
+            //时间戳
+            List<Pt> list = new ArrayList<>();
 
-        System.out.printf("fmurl",JSONObject.toJSONString(fmurl));
-        String url = System.getProperty("user.dir").replaceAll("\\\\", "/");
-        String fileUrl = url+File.separator+"medical_examination_report";
-        System.out.println("------------文件所在路劲-----------------"+fileUrl);
-        File dir = new File(fileUrl);
-        if(!dir.exists()){
-            dir.mkdirs();
-        }
+            //System.out.printf("fmurl",JSONObject.toJSONString(fmurl));
+            //String url = System.getProperty("user.dir").replaceAll("\\\\", "/");
+            String fileUrl = pointpath+File.separator+"medical_examination_report";
+            System.out.println("------------文件所在路劲-----------------"+fileUrl);
+            File dir = new File(fileUrl);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
 
-        for(int i=0;i<uploadFiles.size();i++){
-            String time = FileUtil.createFileTimestamp();
-            String fileName = fmurl.get(i);
-            String fileType = fileName.substring(fileName.lastIndexOf("."));
-            System.out.println("----------------源文件名-------------------------"+uploadFiles.get(i).getOriginalFilename());
-            //if (StringUtils.hasText(file.getOriginalFilename())) {
-            File newFile = new File(fileUrl +File.separator+time+fileType);
-            String fnUrl=fileUrl +File.separator+time+fileType;
-            System.out.println("----------文件路劲------------"+fnUrl);
-            uploadFiles.get(i).transferTo(newFile);
-            Pt fileInfo = new Pt();
-            fileInfo.setPersonCount(fmurl.get(i));
-            fileInfo.setHealthForm(fnUrl);
-            fileInfo.setPid(pid);
-            fileInfo.setCountycode(countycode);
-            fileInfo.setCountyname(countyname);
-            fileInfo.setEventcode(eventcode);
-            list.add(fileInfo);
-            // }
-        }
+            for(int i=0;i<uploadFiles.size();i++){
+                //String time = FileUtil.createFileTimestamp();
+                String time = UUID.randomUUID().toString().replaceAll("-", "");
+                System.out.println("--------------"+time);
+                //String time = DateTime.now().toString("yyyyMMddHHmmssSSS");
+                //long startTime = DateTime.now().getMillis();
+                String fileName = fmurl.get(i);
+                String fileType = fileName.substring(fileName.lastIndexOf("."));
+                System.out.println("----------------源文件名-------------------------"+uploadFiles.get(i).getOriginalFilename());
+                //if (StringUtils.hasText(file.getOriginalFilename())) {
+                File newFile = new File(fileUrl +File.separator+time+fileType);
+                String fnUrl=pointpath+File.separator+"medical_examination_report"+File.separator+time+fileType;
+                //pointpath+File.separator+"medical_examination_report_package"+File.separator+time
+                System.out.println("----------文件路劲------------"+fnUrl);
+                uploadFiles.get(i).transferTo(newFile);
+                Pt fileInfo = new Pt();
+                fileInfo.setPersonCount(fmurl.get(i));
+                fileInfo.setHealthForm(fnUrl);
+                fileInfo.setPid(pid);
+                fileInfo.setCountycode(countycode);
+                fileInfo.setCountyname(countyname);
+                fileInfo.setEventcode(eventcode);
+                list.add(fileInfo);
+                // }
+            }
         /*for(String file:fmurl){
             list.add(file);
             fileInfo.setPersonCount(file);
             System.out.println("------------------前台传的名---------------------"+file);
         }*/
-        for (int i=0;i<list.size();i++) {
-            int a = ps.addPoint(list.get(i));
+            for (int i=0;i<list.size();i++) {
+                int a = ps.addPoint(list.get(i));
+            }
+            System.out.println("------------------------------"+list);
+            flag=true;
+            //ps.insetPersons(list);
+            //ps.addPoint(fileInfo);
+        }catch (Exception e){
+            System.out.println("上传失败");
+            e.printStackTrace();
         }
-        System.out.println("------------------------------"+list);
-        //ps.insetPersons(list);
-        //ps.addPoint(fileInfo);
-        return null;
+
+        return flag;
     }
 
 
@@ -98,11 +117,11 @@ public class FileUploadController {
     @ResponseBody
     public JSONObject packTodownload(@RequestBody JSONArray jsonArray, HttpServletRequest request,
                                      HttpServletResponse response) {
-        JSONObject result=new JSONObject();
+        /*JSONObject result=new JSONObject();
         String time= TimeUtil.dateTime2String(TimeUtil.getNewDate(),"yyyyMMddHHmmss");
         ///opt/tomcat/apache-tomcat-8.5.23/webapps/file/package/
-        String url = System.getProperty("user.dir").replaceAll("\\\\", "/");
-        File file = new File(url+File.separator+"medical_examination_report_package"+File.separator+time);
+        //String url = System.getProperty("user.dir").replaceAll("\\\\", "/");
+        File file = new File(pointpath+File.separator+"medical_examination_report_package"+File.separator+time);
         //File file = new File("/opt/tomcat/apache-tomcat-8.5.23/webapps/file/package/"+time);
         if(!file.exists()){
             file.mkdirs();
@@ -115,13 +134,14 @@ public class FileUploadController {
                 //JSONObject dwtxt = JSONObject.parseObject(jsonArray.getString(i));// jsonArray.getString(i)  获取对象
                 String healthForm=obj.getString("healthForm");                                     // 获取对应的值
                 String personCount=obj.getString("personCount");
-                //copyFile(fnUrl,"D://"+"/"+time+"/"+fnName);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
-                //copyFile(healthForm,"D:"+File.separator+time+File.separator+personCount);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
-                copyFile(healthForm,url+File.separator+"medical_examination_report_package"+File.separator+time+File.separator+personCount);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
-                //copyFile(healthForm,"D:"+File.separator+time+File.separator+personCount);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
+                System.out.println("-----------1---------"+healthForm);
+                System.out.println("-----------1---------"+personCount);
+                copyFile(healthForm,pointpath+File.separator+"medical_examination_report_package"+File.separator+time+File.separator+personCount);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
+                //copyFile(healthForm,"D:"+File.separator+"medical_examination_report_package"+File.separator+time+File.separator+personCount);
+
             }
             //boolean zip = ZipUtil.zip("D:" + "\\" + time, "D:" + "\\" + time + ".zip");// 将拷贝好的文件  进行打包
-            boolean zip = ZipUtil.zip(url + File.separator+"medical_examination_report_package"+File.separator+time, url + File.separator+"medical_examination_report_package"+File.separator+time+ ".zip");// 将拷贝好的文件  进行打包
+            boolean zip = ZipUtil.zip(pointpath + File.separator+"medical_examination_report_package"+File.separator+time, pointpath + File.separator+"medical_examination_report_package"+File.separator+time+ ".zip");// 将拷贝好的文件  进行打包
             //boolean zip = ZipUtil.zip("/opt/tomcat/apache-tomcat-8.5.23/webapps/file/package/" + time, "/opt/tomcat/apache-tomcat-8.5.23/webapps/file/package/" + time + ".zip");// 将拷贝好的文件  进行打包
             if (!zip){
                 result.put("code",0);
@@ -129,7 +149,7 @@ public class FileUploadController {
                 return result;
             }
             //result.put("fnUrl","D:" + "\\" + time + ".zip");
-            result.put("fnUrl",url + File.separator+"medical_examination_report_package"+File.separator+time + ".zip");
+            result.put("fnUrl",downloadpath + File.separator+"medical_examination_report_package"+File.separator+time + ".zip");
             //result.put("fnUrl","/opt/tomcat/apache-tomcat-8.5.23/webapps/file/package/" + time + ".zip");
         }catch (Exception e){
             result.put("code",0);
@@ -139,11 +159,54 @@ public class FileUploadController {
             if (file!=null&&file.exists()){
                 //FileUtil.delFolder("D://"+"/"+time);                                     //删除拷贝过来的文件，不删除*.zip文件
                 //FileUtil.delFolder("D:"+"\\"+time);                                     //删除拷贝过来的文件，不删除*.zip文件
-                FileUtil.delFolder(url + File.separator+"medical_examination_report_package"+File.separator+time);                                     //删除拷贝过来的文件，不删除*.zip文件
+                FileUtil.delFolder(pointpath + File.separator+"medical_examination_report_package"+File.separator+time);                                     //删除拷贝过来的文件，不删除*.zip文件
                 //FileUtil.delFolder("/opt/tomcat/apache-tomcat-8.5.23/webapps/file/package/"+time);                                     //删除拷贝过来的文件，不删除*.zip文件
             }
         }
+        return result;*/
+
+
+
+
+
+
+        JSONObject result=new JSONObject();
+        String time=TimeUtil.dateTime2String(TimeUtil.getNewDate(),"yyyyMMddHHmmss");
+        File file = new File(pointpath+File.separator+"medical_examination_report_package"+File.separator+time);// 创建新的文件夹 空的
+        // D:/medical_examination_report_package/201906241915
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        try {
+            for(int i=0;i<jsonArray.size();i++){
+                String str = JSONObject.toJSONString(jsonArray.get(i));
+                JSONObject obj = JSONObject.parseObject(str);/// 遍历JSONArray
+                String healthForm=obj.getString("healthForm");                                     // 获取对应的值
+                String personCount=obj.getString("personCount");
+                System.out.println("-----------1---------"+healthForm);
+                System.out.println("-----------1---------"+personCount);
+                //copyFile(healthForm,pointpath+File.separator+"medical_examination_report_package"+File.separator+time+File.separator+personCount);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
+                copyFile(healthForm,pointpath+File.separator+"medical_examination_report_package"+File.separator+time+File.separator+personCount);
+                //  D:/medical_examination_report_package/201906241923/新建文本文档.txt
+            }
+           boolean zip= ZipUtil.zip( pointpath+ File.separator+"medical_examination_report_package"+File.separator+time, pointpath + File.separator+"medical_examination_report_package"+File.separator+time+ ".zip"); // 将拷贝好的文件  进行打包
+            if (!zip){
+                result.put("code",0);
+                result.put("message","打包失败！");
+                return result;
+            }
+            result.put("fnUrl",downloadpath+ File.separator+"medical_examination_report_package"+File.separator+time + ".zip");
+        }catch (Exception e){
+            result.put("code",0);
+            result.put("message","打包失败！");
+            result.put("errorMsg",e);
+        }finally {
+            if (file!=null&&file.exists()){
+                FileUtil.delFolder(pointpath + File.separator+"medical_examination_report_package"+File.separator+time);                                     //删除拷贝过来的文件，不删除*.zip文件
+            }
+        }
         return result;
+
     }
 
     public void copyFile(String oldPath, String newPath) {

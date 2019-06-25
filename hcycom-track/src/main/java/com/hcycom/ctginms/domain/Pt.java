@@ -41,14 +41,17 @@ public class Pt {
     private String creattime;
 
     @Column(name = "personCount")
-    @ApiModelProperty(value="预计掉查人数")
+    @ApiModelProperty(value="文件上传名")
     private String personCount;
 
+
+    @Column(name = "predict_number")
+    @ApiModelProperty(value="预计调查人数")
+    private int predict_number;
 
     public int getId() {
         return id;
     }
-
 
     public void setId(int id) {
         this.id = id;
@@ -110,6 +113,14 @@ public class Pt {
         this.personCount = personCount;
     }
 
+    public int getPredict_number() {
+        return predict_number;
+    }
+
+    public void setPredict_number(int predict_number) {
+        this.predict_number = predict_number;
+    }
+
     @Override
     public String toString() {
         return "Pt{" +
@@ -121,6 +132,7 @@ public class Pt {
             ", healthForm='" + healthForm + '\'' +
             ", creattime='" + creattime + '\'' +
             ", personCount='" + personCount + '\'' +
+            ", predict_number=" + predict_number +
             '}';
     }
 }

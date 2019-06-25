@@ -9,6 +9,8 @@
         <relativePath/>
     </parent>
 
+
+
     <groupId>com.hcycom.ctginms</groupId>
     <artifactId>hcycom-track</artifactId>
     <version>1.0.0</version>
@@ -116,6 +118,14 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
         </dependency>-->
+
+        <!--<dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-words</artifactId>
+            <version>19.6</version>
+            <classifier>jdk17</classifier>
+        </dependency>-->
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -597,6 +607,12 @@
                                         <exclude>**/*.yml</exclude>
                                     </excludes>
                                 </resource>
+                                <!--asdasdsadsa-->
+                                <!--<repository>
+                                    <id>AsposeJavaAPI</id>
+                                    <name>Aspose Java API</name>
+                                    <url>https://repository.aspose.com/repo/</url>
+                                </repository>-->
                             </resources>
                         </configuration>
                     </execution>

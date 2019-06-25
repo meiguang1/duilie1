@@ -130,8 +130,8 @@ public class PersonRest {
     @ApiOperation(value="查询，按照项目编码模糊查询对象编码和对象名称并分页以及返回总条数(前台返回值为空的时候需为null,不能是空字符串)")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "researchname", value = "人员名称", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "researchcode", value = "人员编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "researchname", value = "人员名称", required = false, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "researchcode", value = "人员编码", required = false, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int",paramType="query"),
         @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, dataType = "int",paramType="query"),
     })

@@ -1,6 +1,6 @@
 package com.hcycom.ctginms.web.rest;
 
-    import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSON;
     import com.alibaba.fastjson.JSONObject;
     import com.alibaba.fastjson.JSONArray;
     import com.codahale.metrics.annotation.Timed;
@@ -25,6 +25,7 @@ package com.hcycom.ctginms.web.rest;
     import org.springframework.web.multipart.MultipartHttpServletRequest;
     import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+    import javax.mail.internet.MimeUtility;
     import javax.servlet.ServletContext;
     import javax.servlet.http.HttpServletRequest;
     import javax.servlet.http.HttpServletResponse;
@@ -39,10 +40,12 @@ package com.hcycom.ctginms.web.rest;
 public class FmRest {
     @Value("${pointpath}")
     String pointpath;
+    @Value("${downloadpath}")
+    String downloadpath;
     @Autowired
     private FmService fileService;
-    @Autowired
-    private FmServiceImpl fmServiceimpl;
+  /*  @Autowired
+    private FmServiceImpl fmServiceimpl;*/
 
 
     @PostMapping("/InsertUpFile")
@@ -57,15 +60,14 @@ public class FmRest {
     public ResponseEntity<Fm> InsertUpFile(MultipartFile uploadFile, HttpServletRequest request,String fmurl,String pid,String reportcode) throws IOException {
         //String fileUrl ="/opt/tomcat/apache-tomcat-8.5.23/webapps/file/otherFiles/"+fmurl;
         //String url=System.getProperty("user.dir").replaceAll("\\\\", "/");
-        System.out.println("------------url---------------"+pointpath);
+        //System.out.println("------------url---------------"+pointpath);
         String fileUrl =pointpath+File.separator+"other_files"+File.separator+fmurl;
         System.out.println("____________originalFileName_____________" + fmurl);
         //换成  服务器地址+ fileUrl
 //        fileUrl = request.getSession().getServletContext().getRealPath(fileUrl);
         FileUtil.writeFileToUrl(uploadFile, fileUrl);
-        System.out.println("-------------------"+uploadFile);
+        System.out.println("---------uploadFile----------"+uploadFile);
         System.out.println("_____________fileUrl____________"+fileUrl);
-        System.out.println("fileUrl = " + fileUrl);
         Fm fileInfo = new Fm();
         fileInfo.setPid(pid);
         fileInfo.setReportcode(reportcode);
@@ -75,19 +77,27 @@ public class FmRest {
         return new ResponseEntity<Fm>(fileInfo, HttpStatus.OK);
     }
 
-    @GetMapping("/downfile1")
+
+   /* @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
+    //@GetMapping("/downfile1")
     @Timed
     @ApiOperation(value ="aaa")
-    public String downloadFile(@RequestBody JSONObject dwtxt,
+    public String downloadFile(@RequestParam String dwtxt,
                                     HttpServletRequest request,
                                     HttpServletResponse response){
-        String filepath=dwtxt.getString("fnUrl");
-        String filename=dwtxt.getString("fnName");
+
+        //JSONObject filedw= JSON.parseObject(Base64Tool.getFromBase64(dwtxt));
+        //String str = JSONObject.toJSONString(dwtxt);
+        JSONObject obj = JSONObject.parseObject(dwtxt);/// 遍历JSONArray
+        System.out.println(JSONObject.toJSONString(obj));
+        String filepath=obj.getString("fnUrl");
+        String filename=obj.getString("fnName");
         File file = new File(filepath);
         if (file.exists()) {
             response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition",
-                "attachment;fnName=" + filename);// 设置文件名
+            response.setHeader("Content-Disposition",
+                "attachment;fileName=" + filename);// 设置文件名
+            //response.setHeader("Content-Disposition", "attachment;filename="+ MimeUtility.encodeWord(fileName) ); //此处可以重命名
             byte[] buffer = new byte[1024];
             FileInputStream fis = null;
             BufferedInputStream bis = null;
@@ -120,48 +130,7 @@ public class FmRest {
             }
         }
         return null;
-    }
-
-
-
-
-
-
-    @GetMapping("/downfile")
-    @Timed
-    @ApiOperation(value ="aqqq")
-    public HttpServletResponse download(String path, HttpServletResponse response) {
-        try {
-            // path是指欲下载的文件的路径。
-            File file = new File(path);
-            // 取得文件名。
-            String filename = file.getName();
-            // 取得文件的后缀名。
-            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
-
-            // 以流的形式下载文件。
-            InputStream fis = new BufferedInputStream(new FileInputStream(path));
-            byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            fis.close();
-            // 清空response
-            response.reset();
-            // 设置response的Header
-            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
-            response.addHeader("Content-Length", "" + file.length());
-            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-            response.setContentType("application/octet-stream");
-            toClient.write(buffer);
-            toClient.flush();
-            toClient.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return response;
-    }
-
-
-
+    }*/
 
 
     @GetMapping("/fileDownload")
@@ -188,8 +157,8 @@ public class FmRest {
         String time=TimeUtil.dateTime2String(TimeUtil.getNewDate(),"yyyyMMddHHmmss");
         //File ZipLog= FileUtil.mkdirFiles("D:"+"/"+time);                        // 创建新的文件夹 空的
         ///opt/tomcat/apache-tomcat-8.5.23/webapps/file/package/
-        String url = System.getProperty("user.dir").replaceAll("\\\\", "/");
-        File file = new File(url+File.separator+"other_files_package"+File.separator+time);
+        //String url = System.getProperty("user.dir").replaceAll("\\\\", "/");
+        File file = new File(pointpath+File.separator+"other_files_package"+File.separator+time);
         if(!file.exists()){
             file.mkdirs();
         }
@@ -201,12 +170,12 @@ public class FmRest {
                 //JSONObject dwtxt = JSONObject.parseObject(jsonArray.getString(i));// jsonArray.getString(i)  获取对象
                 String fnUrl=obj.getString("fnUrl");                                     // 获取对应的值
                 String fnName=obj.getString("fnName");
-                copyFile(fnUrl,url+File.separator+"other_files_package"+File.separator+time+File.separator+fnName);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
+                copyFile(fnUrl,pointpath+File.separator+"other_files_package"+File.separator+time+File.separator+fnName);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
                 //copyFile(fnUrl,url+File.separator+"other_files_package"+File.separator+time+"/"+fnName);
                 //copyFile(fnUrl,"D:"+File.separator+time+File.separator+fnName);                //拷贝文件 从旧路径到新路径  新路径命名地址/时间/名称
             }
             //boolean zip = ZipUtil.zip("D://" + "/" + time, "D://" + "/" + time + ".zip");// 将拷贝好的文件  进行打包
-            boolean zip = ZipUtil.zip(url + File.separator+"other_files_package"+File.separator+time, url + File.separator+"other_files_package"+File.separator+time+ ".zip");// 将拷贝好的文件  进行打包
+            boolean zip = ZipUtil.zip(pointpath + File.separator+"other_files_package"+File.separator+time, pointpath + File.separator+"other_files_package"+File.separator+time+ ".zip");// 将拷贝好的文件  进行打包
             if (!zip){
                 result.put("code",0);
                 result.put("message","打包失败！");
@@ -255,7 +224,7 @@ public class FmRest {
             }
             return null;*/
             //result.put("fnUrl","D://" + "/" + time + ".zip");
-            result.put("fnUrl",url + File.separator+"other_files_package"+File.separator+time + ".zip");
+            result.put("fnUrl",downloadpath + File.separator+"other_files_package"+File.separator+time + ".zip");
         }catch (Exception e){
             result.put("code",0);
             result.put("message","打包失败！");
@@ -263,7 +232,7 @@ public class FmRest {
         }finally {
             if (file!=null&&file.exists()){
                 //FileUtil.delFolder("D://"+"/"+time);                                     //删除拷贝过来的文件，不删除*.zip文件
-                FileUtil.delFolder(url + File.separator+"other_files_package"+File.separator+time);                                     //删除拷贝过来的文件，不删除*.zip文件
+                FileUtil.delFolder(pointpath + File.separator+"other_files_package"+File.separator+time);                                     //删除拷贝过来的文件，不删除*.zip文件
             }
         }
         return result;
@@ -299,4 +268,5 @@ public class FmRest {
         }
 
     }
+
 }

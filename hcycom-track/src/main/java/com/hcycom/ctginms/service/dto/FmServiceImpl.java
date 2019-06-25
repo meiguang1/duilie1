@@ -67,11 +67,22 @@ public class  FmServiceImpl implements FmService {
     public List<Fm> fileDownload(String pid, String reportcode) {
         return fm.fileDownload(pid,reportcode);
     }
+
+    /*@Override
+    public List<Fm> selectFileById(int id) {
+        return null;
+    }
+
     @Override
+    public List<Fm> selectFileById(String id) {
+        return fm.selectFileById(id);
+    }*/
+
+    /*@Override
     public Fm selectFileById(int id) {
         // TODO Auto-generated method stub
         return fm.selectFileById(id);
-    }
+    }*/
 
 
 

@@ -76,10 +76,10 @@ public class CountyRest {
     @ApiOperation(value="查询,按照项目编码进行模糊分页以及模糊查询并返回总条数")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "projectcode", value = "页数", required = true, dataType = "int",paramType="query"),
-        @ApiImplicitParam(name = "projectcode", value = "每页条数", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "countyname", value = "区县名称", required = false, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = false, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, dataType = "int",paramType="query"),
     })
     public  ResponseEntity<Object> likeSelect(String projectcode,String countyname,String countycode, int page ,int pageSize){
         Tada tada = countyService.likeSelect(projectcode, countyname, countycode, page, pageSize);
@@ -104,8 +104,8 @@ public class CountyRest {
     @ApiOperation(value="对符合条件的区县进行模糊查询并且返回总条数 ")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countyname", value = "区县名称", required = false, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = false, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int",paramType="query"),
         @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, dataType = "int",paramType="query"),
     })

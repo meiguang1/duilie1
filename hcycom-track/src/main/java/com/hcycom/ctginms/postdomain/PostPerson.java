@@ -31,6 +31,9 @@ public class PostPerson {
 
     @ApiModelProperty(value="性别",name="sex",required=true)
     private String sex;
+
+    @ApiModelProperty(value="性别",name="age",required=true)
+    private int age;
 	
 
 	public int getId() {
@@ -83,6 +86,14 @@ public class PostPerson {
         this.sex = sex;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "PostPerson{" +
@@ -92,6 +103,7 @@ public class PostPerson {
             ", position='" + position + '\'' +
             ", projectcode='" + projectcode + '\'' +
             ", sex='" + sex + '\'' +
+            ", age=" + age +
             '}';
     }
 }

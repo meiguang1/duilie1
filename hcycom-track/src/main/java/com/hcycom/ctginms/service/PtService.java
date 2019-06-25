@@ -17,7 +17,7 @@ public interface PtService {
     int addPoint(Pt pt);
 
     //通过id，删除单个人员信息（逻辑删除，更改状态）
-    boolean delete(int id);
+    boolean delete(String pid);
 
 
     //按照事件编码对点位编号以及姓名进行查询

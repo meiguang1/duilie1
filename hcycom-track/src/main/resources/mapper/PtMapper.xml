@@ -14,15 +14,22 @@
         SELECT personCount,healthForm FROM level_management WHERE eventcode=#{eventcode} and pid=#{pid}
     </select>
 
-    <!--添加-->
+    <!--多文件上传-->
     <insert id="addPoint" useGeneratedKeys="true" parameterType="com.hcycom.ctginms.domain.Pt">
-       insert into level_management(pid,countycode,countyname,eventcode,personCount,healthForm,creattime) values (UUid(),#{pt.countycode},#{pt.countyname},#{pt.eventcode},#{pt.personCount},#{pt.healthForm},now())
+       insert into level_management(pid,countycode,countyname,eventcode,personCount,healthForm,creattime) values (#{pt.pid},#{pt.countycode},#{pt.countyname},#{pt.eventcode},#{pt.personCount},#{pt.healthForm},now())
     </insert>
 
 
     <!--删除-->
-    <delete id="delete" parameterType="int">
-        delete from level_management where id=#{id}
+    <delete id="delete" parameterType="String">
+        delete from level_management where pid=#{pid}
+    </delete>
+    <delete id="deleteFile" parameterType="com.hcycom.ctginms.domain.Report">
+        delete from report where pid=#{pid}
+    </delete>
+    <!--删除fm表和report表有关的一些数据-->
+    <delete id="deleteFm" parameterType="com.hcycom.ctginms.domain.Fm">
+        delete from other_files where pid=#{pid}
     </delete>
 
     <!--查询，按照事件编码对点位编码以及点位名称进行模糊查询并进行分页
@@ -110,15 +117,17 @@
 
     <!--多个文件添加并且不允许添加重复的-->
     <insert id="insetPersons"  parameterType="java.util.List" >
-     insert into level_management(pid,countycode,countyname,eventcode,personCount)
+     insert into level_management(pid,countycode,countyname,eventcode,personCount,predict_number)
      values
         <foreach collection="list" item="pt" separator=",">
             (
             UUid(),
             #{pt.countycode},
+
             #{pt.countyname},
             #{pt.eventcode},
-            #{pt.personCount}
+            #{pt.personCount},
+            #{pt.predict_number}
             )
         </foreach>
 

@@ -1,0 +1,133 @@
+﻿服务者：
+    crud类：
+
+    @RequestMapping(value = "/ListUserByname",method = RequestMethod.GET)
+    @ResponseBody
+    public List<User> findUserByName(String name){
+        List<User> users = userservice.findUserByName(name);
+        return users;
+    }
+
+    Service类:
+    
+    public List<User> findUserByName(String name) {
+        return userMapper.findUserByName(name);
+    }
+提供者:
+    client类:
+   
+    @RequestMapping("/ListUserByname")
+    List<User> findUserByName(String name);
+
+    controller类:
+
+    @RequestMapping(value = "/ListUserByname",method = RequestMethod.GET)
+    @ResponseBody
+    public List<User> findUserByName(String name){
+        
+        List<User> users = restUserServiceClient.findUserByName(name);
+       
+        return users;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+服务者:
+     crud类:
+     
+     @RequestMapping("/ListUser")
+     public List<User> ListUser(){
+
+        List<User> users = userservice.ListUser();
+        System.out.println(users.size());
+        return users;
+     }
+
+     Servive类:
+     
+      public List<User> ListUser(){
+        return userMapper.ListUser();
+      }
+   
+提供者:
+  
+     client类:
+     
+     @RequestMapping("/ListUser")
+     public List<User> ListUser();
+ 
+     controller类:
+     
+     @RequestMapping("/ListUser")
+     public List<User> ListUser(){
+            ModelAndView mv = new ModelAndView();
+            List<User> users = restUserServiceClient.ListUser();
+            mv.addObject("users",users);
+            mv.setViewName("User");
+            //System.out.println(users.size());
+            System.out.println(users);
+            return users;
+     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Bean
+    public Docket userApi() {
+            Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                    .apiInfo(apiInfo())
+                    .select()
+                    .apis(RequestHandlerSelectors.basePackage("com.example.controller"))//过滤的接口
+                    .paths(PathSelectors.any())
+                    .build();
+            return docket;
+    }
+
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("eureka服务端提供者接口平台").description("服务相关数据接口")
+                .termsOfServiceUrl("http://www.zhang.box.cn/").contact("技术开发部")
+                .license("Licence Version 1.0").licenseUrl("#").version("1.0").build();
+    }
+
+
+
+打撒所大所多所大所大多撒多 啊大大啊阿萨德阿萨德阿萨德阿萨德as

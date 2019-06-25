@@ -97,8 +97,8 @@ public class ResearcherRest {
     @ApiOperation(value="查询，在人员管理模块进行模糊查询以及分页并返回总条数",notes ="(数据库researcher表的操作)" )
     @ApiImplicitParams({
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "researchname", value = "人员名称", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "researchcode", value = "人员编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "researchname", value = "人员名称", required = false, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "researchcode", value = "人员编码", required = false, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int",paramType="query"),
         @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, dataType = "int",paramType="query"),
     })

@@ -23,37 +23,37 @@
 
 </body>
 
-<script type="text/javascript" src="http://localhost:17112/hcycom-track/static/jquery-1.8.0.js
+<script type="text/javascript" src="http://localhost:15141/hcycom-track/static/jquery-1.8.0.js
 "></script>
 
 <script>
     function uploadFiles(){
         var formData = new FormData();
-        var file1= document.getElementById("excelFile1").valueOf().files[0];
-        //var file1= $("#excelFile1")[0].files[0];
-        /*   var file2= $("#excelFile2")[0].files[0];
+        //var file1= document.getElementById("excelFile1").valueOf().files[0];
+        var file1= $("#excelFile1")[0].files[0];
+           var file2= $("#excelFile2")[0].files[0];
            var file3= $("#excelFile3")[0].files[0];
            var file4= $("#excelFile4")[0].files[0];
            var file5= $("#excelFile5")[0].files[0];
            var file6= $("#excelFile6")[0].files[0];
-           var file7= $("#excelFile7")[0].files[0];*/
+           var file7= $("#excelFile7")[0].files[0];
         var text = $("#text").val();
 
         formData.append("uploadFiles",file1);
-        /*  formData.append("uploadFiles",file2);
+          formData.append("uploadFiles",file2);
           formData.append("uploadFiles",file3);
           formData.append("uploadFiles",file4);
           formData.append("uploadFiles",file5);
           formData.append("uploadFiles",file6);
-          formData.append("uploadFiles",file7);*/
+          formData.append("uploadFiles",file7);
 
         formData.append("fmurl", "新建文本文档.txt");
-        /*  formData.append("fmurl", "222.txt");
+          formData.append("fmurl", "222.txt");
           formData.append("fmurl", "333.txt");
-          formData.append("fmurl", "5555.txt");
-          formData.append("fmurl", "666.txt");
+          formData.append("fmurl", "5555.xls");
+          formData.append("fmurl", "666.docx");
           formData.append("fmurl", "777.txt");
-          formData.append("fmurl", "888.txt");*/
+          formData.append("fmurl", "888.txt");
         // console.log(uploadFiles.length);
         // if(uploadFiles.length>0){
         console.log(formData.get("medical_examination_report"))
@@ -72,7 +72,7 @@
             },
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiIvc3dhZ2dlci1yZXNvdXJjZXM7QUxMLFJPTEVfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNTYwODIwMDAxfQ.rC_SnaqHbJKvN74cNHO1JBAGdm30Yvzq-LiYUD6mgwlJs3iPXuSmg-YM4ga3KgWeOTJJzSa85q8LDYnDo_aCYQ");
+                xhr.setRequestHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiIvc3dhZ2dlci1yZXNvdXJjZXM7QUxMLFJPTEVfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNTYxNDI1NzEyfQ.1HN7v1s_LUCN-boDh8lmY47MHWpLP23FNriY6jM4j8H2fGwDuWEp6TNwxZmcy_XEZpzlt6bQjfAt1IWdwlvI3Q");
             },
             error:function(){
                 alert("上传失败！");
