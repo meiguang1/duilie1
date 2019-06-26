@@ -43,4 +43,11 @@ public interface ImportSampleInfoMapper {
      * @return
      */
     List<Map<String,?>> findSampleByxnCode(@Param("sampleInfoCode")String sampleInfoCode);
+
+    /**
+     * 在正式入库后修改入库信息表中的状态
+     * @param sampleInfoCode
+     * @return
+     */
+    int updateSampleInfo(@Param("sampleInfoCode")String sampleInfoCode);
 }

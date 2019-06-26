@@ -3,6 +3,7 @@ package com.hcycom.ctginms.repository;
 import com.hcycom.ctginms.domain.ImportSampleModel;
 import com.hcycom.ctginms.domain.OperationLog;
 import com.hcycom.ctginms.domain.Sample;
+import com.hcycom.ctginms.postdomain.PostSample;
 import com.hcycom.ctginms.postdomain.PostSampletwo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -58,7 +59,7 @@ public interface SampleMapper {
      * 查询样本列表记录总数
      * @return
      */
-    int selectCount();
+    int selectCount(@Param("eventcode")String eventcode);
 
     /**
      * 统计样本表中每个调查对象的各样本条数

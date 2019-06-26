@@ -3,6 +3,7 @@ package com.hcycom.ctginms.web.rest;
 import com.hcycom.ctginms.domain.*;
 import com.hcycom.ctginms.postdomain.PostOperationLog;
 import com.hcycom.ctginms.postdomain.PostSample;
+import com.hcycom.ctginms.postdomain.PostSampleOne;
 import com.hcycom.ctginms.postdomain.PostSampletwo;
 import com.hcycom.ctginms.service.*;
 import io.swagger.annotations.Api;
@@ -109,29 +110,60 @@ public class ImportSampleInfoRest {
         return new ResponseEntity<List<ImportSampleModel>>(list, HttpStatus.OK);
     }
 
+//    @PostMapping("/addSample")
+//    @ApiOperation(value="修改上传文件数据，插入数据至正式样本库中", notes="插入数据至sample表中")
+//    @ApiImplicitParams({
+//        @ApiImplicitParam(name = "nowtime", value = "当前时间", required = false, dataType = "String",paramType="query"),
+//        @ApiImplicitParam(name = "loginname", value = "登录用户名", required = false, dataType = "String",paramType="query"),
+//        @ApiImplicitParam(name = "projectcode", value = "项目编码(项目编码和事件编码至少有一个)", required = false, dataType = "String",paramType="query"),
+//        @ApiImplicitParam(name = "eventcode", value = "事件编码(项目编码和事件编码至少有一个)", required = false, dataType = "String",paramType="query"),
+//        @ApiImplicitParam(name = "notes", value = "备注信息", required = false, dataType = "String",paramType="query"),
+//    })
+//    public boolean addSample(@RequestBody List<PostSampletwo> sampleList,String nowtime,String loginname,String projectcode,String eventcode,String notes) throws Exception{
+//        List<User> user=userService.getOneUserByUsername(loginname);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date import_time1=sdf.parse(nowtime);
+//        String usercode=user.get(0).getId();
+//        String username=user.get(0).getName();
+//        //获取日志信息
+//        OperationLog operationLog=getoperationLog(import_time1,usercode,username,eventcode);
+//        operationLog.setNotes(notes);
+//        operationLog.setOperation_txt("样本正式入库");
+//        //添加数据至样本正式库
+//        int a=sampleService.addSample(sampleList);
+//            if(a!=0){
+//            //添加一条日志
+//            operationlogService.addOperationLog(operationLog);
+//            //从虚拟库中删除已经正式入库的数据
+//            importSampleInfoService.delSampleModelByCode(sampleList.get(0).getSample_info_code());
+//            return true;
+//        }else{
+//
+//            return false;
+//        }
+//    }
+
     @PostMapping("/addSample")
     @ApiOperation(value="修改上传文件数据，插入数据至正式样本库中", notes="插入数据至sample表中")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "notes", value = "备注信息", required = false, dataType = "String",paramType="query"),
-    })
-    public boolean addSample(@RequestBody List<PostSampletwo> sampleList,PostOperationLog postOperationLog,String notes) throws Exception{
-        List<User> user=userService.getOneUserByUsername(postOperationLog.getLoginname());
+    public boolean addSample(@RequestBody PostSampleOne sampleList) throws Exception{
+        List<User> user=userService.getOneUserByUsername(sampleList.getLoginname());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date import_time1=sdf.parse(postOperationLog.getNowtime());
+        Date import_time1=sdf.parse(sampleList.getNowtime());
         String usercode=user.get(0).getId();
         String username=user.get(0).getName();
-        String eventcode=postOperationLog.getEventcode();
         //获取日志信息
-        OperationLog operationLog=getoperationLog(import_time1,usercode,username,eventcode);
-        operationLog.setNotes(notes);
+        OperationLog operationLog=getoperationLog(import_time1,usercode,username,sampleList.getEventcode());
+        operationLog.setNotes(sampleList.getNotes());
         operationLog.setOperation_txt("样本正式入库");
         //添加数据至样本正式库
-        int a=sampleService.addSample(sampleList);
-            if(a!=0){
+        int a=sampleService.addSample(sampleList.getSampleList());
+        if(a!=0){
+            //修改入库信息表中的状态
+            importSampleInfoService.updateSampleInfo(sampleList.getSampleList().get(0).getSample_info_code());
             //添加一条日志
             operationlogService.addOperationLog(operationLog);
             //从虚拟库中删除已经正式入库的数据
-            importSampleInfoService.delSampleModelByCode(sampleList.get(0).getSample_info_code());
+            importSampleInfoService.delSampleModelByCode(sampleList.getSampleList().get(0).getSample_info_code());
             return true;
         }else{
 

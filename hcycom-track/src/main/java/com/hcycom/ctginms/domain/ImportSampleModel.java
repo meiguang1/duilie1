@@ -79,6 +79,7 @@ public class ImportSampleModel {
             ", box_place='" + box_place + '\'' +
             ", sample_info_code='" + sample_info_code + '\'' +
             ", head='" + head + '\'' +
+            ", state='" + state + '\'' +
             '}';
     }
 
@@ -107,7 +108,6 @@ public class ImportSampleModel {
     }
 
     @Column(name="samplebox_code")
-
     @ApiModelProperty(value="样本盒编号")
     private String samplebox_code;
 
@@ -256,7 +256,18 @@ public class ImportSampleModel {
     }
 
     @Column(name="head")
-
     @ApiModelProperty(value="负责人")
     private String head;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    @Column(name="state")
+    @ApiModelProperty(value="样本状态")
+    private String state;
 }

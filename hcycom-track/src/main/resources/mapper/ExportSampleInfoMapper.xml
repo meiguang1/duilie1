@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.ExportSampleInfoMapper" >
+
+    <select id="findEsiByEventcode" parameterType="String" resultType="com.hcycom.ctginms.domain.ExportSampleInfo">
+        SELECT export_sample_name,point_name,notes,operator_name,operator_time,export_sample_state,detection_report_state,audit_state,
+        export_file_state
+        FROM export_sample_info
+        WHERE event_code=#{eventcode}
+    </select>
+
+    <select id="findSampleByPointorInfo" parameterType="String" resultType="Map">
+        SELECT s.person_code,p.researchname,s.`code`,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_column,s.cryopreserved_line,s.subpackage_time,s.offset_number
+        FROM sample s
+        LEFT JOIN person p ON s.person_code=p.researchcode LEFT JOIN import_sample_info isi ON s.sample_info_code=isi.sample_info_code
+        WHERE s.event_code=#{eventcode}
+        <if test="pointname!=null and pointname!=''">AND isi.point_name LIKE concat('%',#{pointname},'%')</if>
+        <if test="entrepotname!=null and entrepotname!=''">AND isi.entrepot_name=#{entrepotname}</if>
+    </select>
+
+    <select id="findExportsamplemodel" parameterType="String" resultType="Map">
+        SELECT s.person_code,p.researchname,s.`code`,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_column,s.cryopreserved_line,
+                s.subpackage_time,eso.inspect_cryopreserved_code,eso.inspect_box_code
+        FROM export_sample_order eso LEFT JOIN sample s ON eso.sample_code=s.`code` LEFT JOIN person p ON s.person_code=p.researchcode
+        WHERE s.event_code=#{eventcode} AND eso.export_sampleinfo_code=#{exportsampleinfocode}
+    </select>
+</mapper>

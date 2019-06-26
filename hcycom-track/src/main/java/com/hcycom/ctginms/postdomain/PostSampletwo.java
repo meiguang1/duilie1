@@ -22,14 +22,6 @@ public class PostSampletwo {
         this.samplecode = samplecode;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getType() {
         return type;
     }
@@ -37,9 +29,6 @@ public class PostSampletwo {
     public void setType(String type) {
         this.type = type;
     }
-    @ApiModelProperty(value="id主键",name="id",example="0",required=true)
-    private int id;
-
     @ApiModelProperty(value="样本编号",name="samplecode",required=true)
     private String samplecode;
 

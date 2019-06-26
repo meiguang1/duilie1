@@ -17,27 +17,44 @@
     </select>
 
     <select id="getQueryPageone" resultType="String" >
-        SELECT person_code
-        from sample s LEFT JOIN person p ON s.person_code=p.researchcode
-        WHERE s.id!=''
-        <if test="samplecode!=null and samplecode!=''">AND s.`code` LIKE concat('%',#{samplecode},'%') </if>
-        <if test="personcode!=null and personcode!=''">AND s.person_code LIKE concat('%',#{personcode},'%') </if>
-        <if test="researchname!=null and researchname!=''">AND p.researchname LIKE concat('%',#{researchname},'%') </if>
-        <if test="cryopreservedcode!=null and cryopreservedcode!=''">AND s.cryopreserved_code LIKE concat('%',#{cryopreservedcode},'%') </if>
-        GROUP BY person_code LIMIT #{start},#{size}
+        SELECT person_code FROM (
+            SELECT person_code FROM sample s LEFT JOIN person p ON s.person_code=p.researchcode
+            WHERE s.event_code=#{eventcode}
+                <if test="samplecode!=null and samplecode!=''">AND s.`code` LIKE concat('%',#{samplecode},'%')</if>
+                <if test="personcode!=null and personcode!=''">AND s.person_code LIKE concat('%',#{personcode},'%')</if>
+                <if test="researchname!=null and researchname!=''">AND p.researchname LIKE concat('%',#{researchname},'%')</if>
+                <if test="cryopreservedcode!=null and cryopreservedcode!=''">AND s.cryopreserved_code LIKE concat('%',#{cryopreservedcode},'%')</if>
+            UNION
+            SELECT ism.person_code FROM import_sample_model ism LEFT JOIN import_sample_info isi ON ism.sample_info_code=isi.sample_info_code
+            WHERE isi.event_code=#{eventcode}
+                <if test="samplecode!=null and samplecode!=''">AND ism.sample_code LIKE concat('%',#{samplecode},'%')</if>
+                <if test="personcode!=null and personcode!=''">AND ism.person_code LIKE concat('%',#{personcode},'%')</if>
+                <if test="researchname!=null and researchname!=''">AND ism.person_name LIKE concat('%',#{researchname},'%') </if>
+                <if test="cryopreservedcode!=null and cryopreservedcode!=''">AND ism.cryopreserved_code LIKE concat('%',#{cryopreservedcode},'%')</if>
+         ) AS a LIMIT #{start},#{size}
     </select>
 
     <select id="getQueryPagetwo" resultType="map">
         SELECT s.`code`,s.person_code,p.researchname,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_column,s.cryopreserved_line,s.head,
                 s.offset_number,s.refrigerator_code,s.refrigerator_layer,s.sample_shelf,s.samplebox_code,s.state,s.subpackage_time,s.box_place
-        from sample s
-        LEFT JOIN person p on s.person_code=p.researchcode
+        from sample s LEFT JOIN person p on s.person_code=p.researchcode
         WHERE s.person_code IN
         <foreach item="item" collection="queryList" separator="," open="(" close=")" index="index">
             '${item}'
         </foreach>
         AND s.event_code=#{eventcode}
         <if test="starttime!=null and starttime!='' and endtime!=null and endtime!=''">AND s.subpackage_time &gt;= #{starttime} AND s.subpackage_time &lt;= #{endtime}</if>
+        UNION
+        SELECT ism.sample_code,ism.person_code,ism.person_name,ism.sample_type,ism.capacity,ism.cryopreserved_code,ism.cryopreserved_column,
+                ism.cryopreserved_line,ism.head,ism.offset_number,ism.refrigerator_code,ism.refrigerator_layer,ism.sample_shelf,ism.samplebox_code,
+                ism.state,ism.subpackage_time,ism.box_place
+        FROM import_sample_model ism LEFT JOIN import_sample_info isi ON ism.sample_info_code=isi.sample_info_code
+        WHERE ism.person_code IN
+        <foreach item="item1" collection="queryList" separator="," open="(" close=")" index="index1">
+            '${item1}'
+        </foreach>
+        AND isi.event_code=#{eventcode}
+        <if test="starttime!=null and starttime!='' and endtime!=null and endtime!=''">AND ism.subpackage_time &gt;= #{starttime} AND ism.subpackage_time &lt;= #{endtime}</if>
     </select>
 
     <select id="getAll" resultType="com.hcycom.ctginms.domain.Sample">
@@ -45,7 +62,11 @@
     </select>
 
     <select id="selectCount" resultType="java.lang.Integer" >
-        SELECT COUNT(*) from sample
+        SELECT COUNT(*) from (
+            SELECT person_code FROM sample WHERE event_code=#{eventcode}
+            UNION
+            SELECT ism.person_code FROM import_sample_model ism LEFT JOIN import_sample_info isi ON ism.sample_info_code=isi.sample_info_code WHERE isi.event_code=#{eventcode}
+        ) AS a
     </select>
 
     <select id="getStatistics" resultType="map">
@@ -68,7 +89,7 @@
         <foreach item="item" collection="payFeeList" separator=","  index="index">
             (${item.id},'${item.person_code}','${item.person_name}','${item.sample_code}','${item.sample_type}','${item.capacity}','${item.cryopreserved_code}',
             ${item.cryopreserved_line},${item.cryopreserved_column},'${item.subpackage_time}',${item.offset_number},'${item.refrigerator_code}',${item.refrigerator_layer},
-            '${item.sample_shelf}','${item.samplebox_code}','${item.box_place}','${item.head}','${item.sample_info_code}')
+            '${item.sample_shelf}','${item.samplebox_code}','${item.box_place}','${item.head}','${item.sample_info_code}','0')
         </foreach>
     </insert>
 
@@ -80,7 +101,7 @@
         INSERT INTO sample
         VALUES
         <foreach collection="sampleList" item="item" separator="," index="index">
-            (${item.id},'${item.samplecode}','${item.type}','${item.capacity}','${item.cryopreservedcode}',${item.cryopreservedline},${item.cryopreservedcolumn},
+            (0,'${item.samplecode}','${item.type}','${item.capacity}','${item.cryopreservedcode}',${item.cryopreservedline},${item.cryopreservedcolumn},
             '${item.subpackagetime}',${item.offsetnumber},'${item.refrigeratorcode}',${item.refrigeratorlayer},'${item.sampleshelf}','${item.sampleboxcode}','${item.boxplace}',
             '${item.state}','${item.head}','${item.createtime}','${item.personcode}','${item.eventcode}','${item.sample_info_code}')
         </foreach>

@@ -53,7 +53,7 @@ public class SampleServiceImpl implements SampleService {
         pageBean.setPageSize(postSample.getPageSize());
 
         //封装总记录数
-        int totalCount = sampleMapper.selectCount();
+        int totalCount = sampleMapper.selectCount(postSample.getEventCode());
         pageBean.setTotalCount(totalCount);
 
         //封装总页数
@@ -68,6 +68,7 @@ public class SampleServiceImpl implements SampleService {
         map.put("cryopreservedcode", postSample.getCryopreservedcode());
         map.put("starttime", postSample.getStarttime());
         map.put("endtime", postSample.getEndtime());
+        map.put("eventcode", postSample.getEventCode());
         //封装每页显示的数据
         List<String> lists = sampleMapper.getQueryPageone(map);
         return lists;
@@ -85,8 +86,8 @@ public class SampleServiceImpl implements SampleService {
     }
 
     @Override
-    public int selectCount(){
-        return sampleMapper.selectCount();
+    public int selectCount(String eventcode){
+        return sampleMapper.selectCount(eventcode);
     }
 
     @Override

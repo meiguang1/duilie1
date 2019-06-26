@@ -26,7 +26,7 @@ public interface SampleService {
 
    List<Map<String,?>> getQueryPagetwo(List<String> list,String eventcode,String starttime,String endtime);
 
-   int selectCount();
+   int selectCount(String eventcode);
 
    List<Sample> getAll();
 

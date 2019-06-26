@@ -20,4 +20,6 @@ public interface ImportSampleInfoService {
     int delSampleModelByCode(String sampleInfoCode);
 
     List<Map<String,?>> findSampleByxnCode(String sampleInfoCode);
+
+    int updateSampleInfo(String sampleInfoCode);
 }

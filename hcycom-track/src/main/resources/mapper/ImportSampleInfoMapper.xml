@@ -14,6 +14,12 @@
         ORDER BY import_time DESC
     </select>
 
+    <update id="updateSampleInfo" parameterType="String">
+        UPDATE import_sample_info
+        SET state='1'
+        WHERE sample_info_code=#{sampleInfoCode}
+    </update>
+
     <delete id="delSampleModelByCode" parameterType="String">
         DELETE FROM import_sample_model WHERE sample_info_code=#{sampleInfoCode}
     </delete>

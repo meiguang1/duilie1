@@ -36,4 +36,8 @@ public class ImportSampleInfoServiceImpl implements ImportSampleInfoService{
     public List<Map<String,?>> findSampleByxnCode(String sampleInfoCode){
         return importSampleInfoMapper.findSampleByxnCode(sampleInfoCode);
     }
+
+    public int updateSampleInfo(String sampleInfoCode){
+        return importSampleInfoMapper.updateSampleInfo(sampleInfoCode);
+    }
 }

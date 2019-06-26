@@ -23,6 +23,19 @@ public class ImportSampleInfo {
     @ApiModelProperty(value="id主键")
     private int id;
 
+    public String getExport_sampleinfo_code() {
+        return export_sampleinfo_code;
+    }
+
+    public void setExport_sampleinfo_code(String export_sampleinfo_code) {
+        this.export_sampleinfo_code = export_sampleinfo_code;
+    }
+
+    @Column(name = "export_sampleinfo_code")
+    @ApiModelProperty(value = "出库信息编号")
+
+    private String export_sampleinfo_code;
+
     @Column(name="entrepot_name")
     @ApiModelProperty(value="入库名称")
     private String entrepot_name;
@@ -113,24 +126,25 @@ public class ImportSampleInfo {
         this.sample_info_code = sample_info_code;
     }
 
+    public void setEvent_code(String event_code) {
+        this.event_code = event_code;
+
+    }
+
     @Override
     public String toString() {
         return "ImportSampleInfo{" +
             "id=" + id +
+            ", export_sampleinfo_code='" + export_sampleinfo_code + '\'' +
             ", entrepot_name='" + entrepot_name + '\'' +
             ", point_name='" + point_name + '\'' +
             ", import_name='" + import_name + '\'' +
             ", operator_name='" + operator_name + '\'' +
-            ", import_time='" + import_time + '\'' +
+            ", import_time=" + import_time +
             ", state='" + state + '\'' +
             ", event_code='" + event_code + '\'' +
             ", sample_info_code='" + sample_info_code + '\'' +
             '}';
-    }
-
-    public void setEvent_code(String event_code) {
-        this.event_code = event_code;
-
     }
 
     @Column(name="state")
