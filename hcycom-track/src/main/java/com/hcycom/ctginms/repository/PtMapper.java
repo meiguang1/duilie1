@@ -1,6 +1,7 @@
 package com.hcycom.ctginms.repository;
 
 import com.hcycom.ctginms.domain.Pt;
+import com.hcycom.ctginms.domain.Researcher;
 import com.hcycom.ctginms.postdomain.PostPt;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

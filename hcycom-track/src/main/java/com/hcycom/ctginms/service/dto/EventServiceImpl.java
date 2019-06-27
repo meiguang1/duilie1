@@ -83,7 +83,24 @@ public class EventServiceImpl implements EventService{
 	    return em.findeventAndproject(eventcode);
     }
 
+    @Override
+    public int rename(String eventname, String eventcode, String creatusername) {
+	    int list=em.rename(eventname, eventcode, creatusername);
+        return list;
+    }
 
+    @Override
+    public int describe(String eventdescribes, String eventcode, String creatusername) {
+        int list=em.describe(eventdescribes, eventcode, creatusername);
+        return list;
+    }
+
+
+    @Override
+    public int deleteEvents(int id) {
+	    int list=em.deleteEvents(id);
+        return list;
+    }
 
 
 }

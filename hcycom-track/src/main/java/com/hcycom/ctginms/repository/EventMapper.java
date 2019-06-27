@@ -39,4 +39,15 @@ public interface EventMapper {
      */
     List<Map<String,?>> findeventAndproject(@Param("eventcode") String eventcode);
 
+
+    //<!--事件设置:事件名称修改-->
+    int rename(@Param("eventname")String eventname,@Param("eventcode")String eventcode,@Param("creatusername")String creatusername);
+
+    //<!--事件设置:事件描述修改-->
+    int describe(@Param("eventdescribes")String eventdescribes,@Param("eventcode")String eventcode,@Param("creatusername")String creatusername);
+
+    //<!--事件设置:事件描述修改-->
+    int deleteEvents(@Param("id")int id);
+
+
 }

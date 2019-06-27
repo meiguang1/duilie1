@@ -36,7 +36,7 @@ import com.alibaba.fastjson.JSON;
 
 @RestController
 @RequestMapping(value="/api/File-upload-and-file-download")
-@Api(tags={"File-upload-and-file-download"},description="点位管理和其他文件管理中的文件上传与下载")
+@Api(tags={"点位管理中文件的上传和下载"},description="点位管理和其他文件管理中的文件上传与下载")
 public class FmRest {
     @Value("${pointpath}")
     String pointpath;

@@ -17,7 +17,7 @@
 
 
     <update id="updateOnePersonById">
-  update person set researchcode=#{person.researchcode},researchname=#{person.researchname},position=#{person.position},sex=#{person.sex} where id=#{person.id}
+  update person set researchcode=#{person.researchcode},researchname=#{person.researchname},position=#{person.position},sex=#{person.sex},age=#{person.age} where id=#{person.id}
   </update>
 
 

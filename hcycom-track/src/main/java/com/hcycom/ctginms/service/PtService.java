@@ -1,6 +1,8 @@
 package com.hcycom.ctginms.service;
 
 import com.hcycom.ctginms.domain.Pt;
+import com.hcycom.ctginms.domain.Researcher;
+import com.hcycom.ctginms.postdomain.PostDataStatistics;
 import com.hcycom.ctginms.postdomain.PostFm;
 import com.hcycom.ctginms.postdomain.PostPt;
 import org.apache.ibatis.annotations.Param;

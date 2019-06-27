@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value="/api/researcherRest")
-@Api(tags={"researcher"},description="researcher表的相关操作,做人员管理的相关操作")
+@Api(tags={"人员管理"},description="researcher表的相关操作,做人员管理的相关操作")
 public class ResearcherRest {
 
     @Autowired

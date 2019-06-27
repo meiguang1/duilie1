@@ -123,7 +123,6 @@
             (
             UUid(),
             #{pt.countycode},
-
             #{pt.countyname},
             #{pt.eventcode},
             #{pt.personCount},

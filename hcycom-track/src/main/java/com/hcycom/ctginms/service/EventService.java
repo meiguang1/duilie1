@@ -25,5 +25,14 @@ public interface EventService {
 
     List<Map<String,?>> findeventAndproject(String eventcode);
 
+    //<!--事件设置:事件名称修改-->
+    int rename(String eventname,String eventcode,String creatusername);
+
+    //<!--事件设置:事件描述修改-->
+    int describe(String eventdescribes,String eventcode,String creatusername);
+
+    //<!--事件设置:事件描述修改-->
+    int deleteEvents(int id);
+
 
 }

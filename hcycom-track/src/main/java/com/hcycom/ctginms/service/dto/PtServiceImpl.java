@@ -1,6 +1,8 @@
 package com.hcycom.ctginms.service.dto;
 
 import com.hcycom.ctginms.domain.Pt;
+import com.hcycom.ctginms.domain.Researcher;
+import com.hcycom.ctginms.postdomain.PostDataStatistics;
 import com.hcycom.ctginms.postdomain.PostFm;
 import com.hcycom.ctginms.postdomain.PostFmReport;
 import com.hcycom.ctginms.postdomain.PostPt;
@@ -112,6 +114,4 @@ public class PtServiceImpl implements PtService {
     public void insetPersons(List<Pt> rcList) {
         pm.insetPersons(rcList);
     }
-
-
 }

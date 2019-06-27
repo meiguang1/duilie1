@@ -42,7 +42,7 @@
             SELECT c.`countycode`,c.`countyname` FROM county c
             LEFT JOIN level_management
             ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`='1' AND c.`projectcode`=#{projectcode})
+            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
             IS NULL
             AND c.`countycode`  LIKE concat('%',#{countycode},'%')
             limit #{page},#{pageSize}
@@ -51,7 +51,7 @@
             SELECT c.`countycode`,c.`countyname` FROM county c
             LEFT JOIN level_management
             ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`='1' AND c.`projectcode`=#{projectcode})
+            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
             IS NULL
             AND c.`countyname`  LIKE concat('%',#{countyname},'%')
             limit #{page},#{pageSize}

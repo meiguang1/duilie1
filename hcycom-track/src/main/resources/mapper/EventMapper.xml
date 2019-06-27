@@ -57,6 +57,28 @@
         WHERE e.eventcode=#{eventcode}
     </select>
 
+    
+    
+    <!--事件设置:事件名称修改-->
+    <update id="rename" parameterType="com.hcycom.ctginms.domain.Event">
+        UPDATE event SET eventname=#{eventname}
+        WHERE eventcode=#{eventcode}
+        AND creatusername=#{creatusername}
+    </update>
+
+    <!--事件设置:事件描述修改-->
+    <update id="describe" parameterType="com.hcycom.ctginms.domain.Event">
+        UPDATE event SET eventdescribes=#{eventdescribes}
+        WHERE eventcode=#{eventcode}
+        AND creatusername=#{creatusername}
+    </update>
+
+    <!--事件设置:事件单个删除-->
+    <delete id="deleteEvents" parameterType="java.lang.Integer">
+        DELETE FROM  event WHERE id=#{id}
+    </delete>
+
+    
 
   <!-- <select id="selectOneByUsernameNoPassword" resultType="com.hcycom.ctginms.domain.User">
   select id,username,role,name,state,creattime,image,logintime,describes from user where username=#{username}

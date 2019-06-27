@@ -302,8 +302,45 @@ public class ProjectRest {
 		
 		return new ResponseEntity<EventFunctionReturn>(efr, HttpStatus.OK);
 	}
-	
-	
-	
-	
+
+
+
+    @PostMapping("/rename")
+    @Timed
+    @ApiOperation(value="事件设置，修改事件名称",notes="event表根据creatusername和eventcode修改事件名称")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "eventname", value = "事件名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "creatusername", value = "用户名称", required = true, dataType = "String",paramType="query"),
+    })
+    public ResponseEntity<String> rename(String eventname,String eventcode,String creatusername){
+        int a = es.rename(eventname, eventcode, creatusername);
+        return new ResponseEntity<String>(a+"", HttpStatus.OK);
+    }
+
+    @PostMapping("/describe")
+    @Timed
+    @ApiOperation(value="事件设置，修改事件描述",notes="event表根据creatusername和eventcode修改事件描述")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "eventdescribes", value = "事件描述", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "creatusername", value = "用户名称", required = true, dataType = "String",paramType="query"),
+    })
+    public ResponseEntity<String> describe(String eventdescribes,String eventcode,String creatusername){
+        int a = es.describe(eventdescribes, eventcode, creatusername);
+        return new ResponseEntity<String>(a+"", HttpStatus.OK);
+    }
+
+
+    @GetMapping("/deleteEvents")
+    @Timed
+    @ApiOperation(value="删除，通过id删除单个事件", notes="event表根据id删除某个事件")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "事件id", required = true, dataType = "int",paramType="query"),
+    })
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    public ResponseEntity<String> deleteEvents(int id){
+        int a = es.deleteEvents(id);
+        return new ResponseEntity<String>(a+"", HttpStatus.OK);
+    }
 }
