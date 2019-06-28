@@ -3,8 +3,8 @@ package com.hcycom.ctginms.web.rest.Test;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
-import com.hcycom.ctginms.domain.Pt;
-import com.hcycom.ctginms.service.dto.PtServiceImpl;
+import com.hcycom.ctginms.domain.PointLocation;
+import com.hcycom.ctginms.service.dto.PointLocationServiceImpl;
 import com.hcycom.ctginms.web.rest.util.FileUtil;
 import com.hcycom.ctginms.web.rest.util.TimeUtil;
 import com.hcycom.ctginms.web.rest.util.ZipUtil;
@@ -12,19 +12,16 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.zip.ZipFile;
+
 @RestController
 @RequestMapping(value="/api/File-upload-and-file-download")
 @Api(tags={"点位管理中文件的上传和下载"},description="点位管理和其他文件管理中的文件上传与下载")
@@ -34,7 +31,7 @@ public class FileUploadController {
     @Value("${downloadpath}")
     String downloadpath;
     @Autowired
-    private PtServiceImpl ps;
+    private PointLocationServiceImpl ps;
 
 
 
@@ -54,7 +51,7 @@ public class FileUploadController {
         boolean flag=false;
         try{
             //时间戳
-            List<Pt> list = new ArrayList<>();
+            List<PointLocation> list = new ArrayList<>();
 
             //System.out.printf("fmurl",JSONObject.toJSONString(fmurl));
             //String url = System.getProperty("user.dir").replaceAll("\\\\", "/");
@@ -80,7 +77,7 @@ public class FileUploadController {
                 //pointpath+File.separator+"medical_examination_report_package"+File.separator+time
                 System.out.println("----------文件路劲------------"+fnUrl);
                 uploadFiles.get(i).transferTo(newFile);
-                Pt fileInfo = new Pt();
+                PointLocation fileInfo = new PointLocation();
                 fileInfo.setPersonCount(fmurl.get(i));
                 fileInfo.setHealthForm(fnUrl);
                 fileInfo.setPid(pid);

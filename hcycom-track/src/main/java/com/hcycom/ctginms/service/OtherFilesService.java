@@ -1,19 +1,17 @@
 package com.hcycom.ctginms.service;
 
-import com.hcycom.ctginms.domain.Fm;
-import com.hcycom.ctginms.domain.Pt;
+import com.hcycom.ctginms.domain.OtherFiles;
 import com.hcycom.ctginms.domain.Report;
 import com.hcycom.ctginms.postdomain.PostFm;
 import com.hcycom.ctginms.postdomain.PostFmReport;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface FmService {
+public interface OtherFilesService {
 
 
     /*文件上传*/
-    int InsertUpFile(Fm upFile);
+    int InsertUpFile(OtherFiles upFile);
 
     /*新增一个文件类型*/
     int addOnereport(Report report);
@@ -22,7 +20,7 @@ public interface FmService {
     boolean deleteFile(int id,String pid,String reportcode);
 
     /*文件下载*/
-    List<Fm> fileDownload(String pid,String reportcode);
+    List<OtherFiles> fileDownload(String pid,String reportcode);
     //Fm selectFileById(int id);
    /* List<Fm> selectFileById(int id);*/
 

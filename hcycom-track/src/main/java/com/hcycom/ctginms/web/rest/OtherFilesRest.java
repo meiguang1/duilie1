@@ -1,13 +1,11 @@
 package com.hcycom.ctginms.web.rest;
 
-import com.alibaba.fastjson.JSON;
-    import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONObject;
     import com.alibaba.fastjson.JSONArray;
     import com.codahale.metrics.annotation.Timed;
-    import com.hcycom.ctginms.domain.Fm;
-    import com.hcycom.ctginms.service.FmService;
-    import com.hcycom.ctginms.service.dto.FmServiceImpl;
-    import com.hcycom.ctginms.web.rest.util.FileUtil;
+    import com.hcycom.ctginms.domain.OtherFiles;
+    import com.hcycom.ctginms.service.OtherFilesService;
+import com.hcycom.ctginms.web.rest.util.FileUtil;
     import com.hcycom.ctginms.web.rest.util.TimeUtil;
     import com.hcycom.ctginms.web.rest.util.ZipUtil;
     import io.swagger.annotations.Api;
@@ -16,34 +14,26 @@ import com.alibaba.fastjson.JSON;
     import io.swagger.annotations.ApiOperation;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.beans.factory.annotation.Value;
-    import org.springframework.http.HttpHeaders;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.MediaType;
-    import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
     import org.springframework.web.multipart.MultipartFile;
-    import org.springframework.web.multipart.MultipartHttpServletRequest;
-    import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-    import javax.mail.internet.MimeUtility;
-    import javax.servlet.ServletContext;
-    import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
     import javax.servlet.http.HttpServletResponse;
     import java.io.*;
-    import java.net.URLEncoder;
-    import java.sql.SQLException;
-    import java.util.*;
+import java.util.*;
 
 @RestController
 @RequestMapping(value="/api/File-upload-and-file-download")
 @Api(tags={"点位管理中文件的上传和下载"},description="点位管理和其他文件管理中的文件上传与下载")
-public class FmRest {
+public class OtherFilesRest {
     @Value("${pointpath}")
     String pointpath;
     @Value("${downloadpath}")
     String downloadpath;
     @Autowired
-    private FmService fileService;
+    private OtherFilesService fileService;
   /*  @Autowired
     private FmServiceImpl fmServiceimpl;*/
 
@@ -57,7 +47,7 @@ public class FmRest {
         @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "reportcode", value = "文件类型编码", required = true, dataType = "String",paramType="query"),
     })
-    public ResponseEntity<Fm> InsertUpFile(MultipartFile uploadFile, HttpServletRequest request,String fmurl,String pid,String reportcode) throws IOException {
+    public ResponseEntity<OtherFiles> InsertUpFile(MultipartFile uploadFile, HttpServletRequest request,String fmurl,String pid,String reportcode) throws IOException {
         //String fileUrl ="/opt/tomcat/apache-tomcat-8.5.23/webapps/file/otherFiles/"+fmurl;
         //String url=System.getProperty("user.dir").replaceAll("\\\\", "/");
         //System.out.println("------------url---------------"+pointpath);
@@ -68,13 +58,13 @@ public class FmRest {
         FileUtil.writeFileToUrl(uploadFile, fileUrl);
         System.out.println("---------uploadFile----------"+uploadFile);
         System.out.println("_____________fileUrl____________"+fileUrl);
-        Fm fileInfo = new Fm();
+        OtherFiles fileInfo = new OtherFiles();
         fileInfo.setPid(pid);
         fileInfo.setReportcode(reportcode);
         fileInfo.setFnName(fmurl);
         fileInfo.setFnUrl(fileUrl);
         fileService.InsertUpFile(fileInfo);
-        return new ResponseEntity<Fm>(fileInfo, HttpStatus.OK);
+        return new ResponseEntity<OtherFiles>(fileInfo, HttpStatus.OK);
     }
 
 
@@ -140,10 +130,10 @@ public class FmRest {
         @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "reportcode", value = "文件类型编码", required = true, dataType = "String",paramType="query"),
     })
-    public ResponseEntity<List<Fm>> fileDownload(String pid, String reportcode){
+    public ResponseEntity<List<OtherFiles>> fileDownload(String pid, String reportcode){
 
-        List<Fm> listUsers =fileService.fileDownload(pid, reportcode);
-        return new ResponseEntity<List<Fm>>(listUsers, HttpStatus.OK);
+        List<OtherFiles> listUsers =fileService.fileDownload(pid, reportcode);
+        return new ResponseEntity<List<OtherFiles>>(listUsers, HttpStatus.OK);
     }
 
 

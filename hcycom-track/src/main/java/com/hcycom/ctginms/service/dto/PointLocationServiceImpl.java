@@ -1,33 +1,29 @@
 package com.hcycom.ctginms.service.dto;
 
-import com.hcycom.ctginms.domain.Pt;
-import com.hcycom.ctginms.domain.Researcher;
-import com.hcycom.ctginms.postdomain.PostDataStatistics;
-import com.hcycom.ctginms.postdomain.PostFm;
-import com.hcycom.ctginms.postdomain.PostFmReport;
+import com.hcycom.ctginms.domain.PointLocation;
 import com.hcycom.ctginms.postdomain.PostPt;
-import com.hcycom.ctginms.repository.PtMapper;
-import com.hcycom.ctginms.service.PtService;
+import com.hcycom.ctginms.repository.PointLocationMapper;
+import com.hcycom.ctginms.service.PointLocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 @Service
-public class PtServiceImpl implements PtService {
+public class PointLocationServiceImpl implements PointLocationService {
     @Autowired
-    private PtMapper pm;
+    private PointLocationMapper pm;
 
     @Override
-    public List<Pt> getEventAll(String eventcode) {
-        List<Pt> plist = pm.selectEventAll(eventcode);
+    public List<PointLocation> getEventAll(String eventcode) {
+        List<PointLocation> plist = pm.selectEventAll(eventcode);
         return plist;
     }
 
     /*<!--查询已上传文件的路劲和名字-->*/
     @Override
-    public List<Pt> healthForm(String pid,String eventcode) {
-        List<Pt> list=pm.healthForm(pid, eventcode);
+    public List<PointLocation> healthForm(String pid,String eventcode) {
+        List<PointLocation> list=pm.healthForm(pid, eventcode);
         /*String s = pm.healthForm(pid,eventcode);
         if(s==null){
             return "null";
@@ -40,8 +36,8 @@ public class PtServiceImpl implements PtService {
 
     //多文件上传
     @Override
-    public int addPoint(Pt pt) {
-        Pt pt1=new Pt();
+    public int addPoint(PointLocation pt) {
+        PointLocation pt1=new PointLocation();
         pt1.setPid(pt.getPid());
         pt1.setCountycode(pt.getCountycode());
         pt1.setCountyname(pt.getCountyname());
@@ -76,7 +72,7 @@ public class PtServiceImpl implements PtService {
         if (page > 1) {
             b = (page - 1) * pageSize ;
         }
-        List<Pt> researchers = pm.likeSelect(eventcode, countyname, countycode, b, pageSize);
+        List<PointLocation> researchers = pm.likeSelect(eventcode, countyname, countycode, b, pageSize);
         PostPt tada = new PostPt();
         tada.setSelect(researchers);
         int likeTable = pm.getLikeTable(eventcode, countyname, countycode);
@@ -86,7 +82,7 @@ public class PtServiceImpl implements PtService {
 
     /*文件上传*/
     @Override
-    public int filesUpload(Pt upFile) {
+    public int filesUpload(PointLocation upFile) {
 
         upFile.setPid(upFile.getPid());
         upFile.setCountycode(upFile.getCountycode());
@@ -100,7 +96,7 @@ public class PtServiceImpl implements PtService {
 
     /*文件下载*/
     @Override
-    public List<Pt> selectAllFile(String pid) {
+    public List<PointLocation> selectAllFile(String pid) {
         return pm.selectAllFile(pid);
     }
 
@@ -111,7 +107,7 @@ public class PtServiceImpl implements PtService {
     }
     /*多个添加对象*/
     @Override
-    public void insetPersons(List<Pt> rcList) {
+    public void insetPersons(List<PointLocation> rcList) {
         pm.insetPersons(rcList);
     }
 }

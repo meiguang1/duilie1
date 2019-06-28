@@ -1,22 +1,19 @@
 package com.hcycom.ctginms.service;
 
-import com.hcycom.ctginms.domain.Pt;
-import com.hcycom.ctginms.domain.Researcher;
-import com.hcycom.ctginms.postdomain.PostDataStatistics;
-import com.hcycom.ctginms.postdomain.PostFm;
+import com.hcycom.ctginms.domain.PointLocation;
 import com.hcycom.ctginms.postdomain.PostPt;
-import org.apache.ibatis.annotations.Param;
+
 
 import java.util.List;
 
-public interface PtService {
+public interface PointLocationService {
     //根据事件编码查询全部人员
-    List<Pt> getEventAll(String eventcode);
+    List<PointLocation> getEventAll(String eventcode);
     //查询已上传文件的路劲和名字
-    List<Pt> healthForm(String pid,String eventcode);
+    List<PointLocation> healthForm(String pid,String eventcode);
 
     //新增一个人员（该方法仅单个添加）返回新增人员的id
-    int addPoint(Pt pt);
+    int addPoint(PointLocation pt);
 
     //通过id，删除单个人员信息（逻辑删除，更改状态）
     boolean delete(String pid);
@@ -26,12 +23,12 @@ public interface PtService {
     PostPt likeSelect(String eventcode, String countyname, String countycode, int page, int pageSize);
 
     /*文件上传*/
-    int filesUpload(Pt upFile);
+    int filesUpload(PointLocation upFile);
     /*文件下载*/
-    List<Pt> selectAllFile(String pid);
+    List<PointLocation> selectAllFile(String pid);
 
     //单个添加对象
     int selectByIds(List list);
     //批量添加对象
-    void insetPersons(List<Pt> rcList);
+    void insetPersons(List<PointLocation> rcList);
 }

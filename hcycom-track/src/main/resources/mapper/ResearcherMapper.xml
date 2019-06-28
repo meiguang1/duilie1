@@ -77,7 +77,7 @@
         SELECT COUNT(*) FROM researcher WHERE eventcode=#{eventcode} and position=#{position}
     </select>
     <!--查询上传数量-->
-    <select id="uploading" resultType="int" parameterType="com.hcycom.ctginms.domain.Pt">
+    <select id="uploading" resultType="int" parameterType="com.hcycom.ctginms.domain.PointLocation">
         SELECT count(*) FROM level_management WHERE pid=#{pid}
     </select>
 </mapper>

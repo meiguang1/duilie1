@@ -6,11 +6,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
-@Table(name = "Fm")
-public class Fm {
+@Table(name = "OtherFiles")
+public class OtherFiles {
     @Id
     @Column(name = "id")
     @ApiModelProperty(value="id主键")
@@ -87,7 +86,7 @@ public class Fm {
 
     @Override
     public String toString() {
-        return "Fm{" +
+        return "OtherFiles{" +
             "id=" + id +
             ", pid='" + pid + '\'' +
             ", fnName='" + fnName + '\'' +

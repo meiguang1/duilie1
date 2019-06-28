@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hcycom.ctginms.repository.FmMapper">
+<mapper namespace="com.hcycom.ctginms.repository.OtherFilesMapper">
 
     <!--查询其他文件中的文件类型-->
     <select id="selectReport" parameterType="com.hcycom.ctginms.domain.Report" resultType="com.hcycom.ctginms.domain.Report">
@@ -21,16 +21,16 @@
 
 
     <!--文件上传-->
-    <insert id="InsertUpFile"  parameterType="com.hcycom.ctginms.domain.Fm">
+    <insert id="InsertUpFile"  parameterType="com.hcycom.ctginms.domain.OtherFiles">
        insert into other_files (pid,fnName,fnUrl,time,reportcode) values (#{pid},#{fnName},#{fnUrl},now(),#{reportcode})
     </insert>
-    <!--<select id="selectFileById" resultType="com.hcycom.ctginms.domain.Fm">
+    <!--<select id="selectFileById" resultType="com.hcycom.ctginms.domain.OtherFiles">
         select * from other_files where id=#{id}
     </select>-->
 
 
     <!--文件下载-->
-    <select id="fileDownload" resultType="com.hcycom.ctginms.domain.Fm">
+    <select id="fileDownload" resultType="com.hcycom.ctginms.domain.OtherFiles">
         <if test="pid != null and reportcode!= null">
             SELECT fnUrl FROM other_files WHERE pid=#{pid} AND reportcode=#{reportcode}
         </if>
@@ -50,7 +50,7 @@
         delete from report where id=#{id}
     </delete>
     <!--删除fm表和report表有关的一些数据-->
-    <delete id="deleteFm" parameterType="com.hcycom.ctginms.domain.Fm">
+    <delete id="deleteFm" parameterType="com.hcycom.ctginms.domain.OtherFiles">
         delete from other_files where pid=#{pid} and reportcode=#{reportcode}
     </delete>
 

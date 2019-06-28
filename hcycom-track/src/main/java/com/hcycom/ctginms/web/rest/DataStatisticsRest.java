@@ -5,7 +5,6 @@ package com.hcycom.ctginms.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.hcycom.ctginms.postdomain.PostDataStatistics;
 import com.hcycom.ctginms.service.dto.DataStatisticsServiceImpl;
-import com.hcycom.ctginms.service.dto.PtServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

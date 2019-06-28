@@ -8,9 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Pt")
-public class Pt {
-
+@Table(name = "PointLocation")
+public class PointLocation {
     @Id
     @Column(name = "id")
     @ApiModelProperty(value="id主键")
@@ -123,7 +122,7 @@ public class Pt {
 
     @Override
     public String toString() {
-        return "Pt{" +
+        return "PointLocation{" +
             "id=" + id +
             ", pid='" + pid + '\'' +
             ", countycode='" + countycode + '\'' +

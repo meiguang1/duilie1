@@ -1,20 +1,14 @@
 package com.hcycom.ctginms.web.rest;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.codahale.metrics.annotation.Timed;
-import com.hcycom.ctginms.domain.Pt;
+import com.hcycom.ctginms.domain.PointLocation;
 import com.hcycom.ctginms.domain.Report;
-import com.hcycom.ctginms.domain.Researcher;
-import com.hcycom.ctginms.postdomain.PostDataStatistics;
 import com.hcycom.ctginms.postdomain.PostFm;
 import com.hcycom.ctginms.postdomain.PostFmReport;
 import com.hcycom.ctginms.postdomain.PostPt;
-import com.hcycom.ctginms.service.dto.FmServiceImpl;
-import com.hcycom.ctginms.service.dto.PtServiceImpl;
+import com.hcycom.ctginms.service.dto.OtherFilesServiceImpl;
+import com.hcycom.ctginms.service.dto.PointLocationServiceImpl;
 import com.hcycom.ctginms.web.rest.util.FileUtil;
-import com.hcycom.ctginms.web.rest.util.TimeUtil;
-import com.hcycom.ctginms.web.rest.util.ZipUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +28,13 @@ import java.util.List;
 @RestController
 @RequestMapping(value="/api/level_management")
 @Api(tags={"点位管理"},description="level_management和other_files表的相关操作，做点位管理的相关操作")
-public class PtRest {
+public class PointLocationRest {
     @Value("${pointpath}")
     String pointpath;
     @Autowired
-    private PtServiceImpl ps;
+    private PointLocationServiceImpl ps;
     @Autowired
-    private FmServiceImpl fm;
+    private OtherFilesServiceImpl fm;
 
     @GetMapping("/getEventAll")
     @Timed
@@ -49,10 +42,10 @@ public class PtRest {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String", paramType = "query"),
     })
-    public ResponseEntity<List<Pt>> getAll(String eventcode) {
+    public ResponseEntity<List<PointLocation>> getAll(String eventcode) {
 
-        List<Pt> listUsers = ps.getEventAll(eventcode);
-        return new ResponseEntity<List<Pt>>(listUsers, HttpStatus.OK);
+        List<PointLocation> listUsers = ps.getEventAll(eventcode);
+        return new ResponseEntity<List<PointLocation>>(listUsers, HttpStatus.OK);
     }
 
 
@@ -85,10 +78,10 @@ public class PtRest {
    /* @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value = "人员id", required = true, dataType = "rcList",paramType="query"),
     })*/
-    public String addOnePerson(@RequestBody List<Pt> rcList) {
+    public String addOnePerson(@RequestBody List<PointLocation> rcList) {
         ArrayList<String> list = new ArrayList<>();
         try {
-            for (Pt pt : rcList) {
+            for (PointLocation pt : rcList) {
                 list.add(pt.getCountyname());
             }
             int i1 = ps.selectByIds(list);
@@ -155,7 +148,7 @@ public class PtRest {
         @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String", paramType = "query"),
         @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String", paramType = "query"),
     })
-    public ResponseEntity<Pt> filesUpload(MultipartFile uploadFile, HttpServletRequest request, String fmurl, String pid, String eventcode, String countycode, String countyname) throws IOException {
+    public ResponseEntity<PointLocation> filesUpload(MultipartFile uploadFile, HttpServletRequest request, String fmurl, String pid, String eventcode, String countycode, String countyname) throws IOException {
         /*System.out.println("uploadFile = " + uploadFile);
         //获得文件
         byte[] buf = uploadFile.getBytes();
@@ -179,7 +172,7 @@ public class PtRest {
 
         FileUtil.writeFileToUrl(uploadFile, fileUrl);
         String fileUrl1 = pointpath + File.separator + "medical_examination_report" + File.separator + fmurl;
-        Pt fileInfo = new Pt();
+        PointLocation fileInfo = new PointLocation();
         fileInfo.setPersonCount(fmurl);
         fileInfo.setHealthForm(fileUrl1);
         fileInfo.setPid(pid);
@@ -188,20 +181,20 @@ public class PtRest {
         fileInfo.setCountyname(countyname);
 
         ps.filesUpload(fileInfo);
-        return new ResponseEntity<Pt>(fileInfo, HttpStatus.OK);
+        return new ResponseEntity<PointLocation>(fileInfo, HttpStatus.OK);
     }
 
 
     @GetMapping("/selectAllFile")
     @Timed
-    @ApiOperation(value = "点位管理模块的单文件下载", notes = "(pt表的操作，在其他文件中进行下载)")
+    @ApiOperation(value = "点位管理模块的单文件下载", notes = "(level_management表的操作，在其他文件中进行下载)")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "pid", value = "事件编码", required = true, dataType = "String", paramType = "query"),
     })
-    public ResponseEntity<List<Pt>> selectAllFile(String pid) {
+    public ResponseEntity<List<PointLocation>> selectAllFile(String pid) {
 
-        List<Pt> listUsers = ps.selectAllFile(pid);
-        return new ResponseEntity<List<Pt>>(listUsers, HttpStatus.OK);
+        List<PointLocation> listUsers = ps.selectAllFile(pid);
+        return new ResponseEntity<List<PointLocation>>(listUsers, HttpStatus.OK);
     }
 
 
@@ -264,9 +257,9 @@ public class PtRest {
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String", paramType = "query"),
         @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String", paramType = "query"),
     })
-    public List<Pt> healthForm(String pid, String eventcode) {
+    public List<PointLocation> healthForm(String pid, String eventcode) {
 
-        List<Pt> list = ps.healthForm(pid, eventcode);
+        List<PointLocation> list = ps.healthForm(pid, eventcode);
         //String  listUsers = ps.healthForm(pid,eventcode);
         return list;
     }

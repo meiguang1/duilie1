@@ -1,28 +1,26 @@
 package com.hcycom.ctginms.service.dto;
 
-import com.hcycom.ctginms.domain.Fm;
+import com.hcycom.ctginms.domain.OtherFiles;
 import com.hcycom.ctginms.domain.Report;
 import com.hcycom.ctginms.postdomain.PostFm;
 import com.hcycom.ctginms.postdomain.PostFmReport;
-import com.hcycom.ctginms.repository.FmMapper;
-import com.hcycom.ctginms.service.FmService;
-import com.hcycom.ctginms.web.rest.vm.FmReport;
+import com.hcycom.ctginms.repository.OtherFilesMapper;
+import com.hcycom.ctginms.service.OtherFilesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class  FmServiceImpl implements FmService {
+public class OtherFilesServiceImpl implements OtherFilesService {
 
     @Autowired
-    private FmMapper fm;
+    private OtherFilesMapper fm;
 
     /*文件上传*/
     @Override
-    public int InsertUpFile(Fm upFile) {
+    public int InsertUpFile(OtherFiles upFile) {
         // TODO Auto-generated method stub
         upFile.setPid(upFile.getPid());
         upFile.setFnName(upFile.getFnName());
@@ -64,22 +62,22 @@ public class  FmServiceImpl implements FmService {
 
     /*文件下载*/
     @Override
-    public List<Fm> fileDownload(String pid, String reportcode) {
+    public List<OtherFiles> fileDownload(String pid, String reportcode) {
         return fm.fileDownload(pid,reportcode);
     }
 
     /*@Override
-    public List<Fm> selectFileById(int id) {
+    public List<OtherFiles> selectFileById(int id) {
         return null;
     }
 
     @Override
-    public List<Fm> selectFileById(String id) {
+    public List<OtherFiles> selectFileById(String id) {
         return fm.selectFileById(id);
     }*/
 
     /*@Override
-    public Fm selectFileById(int id) {
+    public OtherFiles selectFileById(int id) {
         // TODO Auto-generated method stub
         return fm.selectFileById(id);
     }*/
@@ -97,7 +95,7 @@ public class  FmServiceImpl implements FmService {
     //查询某个文件类型下的文件以及总条数
     @Override
     public PostFmReport selectAll(String pid, String reportcode) {
-        List<Fm> plist = fm.selectAll(pid,reportcode);
+        List<OtherFiles> plist = fm.selectAll(pid,reportcode);
         PostFmReport postFm=new PostFmReport();
         postFm.setSelectOne(plist);
         int i=fm.eFiles(pid,reportcode);

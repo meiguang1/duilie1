@@ -1,6 +1,6 @@
 package com.hcycom.ctginms.repository;
 
-import com.hcycom.ctginms.domain.Fm;
+import com.hcycom.ctginms.domain.OtherFiles;
 import com.hcycom.ctginms.domain.Report;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,10 +8,10 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface FmMapper {
+public interface OtherFilesMapper {
 
     /*查询某个文件类型下的文件以及总个数*/
-    List<Fm> selectAll(@Param("pid")String pid,@Param("reportcode")String reportcode);
+    List<OtherFiles> selectAll(@Param("pid")String pid,@Param("reportcode")String reportcode);
     //查询某文件类型的文件总条数
     int eFiles(@Param("pid")String pid,@Param("reportcode")String reportcode);
 
@@ -25,7 +25,7 @@ public interface FmMapper {
 
 
     /*文件上传*/
-    int InsertUpFile(Fm upFile);
+    int InsertUpFile(OtherFiles upFile);
 
     /*文件类型添加*/
     int addOnereport(Report report);
@@ -36,8 +36,8 @@ public interface FmMapper {
 
 
     /*文件下载*/
-    List<Fm> fileDownload(@Param("pid")String pid,@Param("reportcode")String reportcode);
-    /*List<Fm> selectFileById(int id);*/
+    List<OtherFiles> fileDownload(@Param("pid")String pid,@Param("reportcode")String reportcode);
+    /*List<OtherFiles> selectFileById(int id);*/
 
     //查询某文件类型下文件的详情
     List<Report> selectReport(String pid);
@@ -46,7 +46,7 @@ public interface FmMapper {
 
 
     //根据事件编码查询全部人员
-    //List<Fm> FmselectEventAll(@Param("pid")String pid);
+    //List<OtherFiles> FmselectEventAll(@Param("pid")String pid);
 
 
     //根据点位编码查询上传文件是否为空
