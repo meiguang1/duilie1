@@ -23,9 +23,34 @@ public class ExportSampleInfo {
     @ApiModelProperty(value="id主键")
     private int id;
 
+    public String getExport_sampleinfo_code() {
+        return export_sampleinfo_code;
+    }
+
+    public void setExport_sampleinfo_code(String export_sampleinfo_code) {
+        this.export_sampleinfo_code = export_sampleinfo_code;
+    }
+
+    @Column(name="export_sampleinfo_code")
+    @ApiModelProperty(value="出库信息编号")
+    private String export_sampleinfo_code;
+
+    public String getPoint_code() {
+        return point_code;
+    }
+
+    public void setPoint_code(String point_code) {
+        this.point_code = point_code;
+    }
+
     @Column(name="export_sample_name")
     @ApiModelProperty(value="出库名称")
+
     private String export_sample_name;
+
+    @Column(name="point_code")
+    @ApiModelProperty(value="点位编号")
+    private String point_code;
 
     @Column(name="point_name")
     @ApiModelProperty(value="点位名称")

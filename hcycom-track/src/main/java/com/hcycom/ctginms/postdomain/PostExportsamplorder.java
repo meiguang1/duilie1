@@ -21,6 +21,17 @@ public class PostExportsamplorder {
     @ApiModelProperty(value = "出库备注",name = "notes",required = false)
     private String notes;
 
+    public String getAudit_text() {
+        return audit_text;
+    }
+
+    public void setAudit_text(String audit_text) {
+        this.audit_text = audit_text;
+    }
+
+    @ApiModelProperty(value = "审核反馈信息",name = "audit_text",required = false)
+    private String audit_text;
+
     public List<Map<String, ?>> getList() {
         return list;
     }

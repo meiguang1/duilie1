@@ -148,9 +148,9 @@ public class SampleServiceImpl implements SampleService {
                 ImportSampleModel importModel=new ImportSampleModel();
                 String[] aa = data.split(",");
                 importModel.setId(0);
-                importModel.setPerson_code(aa[0]);
+                importModel.setSample_code(aa[0]);
                 importModel.setPerson_name(aa[1]);
-                importModel.setSample_code(aa[2]);
+                importModel.setPerson_code(aa[2]);
                 importModel.setSample_type(aa[3]);
                 importModel.setCapacity(aa[4]);
                 importModel.setCryopreserved_code(aa[5]);

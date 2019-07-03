@@ -1,6 +1,6 @@
 package com.hcycom.ctginms.service;
 
-import com.hcycom.ctginms.domain.ExportSampleInfo;
+import com.hcycom.ctginms.domain.*;
 
 import java.util.List;
 import java.util.Map;
@@ -17,5 +17,29 @@ public interface ExportSampleInfoService {
 
     List<Map<String,?>> findSampleByPointorInfo(String eventcode, String pointname, String entrepotname);
 
-    List<Map<String,?>> findExportsamplemodel(String eventcode,String exportsampleinfocode);
+    List<Map<String,?>> findExportsampleorder(String eventcode,String exportsampleinfocode);
+
+    int addExportsampleorder(List<ExportSampleOrder> esoList);
+
+    int addExportsampleinfo(ExportSampleInfo esi);
+
+    int updateExportsampleinfo(ExportSampleInfo esi);
+
+    int deleExportsampleorder(String export_sampleinfo_code);
+
+    int addResearchReport(List<ResearchReport> rrList);
+
+    int addProcedureOfSingle(ProcedureOfSingle pos);
+
+    int addExportSampleFile(ExportSampleFile esf);
+
+    ProcedureOfSingle findPosBycode(String export_sampleinfo_code);
+
+    List<ResearchReport> findResearchReport(String export_sampleinfo_code);
+
+    ExportSampleFile findExportSampleFile(String export_samplefile_code);
+
+    ExportSampleInfo findEsiByCode(String export_sampleinfo_code);
+
+    List<ExportSampleFile> getExportSampleFileAll(String export_sampleinfo_code);
 }

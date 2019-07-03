@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.AuditSampleMapper" >
+
+    <select id="getAll" resultType="com.hcycom.ctginms.domain.AuditSample">
+        SELECT * FROM audit_sample
+    </select>
+
+    <insert id="addAudit" parameterType="com.hcycom.ctginms.domain.AuditSample">
+        INSERT INTO audit_sample
+        VALUES (0,#{as.audit_name},UUID(),#{as.export_sampleinfo_code},#{as.create_time},"0","")
+    </insert>
+
+    <update id="updateAudit" parameterType="com.hcycom.ctginms.domain.AuditSample">
+        UPDATE audit_sample SET audit_state=#{as.audit_state}
+        <if test="as.audit_text!=null and as.audit_text!=''">,audit_text=#{as.audit_text} </if>
+        WHERE audit_code=#{as.audit_code}
+    </update>
+
+    <select id="findAuditBycode" parameterType="String" resultType="com.hcycom.ctginms.domain.AuditSample">
+        SELECT * FROM audit_sample WHERE audit_code=#{audit_code}
+    </select>
+
+    <select id="findAuditByExportSampleCode" parameterType="String" resultType="com.hcycom.ctginms.domain.AuditSample">
+        SELECT * FROM audit_sample WHERE export_sampleinfo_code=#{export_sampleinfo_code}
+    </select>
+</mapper>

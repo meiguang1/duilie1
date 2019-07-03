@@ -87,6 +87,7 @@ public class ImportSampleInfoRest {
         importSampleInfo.setState("0");
         importSampleInfo.setEvent_code(eventcode);
         OperationLog operationLog=getoperationLog(import_time1,user.get(0).getId(),user.get(0).getName(),eventcode);
+        operationLog.setDescribe("import_sample_model,import_sample_info");
         operationLog.setOperation_txt("样本预入库");
         int a=sampleService.importSampleModel(multipartFile,uuid);
         if(a!=0){
@@ -154,6 +155,7 @@ public class ImportSampleInfoRest {
         //获取日志信息
         OperationLog operationLog=getoperationLog(import_time1,usercode,username,sampleList.getEventcode());
         operationLog.setNotes(sampleList.getNotes());
+        operationLog.setDescribe("sample");
         operationLog.setOperation_txt("样本正式入库");
         //添加数据至样本正式库
         int a=sampleService.addSample(sampleList.getSampleList());
@@ -190,7 +192,6 @@ public class ImportSampleInfoRest {
     public OperationLog getoperationLog(Date time, String userid, String name, String eventcode){
         List<Map<String,?>> list=eventService.findeventAndproject(eventcode);
         OperationLog operationLog=new OperationLog();
-        operationLog.setDescribe("sample");
         operationLog.setOperation_time(time);
         operationLog.setOperation_code(userid);
         operationLog.setOperation_name(name);

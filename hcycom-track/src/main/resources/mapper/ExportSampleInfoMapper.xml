@@ -3,8 +3,8 @@
 <mapper namespace="com.hcycom.ctginms.repository.ExportSampleInfoMapper" >
 
     <select id="findEsiByEventcode" parameterType="String" resultType="com.hcycom.ctginms.domain.ExportSampleInfo">
-        SELECT export_sample_name,point_name,notes,operator_name,operator_time,export_sample_state,detection_report_state,audit_state,
-        export_file_state
+        SELECT export_sampleinfo_code,export_sample_name,point_name,notes,operator_name,operator_time,export_sample_state,detection_report_state,audit_state,
+        export_file_state,event_code
         FROM export_sample_info
         WHERE event_code=#{eventcode}
     </select>
@@ -18,10 +18,84 @@
         <if test="entrepotname!=null and entrepotname!=''">AND isi.entrepot_name=#{entrepotname}</if>
     </select>
 
-    <select id="findExportsamplemodel" parameterType="String" resultType="Map">
+    <select id="findExportsampleorder" parameterType="String" resultType="Map">
         SELECT s.person_code,p.researchname,s.`code`,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_column,s.cryopreserved_line,
                 s.subpackage_time,eso.inspect_cryopreserved_code,eso.inspect_box_code
         FROM export_sample_order eso LEFT JOIN sample s ON eso.sample_code=s.`code` LEFT JOIN person p ON s.person_code=p.researchcode
         WHERE s.event_code=#{eventcode} AND eso.export_sampleinfo_code=#{exportsampleinfocode}
+    </select>
+
+    <insert id="addExportsampleinfo" parameterType="com.hcycom.ctginms.domain.ExportSampleInfo">
+        INSERT INTO export_sample_info
+        VALUES (0,#{esi.export_sampleinfo_code},#{esi.export_sample_name},#{esi.point_code},#{esi.point_name},#{esi.notes},
+                #{esi.operator_name},#{esi.operator_time},#{esi.export_sample_state},#{esi.detection_report_state},
+                #{esi.audit_state},#{esi.export_file_state},#{esi.event_code})
+
+    </insert>
+
+    <insert id="addExportsampleorder" parameterType="com.hcycom.ctginms.domain.ExportSampleOrder">
+        INSERT INTO export_sample_order
+        VALUES
+        <foreach collection="esoList" item="item" separator="," index="index">
+            (0,'${item.sample_code}','${item.inspect_cryopreserved_code}','${item.inspect_box_code}','${item.export_sampleinfo_code}')
+        </foreach>
+    </insert>
+
+    <update id="updateExportsampleinfo" parameterType="com.hcycom.ctginms.domain.ExportSampleInfo">
+        UPDATE export_sample_info SET export_sampleinfo_code=#{esi.export_sampleinfo_code}
+        <if test="esi.notes!=null and esi.notes!=''">,notes=#{esi.notes}</if>
+        <if test="esi.export_sample_state!=null and esi.export_sample_state!=''">,export_sample_state=#{esi.export_sample_state}</if>
+        <if test="esi.detection_report_state!=null and esi.detection_report_state!=''">,detection_report_state=#{esi.detection_report_state}</if>
+        <if test="esi.audit_state!=null and esi.audit_state!=''">,audit_state=#{esi.audit_state}</if>
+        <if test="esi.export_file_state!=null and esi.export_file_state!=''">,export_file_state=#{esi.export_file_state}</if>
+        WHERE export_sampleinfo_code=#{esi.export_sampleinfo_code}
+    </update>
+
+    <delete id="deleExportsampleorder" parameterType="String">
+        DELETE FROM export_sample_order WHERE export_sampleinfo_code=#{export_sampleinfo_code}
+    </delete>
+
+    <insert id="addResearchReport" parameterType="com.hcycom.ctginms.domain.ResearchReport">
+        INSERT INTO research_report
+        VALUES
+        <foreach collection="rrList" item="item" separator="," index="index">
+            (0,UUID(),'${item.person_code}','${item.person_name}','${item.sample_code}','${item.g_csg}','${item.gm_csf}','${item.ifng}',
+            '${item.il_10}','${item.scd40l}','${item.il_17}','${item.il_1b}','${item.il_6}','${item.il_8}','${item.iabel_bio}','${item.iabel_edc}',
+            '${item.inspect_cryopreserved_code}','${item.inspect_box_code}','${item.export_sampleinfo_code}')
+        </foreach>
+    </insert>
+
+    <insert id="addProcedureOfSingle" parameterType="com.hcycom.ctginms.domain.ProcedureOfSingle">
+        INSERT INTO procedure_of_single
+        VALUES (0,#{pos.code},#{pos.name},#{pos.upload_time},#{pos.export_sampleinfo_code},#{pos.export_samplefile_code})
+    </insert>
+
+    <insert id="addExportSampleFile" parameterType="com.hcycom.ctginms.domain.ExportSampleFile">
+        INSERT INTO export_sample_file
+        VALUES (0,#{esf.export_samplefile_code},#{esf.file_name},#{esf.file_path},#{esf.export_sampleinfo_code})
+    </insert>
+
+    <select id="findPosBycode" parameterType="String" resultType="com.hcycom.ctginms.domain.ProcedureOfSingle">
+        SELECT * FROM procedure_of_single
+        WHERE export_sampleinfo_code=#{export_sampleinfo_code}
+    </select>
+
+    <select id="findResearchReport" parameterType="String" resultType="com.hcycom.ctginms.domain.ResearchReport">
+        SELECT * FROM research_report
+    </select>
+
+    <select id="findEsiByCode" parameterType="String" resultType="com.hcycom.ctginms.domain.ExportSampleInfo">
+        SELECT * FROM export_sample_info
+        WHERE export_sampleinfo_code=#{export_sampleinfo_code}
+    </select>
+
+    <select id="findExportSampleFile" parameterType="String" resultType="com.hcycom.ctginms.domain.ExportSampleFile">
+        SELECT * FROM export_sample_file
+        WHERE export_samplefile_code=#{export_samplefile_code}
+    </select>
+
+    <select id="getExportSampleFileAll" parameterType="String" resultType="com.hcycom.ctginms.domain.ExportSampleFile">
+        SELECT * FROM export_sample_file
+        WHERE export_sampleinfo_code=#{export_sampleinfo_code}
     </select>
 </mapper>
