@@ -4,6 +4,8 @@ package com.hcycom.ctginms.postdomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.Column;
+
 
 /**     
  * @author: 北京华晨阳通信技术有限责任公司
@@ -22,10 +24,14 @@ public class PostPerson {
 	
 	@ApiModelProperty(value="调查人员姓名",name="researchname",required=true)
 	private String researchname;
+
+    @Column(name = "countycode")
+    @ApiModelProperty(value="所属中心编码（位置信息）")
+    private String countycode;
 	
-	@ApiModelProperty(value="点位",name="position",required=true)
+	@ApiModelProperty(value="点位名称",name="position",required=true)
 	private String position;
-	
+
 	@ApiModelProperty(value="项目编码",name="projectcode",required=true)
     private String projectcode;
 
@@ -34,49 +40,54 @@ public class PostPerson {
 
     @ApiModelProperty(value="性别",name="age",required=true)
     private int age;
-	
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getResearchcode() {
-		return researchcode;
-	}
+    public String getResearchcode() {
+        return researchcode;
+    }
 
-	public void setResearchcode(String researchcode) {
-		this.researchcode = researchcode;
-	}
+    public void setResearchcode(String researchcode) {
+        this.researchcode = researchcode;
+    }
 
-	public String getResearchname() {
-		return researchname;
-	}
+    public String getResearchname() {
+        return researchname;
+    }
 
-	public void setResearchname(String researchname) {
-		this.researchname = researchname;
-	}
+    public void setResearchname(String researchname) {
+        this.researchname = researchname;
+    }
 
-	public String getPosition() {
-		return position;
-	}
+    public String getCountycode() {
+        return countycode;
+    }
 
-	public void setPosition(String position) {
-		this.position = position;
-	}
+    public void setCountycode(String countycode) {
+        this.countycode = countycode;
+    }
 
-	public String getProjectcode() {
-		return projectcode;
-	}
+    public String getPosition() {
+        return position;
+    }
 
-	public void setProjectcode(String projectcode) {
-		this.projectcode = projectcode;
-	}
+    public void setPosition(String position) {
+        this.position = position;
+    }
 
-    //这是后添加上去的,如果出错记得删除
+    public String getProjectcode() {
+        return projectcode;
+    }
+
+    public void setProjectcode(String projectcode) {
+        this.projectcode = projectcode;
+    }
 
     public String getSex() {
         return sex;
@@ -100,6 +111,7 @@ public class PostPerson {
             "id=" + id +
             ", researchcode='" + researchcode + '\'' +
             ", researchname='" + researchname + '\'' +
+            ", countycode='" + countycode + '\'' +
             ", position='" + position + '\'' +
             ", projectcode='" + projectcode + '\'' +
             ", sex='" + sex + '\'' +

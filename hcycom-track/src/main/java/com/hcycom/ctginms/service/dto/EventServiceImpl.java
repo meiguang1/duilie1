@@ -97,8 +97,8 @@ public class EventServiceImpl implements EventService{
 
 
     @Override
-    public int deleteEvents(int id) {
-	    int list=em.deleteEvents(id);
+    public int deleteEvents(String eventcode) {
+	    int list=em.deleteEvents(eventcode);
         return list;
     }
 

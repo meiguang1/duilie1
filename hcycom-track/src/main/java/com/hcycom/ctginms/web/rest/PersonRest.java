@@ -1,9 +1,13 @@
 package com.hcycom.ctginms.web.rest;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hcycom.ctginms.domain.Researcher;
 import com.hcycom.ctginms.postdomain.Tada;
+import com.hcycom.ctginms.web.rest.util.CsvUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +22,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -72,7 +78,7 @@ public class PersonRest {
     @PostMapping("/updatePerson")
     @Timed
     @ApiOperation(value="修改，修改个人信息",notes="修改个人信息")
-    public ResponseEntity<String> updatePerson(@RequestBody PostPerson person){
+    public ResponseEntity<String> updatePerson(@RequestBody Person person){
 
 
 
@@ -103,7 +109,7 @@ public class PersonRest {
     @PostMapping("/addOnePerson")
     @Timed
     @ApiOperation(value="增加，添加单个，个人信息(返回新增人员的id)",notes="添加单个，个人信息(返回新增人员的id)")
-    public ResponseEntity<String> addOnePerson(@RequestBody PostPerson person){
+    public ResponseEntity<String> addOnePerson(@RequestBody Person person){
 
 
 
@@ -141,4 +147,81 @@ public class PersonRest {
         return new ResponseEntity<Object>(tada, HttpStatus.OK);
     }
 
+
+
+
+    /*可以删除，暂时性测试*/
+    /**
+     * 删除
+     *
+     * @param files
+     */
+    private void deleteFile(File... files) {
+        for (File file : files) {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
+
+
+    @PostMapping("/files")
+    @ApiOperation(value="aaa", notes="aaa")
+    public List<String> files(@RequestParam(value="multipartFile",required=false) MultipartFile multipartFile, HttpServletRequest request) throws Exception{
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String path = request.getSession().getServletContext().getRealPath("/upload");
+        File filePath = new File(path);
+        System.out.println("文件保存的路径"+path);
+        if(!filePath.exists()&&!filePath.isDirectory()) {
+
+            System.out.println("目录不存在，创建路径"+filePath);
+            filePath.mkdir();
+        }
+        //获取原始文件名称
+        String originalFileName = multipartFile.getOriginalFilename();
+        System.out.println("原始文件的名称"+originalFileName);
+
+        //获取文件的类型，以“.”作为标识
+        String type = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+        System.out.println("文件类型"+type);
+        //在指定的路径下面创建一个新的文件
+        File targerFile = new File(path,originalFileName);
+
+        multipartFile.transferTo(targerFile);
+
+        CsvUtils csvUtils=new CsvUtils();
+        List<String> samplelist =csvUtils.importCsv(targerFile);
+        List<Person> importList=new ArrayList<Person>();
+        if(samplelist!=null && !samplelist.isEmpty()){
+            for(String data : samplelist){
+                System.out.println(data);
+                Person person=new Person();
+                String[] aa = data.split(",");
+                System.out.println(aa[0]);
+                System.out.println(aa[1]);
+                System.out.println(aa[2]);
+                System.out.println(aa[3]);
+                System.out.println(aa[4]);
+                System.out.println(aa[5]);
+                System.out.println(aa[6]);
+                System.out.println(aa[7]);
+                System.out.println(aa[8]);
+                person.setId(Integer.parseInt(aa[0]));
+                person.setResearchcode(aa[1]);
+                person.setResearchname(aa[2]);
+                person.setCountycode(aa[3]);
+                person.setProjectcode(aa[4]);
+                person.setState(Integer.parseInt(aa[5]));
+                person.setCreattime(aa[6]);
+                person.setAge(Integer.parseInt(aa[8]));
+                person.setSex(aa[7]);
+                importList.add(person);
+                System.out.println(person);
+                System.out.println(person.getCreattime());
+            }
+        }
+        //int aa = ps.importSample(importList);
+        deleteFile(targerFile);
+        return samplelist;
+    }
 }

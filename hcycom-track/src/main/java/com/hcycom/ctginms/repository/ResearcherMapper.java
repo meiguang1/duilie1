@@ -37,7 +37,7 @@ public interface ResearcherMapper {
                      @Param("researchcode")String researchcode);
 
     //查询人员应该上传文件的总数
-    int uploadingAll(@Param("eventcode")String eventcode,@Param("position")String position);
+    int uploadingAll(@Param("eventcode")String eventcode,@Param("countycode")String countycode);
     //查询上传数量
     int uploading(String pid);
 

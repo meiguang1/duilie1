@@ -5,7 +5,11 @@
     <!--查询全部 按照事件编码-->
     <!--select * from pt where eventcode=#{eventcode}-->
     <select id="selectEventAll" resultType="com.hcycom.ctginms.domain.PointLocation">
-       SELECT *, COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} GROUP BY countyname
+       SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number, COUNT(DISTINCT l.countycode)
+       FROM level_management l LEFT JOIN county c
+       on l.countycode=c.`countycode`
+       where l.eventcode=#{eventcode}
+       GROUP BY l.countycode
     </select>
 
 
@@ -16,7 +20,7 @@
 
     <!--多文件上传-->
     <insert id="addPoint" useGeneratedKeys="true" parameterType="com.hcycom.ctginms.domain.PointLocation">
-       insert into level_management(pid,countycode,countyname,eventcode,personCount,healthForm,creattime) values (#{pt.pid},#{pt.countycode},#{pt.countyname},#{pt.eventcode},#{pt.personCount},#{pt.healthForm},now())
+       insert into level_management(pid,countycode,eventcode,personCount,healthForm,creattime) values (#{pt.pid},#{pt.countycode},#{pt.eventcode},#{pt.personCount},#{pt.healthForm},now())
     </insert>
 
 
@@ -42,16 +46,40 @@
 
     <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.PointLocation" resultType="com.hcycom.ctginms.domain.PointLocation">
         <if test="countyname == null and countycode == null">
-            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode}  GROUP BY countyname limit #{page},#{pageSize}
+            SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
+            FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
+            GROUP BY l.countycode
+            limit #{page},#{pageSize}
         </if>
         <if test="countycode != null and countyname ==null">
-            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countycode LIKE CONCAT('%',#{countycode},'%') GROUP BY countyname limit #{page},#{pageSize}
+            SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
+            FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
+            AND  l.countycode LIKE concat('%',#{countycode},'%')
+            GROUP BY l.countycode
+            limit #{page},#{pageSize}
         </if>
         <if test="countyname != null and countycode ==null">
-            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countyname LIKE CONCAT('%',#{countyname},'%')  GROUP BY countyname limit #{page},#{pageSize}
+            SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
+            FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
+            AND  c.countyname LIKE concat('%',#{countyname},'%')
+            GROUP BY l.countycode
+            limit #{page},#{pageSize}
         </if>
         <if test="countyname != null and countycode != null">
-            SELECT *,COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} and (countyname LIKE concat('%',#{countyname},'%') and countycode LIKE concat('%',#{countycode},'%')) GROUP BY countyname limit #{page},#{pageSize}
+            SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
+            FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
+            AND  c.countyname LIKE concat('%',#{countyname},'%')
+            AND  l.countycode LIKE concat('%',#{countycode},'%')
+            GROUP BY l.countycode
+            limit #{page},#{pageSize}
         </if>
     </select>
 
@@ -72,16 +100,28 @@
     </select>-->
     <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.PointLocation" resultType="int">
         <if test="countyname == null and countycode == null">
-            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode}
+            SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
         </if>
         <if test="countycode != null and countyname ==null">
-            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countycode LIKE CONCAT('%',#{countycode},'%')
+            SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
+            AND l.countycode LIKE concat('%',#{countycode},'%')
         </if>
         <if test="countyname != null and countycode ==null">
-            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} AND countyname LIKE CONCAT('%',#{countyname},'%')
+            SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
+            AND c.countyname LIKE concat('%',#{countyname},'%')
         </if>
         <if test="countyname != null and countycode != null">
-            SELECT COUNT(DISTINCT countyname) FROM level_management WHERE eventcode=#{eventcode} and (countyname LIKE concat('%',#{countyname},'%') and countycode LIKE concat('%',#{countycode},'%'))
+            SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
+            on l.countycode=c.`countycode`
+            where l.eventcode=#{eventcode}
+            AND c.countyname LIKE concat('%',#{countyname},'%')
+            AND l.countycode LIKE concat('%',#{countycode},'%')
         </if>
     </select>
 
@@ -93,7 +133,7 @@
 
     <!--文件上传-->
     <insert id="filesUpload" parameterType="com.hcycom.ctginms.domain.PointLocation">
-        INSERT INTO level_management(pid,countycode,countyname,eventcode,personCount,healthForm,creattime) VALUES(#{pid},#{countycode},#{countyname},#{eventcode},#{personCount},#{healthForm},now())
+        INSERT INTO level_management(pid,countycode,eventcode,personCount,healthForm,creattime) VALUES(#{pid},#{countycode},#{eventcode},#{personCount},#{healthForm},now())
     </insert>
     <!--<update id="filesUpload" parameterType="com.hcycom.ctginms.domain.PointLocation">
        UPDATE pt SET personCount=#{personCount},healthForm=#{healthForm},creattime=NOW() WHERE pid=#{pid} AND eventcode=#{eventcode};
@@ -108,22 +148,21 @@
     <select id="selectByIds" parameterType="java.util.List" resultType="Integer">
         select  count(*)
         from level_management
-        where  countyname in (
-        <foreach collection="list" item="countyname" separator=",">
-            #{countyname}
+        where  countycode in (
+        <foreach collection="list" item="countycode" separator=",">
+            #{countycode}
         </foreach>
         )
     </select>
 
     <!--多个文件添加并且不允许添加重复的-->
     <insert id="insetPersons"  parameterType="java.util.List" >
-     insert into level_management(pid,countycode,countyname,eventcode,personCount,predict_number)
+     insert into level_management(pid,countycode,eventcode,personCount,predict_number)
      values
         <foreach collection="list" item="pt" separator=",">
             (
             UUid(),
             #{pt.countycode},
-            #{pt.countyname},
             #{pt.eventcode},
             #{pt.personCount},
             #{pt.predict_number}

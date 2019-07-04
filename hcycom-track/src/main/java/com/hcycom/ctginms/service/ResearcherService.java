@@ -31,6 +31,6 @@ public interface ResearcherService {
     PostResearcher likeSelect(String eventcode, String researchname, String researchcode, int page, int pageSize);
 
     /*查询文件上传数量以及需要上传的数量*/
-    PostFm uploadingAll(String pid,String eventcode,String position);
+    PostFm uploadingAll(String pid,String eventcode,String countycode);
 
 }

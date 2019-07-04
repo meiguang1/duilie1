@@ -106,4 +106,7 @@
             '${item.state}','${item.head}','${item.createtime}','${item.personcode}','${item.eventcode}','${item.sample_info_code}')
         </foreach>
     </insert>
+
+
+
 </mapper>

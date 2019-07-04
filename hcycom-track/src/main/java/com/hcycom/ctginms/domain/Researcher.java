@@ -36,9 +36,9 @@ public class Researcher{
     @ApiModelProperty(value="研究对象姓名")
     private String researchname;
 
-    @Column(name = "position")
-    @ApiModelProperty(value="所属中心（位置信息）")
-    private String position;
+    @Column(name = "countycode")
+    @ApiModelProperty(value="所属中心编码（位置信息）")
+    private String countycode;
 
     @Column(name = "projectcode")
     @ApiModelProperty(value="所属项目编码")
@@ -92,12 +92,12 @@ public class Researcher{
         this.researchname = researchname;
     }
 
-    public String getPosition() {
-        return position;
+    public String getCountycode() {
+        return countycode;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setCountycode(String countycode) {
+        this.countycode = countycode;
     }
 
     public String getProjectcode() {
@@ -117,7 +117,7 @@ public class Researcher{
             ", age=" + age +
             ", sex='" + sex + '\'' +
             ", researchname='" + researchname + '\'' +
-            ", position='" + position + '\'' +
+            ", countycode='" + countycode + '\'' +
             ", projectcode='" + projectcode + '\'' +
             '}';
     }

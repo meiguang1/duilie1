@@ -113,10 +113,10 @@ public class ResearcherRest {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "position", value = "区县名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String",paramType="query"),
     })
-    public PostFm uploadingAll(String pid,String eventcode,String position){
-        PostFm postFm = pm.uploadingAll(pid,eventcode,position);
+    public PostFm uploadingAll(String pid,String eventcode,String countycode){
+        PostFm postFm = pm.uploadingAll(pid,eventcode,countycode);
         return postFm;
     }
 

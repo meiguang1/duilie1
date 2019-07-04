@@ -66,4 +66,11 @@ public interface PersonMapper {
 
 
 
+
+    /**
+     * 可以删除,暂时性测试
+     */
+    int  importSample(@Param("payFeeList")List payFeeList);
+    //int  importSample(List<ImportSampleModel> payFeeList);
+
 }

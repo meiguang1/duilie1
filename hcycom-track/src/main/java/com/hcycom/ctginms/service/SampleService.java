@@ -2,6 +2,7 @@ package com.hcycom.ctginms.service;
 
 import com.hcycom.ctginms.domain.ImportSampleModel;
 import com.hcycom.ctginms.domain.OperationLog;
+import com.hcycom.ctginms.domain.Person;
 import com.hcycom.ctginms.domain.Sample;
 import com.hcycom.ctginms.postdomain.PostSample;
 import com.hcycom.ctginms.postdomain.PostSampletwo;
@@ -37,4 +38,9 @@ public interface SampleService {
    List<ImportSampleModel> findSampleModelByCode(String sampleModeCode);
 
    int addSample(List<PostSampletwo> sampleList);
+
+
+
+
+
 }

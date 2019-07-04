@@ -54,7 +54,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public int updateOnePersonById(PostPerson person) {
+    public int updateOnePersonById(Person person) {
         // TODO Auto-generated method stub
 
         Person person1 = new Person();
@@ -62,7 +62,7 @@ public class PersonServiceImpl implements PersonService {
         person1.setId(person.getId());
         person1.setResearchcode(person.getResearchcode());
         person1.setResearchname(person.getResearchname());
-        person1.setPosition(person.getPosition());
+        person1.setCountycode(person.getCountycode());
         person1.setProjectcode(person.getProjectcode());
         person1.setSex(person.getSex());
         person1.setAge(person.getAge());
@@ -82,7 +82,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public int addOnePerson(PostPerson person) {
+    public int addOnePerson(Person person) {
         // TODO Auto-generated method stub
 
         Person person1=new Person();
@@ -90,7 +90,7 @@ public class PersonServiceImpl implements PersonService {
         person1.setId(person.getId());
         person1.setResearchcode(person.getResearchcode());
         person1.setResearchname(person.getResearchname());
-        person1.setPosition(person.getPosition());
+        person1.setCountycode(person.getCountycode());
         person1.setProjectcode(person.getProjectcode());
         person1.setSex(person.getSex());
         person1.setAge(person.getAge());
@@ -129,5 +129,11 @@ public class PersonServiceImpl implements PersonService {
         return tada;
     }
 
+
+    /*可以删除，暂时性测试*/
+    @Override
+    public int importSample(List<Person> payFeeList) {
+        return pm.importSample(payFeeList);
+    }
 
 }

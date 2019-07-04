@@ -32,7 +32,7 @@ public interface EventService {
     int describe(String eventdescribes,String eventcode,String creatusername);
 
     //<!--事件设置:事件描述修改-->
-    int deleteEvents(int id);
+    int deleteEvents(String eventcode);
 
 
 }

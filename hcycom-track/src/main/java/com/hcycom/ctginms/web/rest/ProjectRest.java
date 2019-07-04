@@ -305,7 +305,7 @@ public class ProjectRest {
 
 
 
-    @PostMapping("/rename")
+    @GetMapping("/rename")
     @Timed
     @ApiOperation(value="事件设置，修改事件名称",notes="event表根据creatusername和eventcode修改事件名称")
     @ApiImplicitParams({
@@ -318,7 +318,7 @@ public class ProjectRest {
         return new ResponseEntity<String>(a+"", HttpStatus.OK);
     }
 
-    @PostMapping("/describe")
+    @GetMapping("/describe")
     @Timed
     @ApiOperation(value="事件设置，修改事件描述",notes="event表根据creatusername和eventcode修改事件描述")
     @ApiImplicitParams({
@@ -334,13 +334,13 @@ public class ProjectRest {
 
     @GetMapping("/deleteEvents")
     @Timed
-    @ApiOperation(value="删除，通过id删除单个事件", notes="event表根据id删除某个事件")
+    @ApiOperation(value="删除，通过eventcode删除单个事件", notes="event表根据id删除某个事件")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "id", value = "事件id", required = true, dataType = "int",paramType="query"),
+        @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
     })
     //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    public ResponseEntity<String> deleteEvents(int id){
-        int a = es.deleteEvents(id);
+    public ResponseEntity<String> deleteEvents(String eventcode){
+        int a = es.deleteEvents(eventcode);
         return new ResponseEntity<String>(a+"", HttpStatus.OK);
     }
 }

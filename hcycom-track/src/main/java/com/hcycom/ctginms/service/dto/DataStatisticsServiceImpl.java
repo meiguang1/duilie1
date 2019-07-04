@@ -1,9 +1,7 @@
 package com.hcycom.ctginms.service.dto;
 
 
-import com.alibaba.fastjson.JSONObject;
-import com.hcycom.ctginms.domain.Pt;
-import com.hcycom.ctginms.domain.Researcher;
+
 import com.hcycom.ctginms.postdomain.PostDataStatistics;
 import com.hcycom.ctginms.repository.DataStatisticsMapper;
 import com.hcycom.ctginms.service.DataStatisticsService;

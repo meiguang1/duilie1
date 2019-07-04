@@ -82,7 +82,7 @@ public class PointLocationRest {
         ArrayList<String> list = new ArrayList<>();
         try {
             for (PointLocation pt : rcList) {
-                list.add(pt.getCountyname());
+                list.add(pt.getCountycode());
             }
             int i1 = ps.selectByIds(list);
             if (i1 > 0 && rcList.size() > 0) {
@@ -146,9 +146,8 @@ public class PointLocationRest {
         @ApiImplicitParam(name = "pid", value = "点位编码", required = true, dataType = "String", paramType = "query"),
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String", paramType = "query"),
         @ApiImplicitParam(name = "countycode", value = "区县编码", required = true, dataType = "String", paramType = "query"),
-        @ApiImplicitParam(name = "countyname", value = "区县名称", required = true, dataType = "String", paramType = "query"),
     })
-    public ResponseEntity<PointLocation> filesUpload(MultipartFile uploadFile, HttpServletRequest request, String fmurl, String pid, String eventcode, String countycode, String countyname) throws IOException {
+    public ResponseEntity<PointLocation> filesUpload(MultipartFile uploadFile, HttpServletRequest request, String fmurl, String pid, String eventcode, String countycode) throws IOException {
         /*System.out.println("uploadFile = " + uploadFile);
         //获得文件
         byte[] buf = uploadFile.getBytes();
@@ -178,8 +177,6 @@ public class PointLocationRest {
         fileInfo.setPid(pid);
         fileInfo.setEventcode(eventcode);
         fileInfo.setCountycode(countycode);
-        fileInfo.setCountyname(countyname);
-
         ps.filesUpload(fileInfo);
         return new ResponseEntity<PointLocation>(fileInfo, HttpStatus.OK);
     }

@@ -4,53 +4,58 @@
 
     <!--数据统计:调查人数:点位编码、点位名称、预计人数-->
     <select id="sampleSize" resultType="java.util.Map">
-        SELECT countycode,countyname,predict_number, COUNT(DISTINCT countyname) as deweightNumber FROM level_management
-        WHERE eventcode=#{eventcode}
-        GROUP BY countyname
+        SELECT l.countycode,c.`countyname`,l.predict_number, COUNT(DISTINCT l.countycode) AS deweightNumber
+        FROM level_management l LEFT JOIN county c
+        on l.countycode=c.`countycode`
+        where l.eventcode=#{eventcode}
+        GROUP BY l.countycode
     </select>
     <!--数据统计:调查人数:实际人数-->
     <select id="effectiveStrength"  resultType="java.util.Map">
-        SELECT position,COUNT(POSITION) as practical  FROM researcher
+        SELECT countycode,COUNT(countycode) AS practical  FROM researcher
         WHERE eventcode=#{eventcode}
-        GROUP BY POSITION
+        GROUP BY countycode
     </select>
 
     <!--数据统计:男女比例树状图:各点位男女数据统计-->
     <select id="maleFemaleRatio" resultType="java.util.Map">
-        SELECT COUNT(*) AS numberOfPeople ,POSITION,sex FROM researcher
-        WHERE eventcode = #{eventcode}
-        GROUP BY POSITION,sex
+        SELECT r.countycode,c.`countyname`,r.sex,COUNT(*) AS numberOfPeople
+        FROM researcher r LEFT JOIN county c
+        on r.countycode=c.`countycode`
+        where r.eventcode = #{eventcode}
+        GROUP BY r.countycode,r.sex
     </select>
     <!--数据统计:男女比例树状图:男女各个总数-->
     <select id="headcount" resultType="java.util.Map">
-        SELECT s.sex,COUNT(s.sex) as amount FROM researcher s
+        SELECT s.sex,COUNT(s.sex) AS amount FROM researcher s
         WHERE eventcode = #{eventcode}
         GROUP BY sex
     </select>
 
     <!--数据统计:年龄比例柱状图:各点位不同年龄段的数据统计-->
     <select id="theAgeRatio" resultType="java.util.Map">
-        SELECT age AS ageBracket,COUNT(*) AS numberOfPeople,POSITION FROM(
+        SELECT a.age AS ageBracket,COUNT(*) AS numberOfPeople,a.countycode,a.countyname FROM(
          SELECT
          CASE
-          WHEN age BETWEEN 20 AND 25  THEN  '20~25'
-          WHEN age BETWEEN 26 AND 30  THEN  '26~30'
-          WHEN age BETWEEN 31 AND 35  THEN  '31~35'
-          WHEN age BETWEEN 36 AND 40  THEN  '36~40'
-          WHEN age BETWEEN 41 AND 45  THEN  '41~45'
-          WHEN age BETWEEN 46 AND 50  THEN  '46~50'
-          WHEN age BETWEEN 51 AND 55  THEN  '51~55'
-          WHEN age BETWEEN 56 AND 70  THEN  '56~70'
-          WHEN age BETWEEN 71 AND 75  THEN  '71~75'
-          WHEN age BETWEEN 76 AND 80  THEN  '76~80'
-          WHEN age >80 THEN '80+'
+          WHEN r.age BETWEEN 20 AND 25  THEN  '20~25'
+          WHEN r.age BETWEEN 26 AND 30  THEN  '26~30'
+          WHEN r.age BETWEEN 31 AND 35  THEN  '31~35'
+          WHEN r.age BETWEEN 36 AND 40  THEN  '36~40'
+          WHEN r.age BETWEEN 41 AND 45  THEN  '41~45'
+          WHEN r.age BETWEEN 46 AND 50  THEN  '46~50'
+          WHEN r.age BETWEEN 51 AND 55  THEN  '51~55'
+          WHEN r.age BETWEEN 56 AND 70  THEN  '56~70'
+          WHEN r.age BETWEEN 71 AND 75  THEN  '71~75'
+          WHEN r.age BETWEEN 76 AND 80  THEN  '76~80'
+          WHEN r.age >80 THEN '80+'
          END
-         AS age,POSITION FROM  researcher WHERE eventcode = #{eventcode}
-        )a GROUP BY age,POSITION
+         AS age,r.countycode,c.`countyname` FROM researcher r LEFT JOIN county c ON r.countycode= c.countycode
+         WHERE r.eventcode = #{eventcode}
+        ) a GROUP BY age,countycode
     </select>
     <!--数据统计:年龄比例柱状图:人数总计-->
     <select id="aggregate" resultType="java.lang.Integer">
-        SELECT COUNT(POSITION) as aggregate FROM researcher WHERE eventcode = #{eventcode}
+        SELECT COUNT(countycode) AS AGGREGATE FROM researcher WHERE eventcode =#{eventcode}
     </select>
     
 </mapper>

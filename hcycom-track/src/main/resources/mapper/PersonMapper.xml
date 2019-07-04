@@ -4,20 +4,23 @@
 
 
 
-
-    <select id="selectPersonByProjectcode" resultType="com.hcycom.ctginms.domain.Person">
-  select id,researchcode,researchname,position,projectcode,state,creattime,sex,age from person where projectcode=#{projectcode} and state=1
+    <select id="selectPersonByProjectcode" resultType="com.hcycom.ctginms.postdomain.PostPerson">
+         SELECT p.`id`,p.`researchcode`,p.`researchname`,p.`countycode`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
+         FROM person p LEFT JOIN county c
+         on p.`countycode`=c.`countycode`
+         where p.projectcode=#{projectcode}
+         AND p.state=1
   </select>
 
 
 
     <select id="selectPersonByEventCode" resultType="com.hcycom.ctginms.domain.Person">
-  select p.id,p.researchcode,p.researchname,p.position,p.projectcode,p.state,p.creattime,p.sex,p.age from person p,personevent e where p.id=e.pid and p.state=1 and e.eventcode=#{eventcode}
+  select p.id,p.researchcode,p.researchname,p.countycode,p.projectcode,p.state,p.creattime,p.sex,p.age from person p,personevent e where p.id=e.pid and p.state=1 and e.eventcode=#{eventcode}
   </select>
 
 
     <update id="updateOnePersonById">
-  update person set researchcode=#{person.researchcode},researchname=#{person.researchname},position=#{person.position},sex=#{person.sex},age=#{person.age} where id=#{person.id}
+  update person set researchcode=#{person.researchcode},researchname=#{person.researchname},countycode=#{person.countycode},sex=#{person.sex},age=#{person.age} where id=#{person.id}
   </update>
 
 
@@ -27,7 +30,7 @@
 
 
     <insert id="addOnePerson" useGeneratedKeys="true" keyProperty="person.id" parameterType="com.hcycom.ctginms.domain.Person">
-  insert into person(researchcode,researchname,position,projectcode,state,creattime,sex,age) values (#{person.researchcode},#{person.researchname},#{person.position},#{person.projectcode},1,now(),#{person.sex},#{person.age})
+  insert into person(researchcode,researchname,countycode,projectcode,state,creattime,sex,age) values (#{person.researchcode},#{person.researchname},#{person.countycode},#{person.projectcode},1,now(),#{person.sex},#{person.age})
   </insert>
 
 
@@ -44,18 +47,38 @@
 
 
     <!--按照项目编码对调查对象编号以及姓名进行查询并进行分页-->
-    <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.Person" resultType="com.hcycom.ctginms.domain.Person">
+    <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.Person" resultType="com.hcycom.ctginms.postdomain.PostPerson">
         <if test="researchname == null and researchcode == null">
-            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) or researchname LIKE concat('%',#{researchname},'%') or researchcode LIKE concat('%',#{researchcode},'%') limit #{page},#{pageSize}
+            SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
+            FROM person p LEFT JOIN county c
+            on p.`countycode`=c.`countycode`
+            where (p.projectcode=#{projectcode} AND p.state=1)
+            limit #{page},#{pageSize}
         </if>
         <if test="researchcode != null and researchname ==null">
-            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE CONCAT('%',#{researchname},'%')) limit #{page},#{pageSize}
+            SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
+            FROM person p LEFT JOIN county c
+            on p.`countycode`=c.`countycode`
+            where (p.projectcode=#{projectcode} AND p.state=1)
+            AND p.researchcode LIKE CONCAT('%',#{researchcode},'%')
+            limit #{page},#{pageSize}
         </if>
         <if test="researchname != null and researchcode ==null">
-            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchname LIKE CONCAT('%',#{researchname},'%') OR researchcode LIKE CONCAT('%',#{researchcode},'%')) limit #{page},#{pageSize}
+            SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
+            FROM person p LEFT JOIN county c
+            on p.`countycode`=c.`countycode`
+            where (p.projectcode=#{projectcode} AND p.state=1)
+            AND p.researchname LIKE CONCAT('%',#{researchname},'%')
+            limit #{page},#{pageSize}
         </if>
         <if test="researchname != null and researchcode != null">
-            SELECT * FROM person WHERE (projectcode=#{projectcode} AND state=1) and (researchname LIKE concat('%',#{researchname},'%') and researchcode LIKE concat('%',#{researchcode},'%')) limit #{page},#{pageSize}
+            SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
+            FROM person p LEFT JOIN county c
+            on p.`countycode`=c.`countycode`
+            where (p.projectcode=#{projectcode} AND p.state=1)
+            AND p.researchname LIKE CONCAT('%',#{researchname},'%')
+            AND p.researchname LIKE CONCAT('%',#{researchname},'%')
+            limit #{page},#{pageSize}
         </if>
     </select>
 
@@ -120,6 +143,18 @@
            <if test="category!=null">
             where link_category = ${category}
         </if>
+        (${item.id},'${item.researchcode}','${item.researchname}','${item.sex}',${item.age}',${item.position}')
       </select> -->
+
+
+    <!--可以删除,暂时性测试-->
+    <insert id="importSample" parameterType="java.util.List">
+        INSERT INTO person
+        VALUES
+        <foreach item="item" collection="payFeeList" separator=","  index="index">
+            (${item.id},'${item.researchcode}','${item.researchname}','${item.countycode}',
+            '${item.projectcode}',${item.state},'${item.creattime}','${item.sex}',${item.age})
+        </foreach>
+    </insert>
 
 </mapper>

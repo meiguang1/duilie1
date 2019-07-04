@@ -3,6 +3,7 @@ package com.hcycom.ctginms.web.rest;
 
 import com.hcycom.ctginms.domain.ImportSampleModel;
 import com.hcycom.ctginms.domain.OperationLog;
+import com.hcycom.ctginms.domain.Person;
 import com.hcycom.ctginms.postdomain.PostSample;
 import com.hcycom.ctginms.service.SampleService;
 import com.hcycom.ctginms.web.rest.util.CsvUtils;
@@ -16,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +72,7 @@ public class SampleRest {
         List<Map<String,?>> samplelist =sampleService.getStatistics(eventcode);
         return samplelist;
     }
+
 
 
 }

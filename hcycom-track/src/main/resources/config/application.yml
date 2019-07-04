@@ -143,3 +143,7 @@ downloadpath: /file
 #pointpath: /opt/tomcat/apache-tomcat-8.5.23/webapps/file
 pointpath: D:\IDEAGit\duilie1\hcycom-track
 application:
+ExportSampleUrl: H:\apache-tomcat-7.0.90\webapps\
+tomcatUrl: http://192.168.0.96:8282/exportsample/
+combinUrl: H:\apache-tomcat-7.0.90\webapps\exportsample\hebing.pdf
+combintomcatUrl: http://192.168.0.96:8282/exportsample/hebing.pdf

@@ -65,7 +65,7 @@ ResearcherServiceImpl implements ResearcherService{
         researcher1.setAge(researcher.getAge());
         researcher1.setSex(researcher.getSex());
         researcher1.setResearchname(researcher.getResearchname());
-        researcher1.setPosition(researcher.getPosition());
+        researcher1.setCountycode(researcher.getCountycode());
         researcher1.setProjectcode(researcher.getProjectcode());
 
         ps.addOnePerson(researcher1);
@@ -92,8 +92,8 @@ ResearcherServiceImpl implements ResearcherService{
 
     /*查询文件上传数量以及文件需要上传数量*/
     @Override
-    public PostFm uploadingAll(String pid,String eventcode,String position) {
-        int i = ps.uploadingAll(eventcode,position);
+    public PostFm uploadingAll(String pid,String eventcode,String countycode) {
+        int i = ps.uploadingAll(eventcode,countycode);
         PostFm postFm=new PostFm();
         postFm.setLikeSelect(i);
         int i1 = ps.uploading(pid);

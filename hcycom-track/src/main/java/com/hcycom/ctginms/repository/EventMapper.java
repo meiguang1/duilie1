@@ -47,7 +47,7 @@ public interface EventMapper {
     int describe(@Param("eventdescribes")String eventdescribes,@Param("eventcode")String eventcode,@Param("creatusername")String creatusername);
 
     //<!--事件设置:事件描述修改-->
-    int deleteEvents(@Param("id")int id);
+    int deleteEvents(@Param("eventcode")String eventcode);
 
 
 }

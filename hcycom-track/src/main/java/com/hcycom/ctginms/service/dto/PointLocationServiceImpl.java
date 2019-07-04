@@ -40,7 +40,7 @@ public class PointLocationServiceImpl implements PointLocationService {
         PointLocation pt1=new PointLocation();
         pt1.setPid(pt.getPid());
         pt1.setCountycode(pt.getCountycode());
-        pt1.setCountyname(pt.getCountyname());
+        //pt1.setCountyname(pt.getCountyname());
         pt1.setEventcode(pt.getEventcode());
         pt1.setPersonCount(pt.getPersonCount());
         pt1.setHealthForm(pt.getHealthForm());
@@ -66,6 +66,7 @@ public class PointLocationServiceImpl implements PointLocationService {
         return flag;
     }
 
+    /*查询，按照事件编码对点位编码以及点位名称进行模糊查询并进行分页*/
     @Override
     public PostPt likeSelect(String eventcode, String countyname, String countycode, int page, int pageSize) {
         int b=0;
@@ -86,7 +87,7 @@ public class PointLocationServiceImpl implements PointLocationService {
 
         upFile.setPid(upFile.getPid());
         upFile.setCountycode(upFile.getCountycode());
-        upFile.setCountyname(upFile.getCountyname());
+        //upFile.setCountyname(upFile.getCountyname());
         upFile.setEventcode(upFile.getEventcode());
         upFile.setPersonCount(upFile.getPersonCount());
         upFile.setHealthForm(upFile.getHealthForm());

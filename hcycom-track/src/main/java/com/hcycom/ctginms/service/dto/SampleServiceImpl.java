@@ -1,9 +1,6 @@
 package com.hcycom.ctginms.service.dto;
 
-import com.hcycom.ctginms.domain.ImportSampleModel;
-import com.hcycom.ctginms.domain.OperationLog;
-import com.hcycom.ctginms.domain.PageBean;
-import com.hcycom.ctginms.domain.Sample;
+import com.hcycom.ctginms.domain.*;
 import com.hcycom.ctginms.postdomain.PostSample;
 import com.hcycom.ctginms.postdomain.PostSampletwo;
 import com.hcycom.ctginms.repository.SampleMapper;
@@ -184,4 +181,6 @@ public class SampleServiceImpl implements SampleService {
     public int addSample(List<PostSampletwo> sampleList){
         return sampleMapper.addSample(sampleList);
     }
+
+
 }

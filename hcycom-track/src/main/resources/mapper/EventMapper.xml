@@ -74,8 +74,8 @@
     </update>
 
     <!--事件设置:事件单个删除-->
-    <delete id="deleteEvents" parameterType="java.lang.Integer">
-        DELETE FROM  event WHERE id=#{id}
+    <delete id="deleteEvents" parameterType="java.lang.String">
+        DELETE FROM  event WHERE eventcode=#{eventcode}
     </delete>
 
     

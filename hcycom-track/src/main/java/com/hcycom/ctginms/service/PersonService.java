@@ -27,13 +27,13 @@ public interface PersonService {
     List<Person> getPersonByEventCode(String eventcode);
 
     //修改单个人员信息，返回int为改变行数非id
-    int updateOnePersonById(PostPerson person);
+    int updateOnePersonById(Person person);
 
     //通过id，删除单个人员信息（逻辑删除，更改状态）
     int deleteOnePersonById(int id);
 
     //新增一个人员（该方法仅单个添加）返回新增人员的id
-    int addOnePerson(PostPerson person);
+    int addOnePerson(Person person);
 
 
     /*分页查询所有数据
@@ -47,4 +47,6 @@ public interface PersonService {
     Tada likeSelect(String projectcode, String researchname, String researchcode, int page, int pageSize);
 
 
+    /*可以删除，暂时性测试*/
+    int  importSample(List<Person> payFeeList);
 }
