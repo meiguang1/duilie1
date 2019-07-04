@@ -65,13 +65,13 @@ public class ImportSampleInfoRest {
     @ApiOperation(value="新建入库操作", notes="插入import_sample_info表及import_sample_model表")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "entrepot_name", value = "入库名称", required = true, dataType = "String",paramType="query"),
-        @ApiImplicitParam(name = "point_name", value = "点位名称", required = true, dataType = "String",paramType="query"),
+        @ApiImplicitParam(name = "point_code", value = "点位编码", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String",paramType="query"),
         @ApiImplicitParam(name = "import_time", value = "上传时间", required = true, dataType = "String.",paramType="query"),
         @ApiImplicitParam(name = "eventcode", value = "事件编码", required = true, dataType = "String",paramType="query"),
     })
     public boolean importSample(@RequestParam(value="multipartFile",required=false)MultipartFile multipartFile,
-                                String entrepot_name, String point_name, String username, String import_time, String eventcode) throws Exception {
+                                String entrepot_name, String point_code, String username, String import_time, String eventcode) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date import_time1=sdf.parse(import_time);
         String fileName=multipartFile.getOriginalFilename().substring(0,multipartFile.getOriginalFilename().indexOf("."));
@@ -80,7 +80,7 @@ public class ImportSampleInfoRest {
         ImportSampleInfo importSampleInfo=new ImportSampleInfo();
         importSampleInfo.setSample_info_code(uuid);
         importSampleInfo.setEntrepot_name(entrepot_name);
-        importSampleInfo.setPoint_name(point_name);
+        importSampleInfo.setPoint_code(point_code);
         importSampleInfo.setImport_name(fileName);
         importSampleInfo.setOperator_name(user.get(0).getName());
         importSampleInfo.setImport_time(import_time1);

@@ -123,4 +123,11 @@ public interface ExportSampleInfoMapper {
      * @return
      */
     List<ExportSampleFile> getExportSampleFileAll(@Param("export_sampleinfo_code")String export_sampleinfo_code);
+
+    /**
+     * 根据出库信息编码查询出库单中的信息
+     * @param export_sampleinfo_code
+     * @return
+     */
+    List<ExportSampleOrder> findExportSampleOrderByesc(@Param("export_sampleinfo_code")String export_sampleinfo_code);
 }

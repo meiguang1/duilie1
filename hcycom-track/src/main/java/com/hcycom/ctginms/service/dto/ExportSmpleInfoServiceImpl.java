@@ -95,4 +95,9 @@ public class ExportSmpleInfoServiceImpl implements ExportSampleInfoService{
     public List<ExportSampleFile> getExportSampleFileAll(String export_sampleinfo_code){
         return exportSampleInfoMapper.getExportSampleFileAll(export_sampleinfo_code);
     }
+
+    @Override
+    public List<ExportSampleOrder> findExportSampleOrderByesc(String export_sampleinfo_code){
+        return exportSampleInfoMapper.findExportSampleOrderByesc(export_sampleinfo_code);
+    }
 }

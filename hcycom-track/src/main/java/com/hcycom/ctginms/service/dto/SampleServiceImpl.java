@@ -34,6 +34,11 @@ public class SampleServiceImpl implements SampleService {
     }
 
     @Override
+    public Sample findSampleBycode(String sample_code){
+        return sampleMapper.findSampleBycode(sample_code);
+    }
+
+    @Override
     public OperationLog getOperationlog(String describe){
         OperationLog operationLog = sampleMapper.getOperationlog(describe);
         return operationLog;
@@ -182,5 +187,12 @@ public class SampleServiceImpl implements SampleService {
         return sampleMapper.addSample(sampleList);
     }
 
+<<<<<<< Updated upstream
 
+=======
+    @Override
+    public int updateSample(Sample sample){
+        return sampleMapper.updateSample(sample);
+    }
+>>>>>>> Stashed changes
 }

@@ -3,15 +3,15 @@
 <mapper namespace="com.hcycom.ctginms.repository.ImportSampleInfoMapper" >
     <insert id="addSampleInfo" parameterType="com.hcycom.ctginms.domain.ImportSampleInfo">
         INSERT INTO import_sample_info
-        VALUES(0,#{importSampleInfo.sample_info_code},#{importSampleInfo.entrepot_name},#{importSampleInfo.point_name},#{importSampleInfo.import_name},#{importSampleInfo.operator_name},
+        VALUES(0,#{importSampleInfo.sample_info_code},#{importSampleInfo.entrepot_name},#{importSampleInfo.point_code},#{importSampleInfo.import_name},#{importSampleInfo.operator_name},
                 #{importSampleInfo.import_time},#{importSampleInfo.state},#{importSampleInfo.event_code})
     </insert>
 
     <select id="getSampleInfo" resultType="com.hcycom.ctginms.domain.ImportSampleInfo">
-        SELECT entrepot_name,point_name,import_name,operator_name,import_time,state,sample_info_code
-        FROM import_sample_info
-        WHERE event_code=#{eventCode}
-        ORDER BY import_time DESC
+        SELECT isi.entrepot_name,isi.point_code,c.countyname as point_name,isi.import_name,isi.operator_name,isi.import_time,isi.state,isi.sample_info_code
+        FROM import_sample_info isi LEFT JOIN county c ON isi.point_code=c.countycode
+        WHERE isi.event_code=#{eventCode}
+        ORDER BY isi.import_time DESC
     </select>
 
     <update id="updateSampleInfo" parameterType="String">

@@ -29,6 +29,13 @@ public interface SampleMapper {
     List<Map<String,?>> getSampleByEventtcode(@Param("eventcode")String eventcode);
 
     /**
+     * 根据样本编号查询样本信息
+     * @param sample_code
+     * @return
+     */
+    Sample findSampleBycode(@Param("sample_code")String sample_code);
+
+    /**
      * 根据操作表叙述查询操作日志
      * @param describe
      * @return
@@ -91,7 +98,16 @@ public interface SampleMapper {
      */
     int addSample(@Param("sampleList")List<PostSampletwo> sampleList);
 
+<<<<<<< Updated upstream
 
 
 
+=======
+    /**
+     * 修改样本库中的信息
+     * @param sample
+     * @return
+     */
+    int updateSample(@Param("sample")Sample sample);
+>>>>>>> Stashed changes
 }

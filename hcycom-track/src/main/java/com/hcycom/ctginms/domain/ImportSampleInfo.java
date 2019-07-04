@@ -40,8 +40,20 @@ public class ImportSampleInfo {
     @ApiModelProperty(value="入库名称")
     private String entrepot_name;
 
+    public String getPoint_name() {
+        return point_name;
+    }
+
+    public void setPoint_name(String point_name) {
+        this.point_name = point_name;
+    }
+
+    @Column(name="point_code")
+    @ApiModelProperty(value="点位编码")
+    private String point_code;
+
     @Column(name="point_name")
-    @ApiModelProperty(value="点位名称")
+    @ApiModelProperty(value="点位名称（为外表关联字段）")
     private String point_name;
 
     @Column(name="import_name")
@@ -56,20 +68,20 @@ public class ImportSampleInfo {
         this.id = id;
     }
 
+    public String getPoint_code() {
+        return point_code;
+    }
+
+    public void setPoint_code(String point_code) {
+        this.point_code = point_code;
+    }
+
     public String getEntrepot_name() {
         return entrepot_name;
     }
 
     public void setEntrepot_name(String entrepot_name) {
         this.entrepot_name = entrepot_name;
-    }
-
-    public String getPoint_name() {
-        return point_name;
-    }
-
-    public void setPoint_name(String point_name) {
-        this.point_name = point_name;
     }
 
     public String getImport_name() {
@@ -137,7 +149,7 @@ public class ImportSampleInfo {
             "id=" + id +
             ", export_sampleinfo_code='" + export_sampleinfo_code + '\'' +
             ", entrepot_name='" + entrepot_name + '\'' +
-            ", point_name='" + point_name + '\'' +
+            ", point_code='" + point_code + '\'' +
             ", import_name='" + import_name + '\'' +
             ", operator_name='" + operator_name + '\'' +
             ", import_time=" + import_time +

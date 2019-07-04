@@ -1,6 +1,5 @@
 package com.hcycom.ctginms.web.rest;
 
-import com.alibaba.fastjson.JSON;
 import com.hcycom.ctginms.domain.*;
 import com.hcycom.ctginms.postdomain.PostExportSample;
 import com.hcycom.ctginms.postdomain.PostExportSampleTwo;
@@ -10,23 +9,14 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfReader;
 import io.swagger.annotations.*;
-import io.swagger.models.Response;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.SocketUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -51,10 +41,16 @@ public class ExportSampleInfoRest {
     private OperationlogService operationlogService;
     @Autowired
     private AuditSampleService auditSampleService;
+    @Autowired
+    private SampleService sampleService;
     @Value("${ExportSampleUrl}")
     private String ExportSampleUrl;
     @Value("${tomcatUrl}")
     private String tomcatUrl;
+    @Value("${combinUrl}")
+    private String combinUrl;
+    @Value("${combintomcatUrl}")
+    private String combintomcatUrl;
 
     @GetMapping("/findEsiByEventcode")
     @ApiOperation(value="获取出库操作信息", notes="根据事件编码查询export_sample_info表")
@@ -140,6 +136,12 @@ public class ExportSampleInfoRest {
                 auditSample.setCreate_time(new Date());
                 //插入审核信息
                 auditSampleService.addAudit(auditSample);
+                //修改样本库中的样本状态为待出库
+                for (int i=0;i<postExportSample.getList().size();i++){
+                    Sample sample=sampleService.findSampleBycode(postExportSample.getList().get(i).getSample_code());
+                    sample.setState("2");
+                    sampleService.updateSample(sample);
+                }
                 return 200;
             }else{
                 return 500;
@@ -261,6 +263,13 @@ public class ExportSampleInfoRest {
         esf.setFile_path(path);
         esf.setExport_sampleinfo_code(export_sampleinfo_code);
         exportSampleInfoService.addExportSampleFile(esf);
+        //修改样本信息为已出库状态
+        List<ExportSampleOrder> listEso=exportSampleInfoService.findExportSampleOrderByesc(export_sampleinfo_code);
+        for (int i=0;i<listEso.size();i++){
+            Sample sample=sampleService.findSampleBycode(listEso.get(i).getSample_code());
+            sample.setState("3");
+            sampleService.updateSample(sample);
+        }
         return 1;
     }
 
@@ -333,6 +342,13 @@ public class ExportSampleInfoRest {
             ExportSampleInfo esi = exportSampleInfoService.findEsiByCode(export_sampleinfo_code);
             esi.setDetection_report_state("2");
             int b = exportSampleInfoService.updateExportsampleinfo(esi);
+            //修改样本信息为已出库状态
+            List<ExportSampleOrder> listEso=exportSampleInfoService.findExportSampleOrderByesc(export_sampleinfo_code);
+            for (int i=0;i<listEso.size();i++){
+                Sample sample=sampleService.findSampleBycode(listEso.get(i).getSample_code());
+                sample.setState("4");
+                sampleService.updateSample(sample);
+            }
             return 200;
         }else{
             return 500;
@@ -365,9 +381,9 @@ public class ExportSampleInfoRest {
             }
 //            String aa = "H:\\apache-tomcat-7.0.90\\webapps\\exportsample\\201907183165517.pdf";
 //            String bb = "H:\\apache-tomcat-7.0.90\\webapps\\exportsample\\201907183182221.pdf";
-            String targetFilename=ExportSampleUrl+"exportsample\\hebing.pdf";
+            String targetFilename=combinUrl;
             combinPdf(pdfFilenames,targetFilename);
-            String tomcatUrlTwo = tomcatUrl+"/hebing.pdf";
+            String tomcatUrlTwo = combintomcatUrl;
             return tomcatUrlTwo;
     }
 

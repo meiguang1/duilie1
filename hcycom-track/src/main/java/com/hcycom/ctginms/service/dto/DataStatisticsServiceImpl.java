@@ -1,7 +1,10 @@
 package com.hcycom.ctginms.service.dto;
 
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 import com.hcycom.ctginms.postdomain.PostDataStatistics;
 import com.hcycom.ctginms.repository.DataStatisticsMapper;
 import com.hcycom.ctginms.service.DataStatisticsService;

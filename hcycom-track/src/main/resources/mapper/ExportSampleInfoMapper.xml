@@ -98,4 +98,8 @@
         SELECT * FROM export_sample_file
         WHERE export_sampleinfo_code=#{export_sampleinfo_code}
     </select>
+
+    <select id="findExportSampleOrderByesc" parameterType="String" resultType="com.hcycom.ctginms.domain.ExportSampleOrder">
+        SELECT * FROM export_sample_order WHERE export_sampleinfo_code=#{export_sampleinfo_code}
+    </select>
 </mapper>

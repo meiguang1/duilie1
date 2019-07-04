@@ -42,4 +42,6 @@ public interface ExportSampleInfoService {
     ExportSampleInfo findEsiByCode(String export_sampleinfo_code);
 
     List<ExportSampleFile> getExportSampleFileAll(String export_sampleinfo_code);
+
+    List<ExportSampleOrder> findExportSampleOrderByesc(String export_sampleinfo_code);
 }

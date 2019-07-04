@@ -9,6 +9,10 @@
         WHERE s.event_code=#{eventcode}
     </select>
 
+    <select id="findSampleBycode" parameterType="String" resultType="com.hcycom.ctginms.domain.Sample">
+        SELECT * FROM sample WHERE code=#{sample_code}
+    </select>
+
     <select id="getOperationlog" resultType="com.hcycom.ctginms.domain.OperationLog">
         SELECT operation_time,operation_code,operation_name
         from operation_log o
@@ -107,6 +111,14 @@
         </foreach>
     </insert>
 
+<<<<<<< Updated upstream
 
 
+=======
+    <update id="updateSample" parameterType="com.hcycom.ctginms.domain.Sample">
+        UPDATE sample
+        SET state=#{sample.state}
+        WHERE code=#{sample.code}
+    </update>
+>>>>>>> Stashed changes
 </mapper>

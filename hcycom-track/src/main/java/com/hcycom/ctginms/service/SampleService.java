@@ -21,6 +21,8 @@ public interface SampleService {
 
    List<Map<String,?>> getSampleByEventtcode(String eventcode);
 
+   Sample findSampleBycode(String sample_code);
+
    OperationLog getOperationlog(String describe);
 
    List<String> getQueryPageone(PostSample postSample);
@@ -39,8 +41,12 @@ public interface SampleService {
 
    int addSample(List<PostSampletwo> sampleList);
 
+<<<<<<< Updated upstream
 
 
 
+=======
+   int updateSample(Sample sample);
+>>>>>>> Stashed changes
 
 }
