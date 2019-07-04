@@ -13,7 +13,7 @@
         SELECT s.person_code,p.researchname,s.`code`,s.type,s.capacity,s.cryopreserved_code,s.cryopreserved_column,s.cryopreserved_line,s.subpackage_time,s.offset_number
         FROM sample s
         LEFT JOIN person p ON s.person_code=p.researchcode LEFT JOIN import_sample_info isi ON s.sample_info_code=isi.sample_info_code
-        WHERE s.event_code=#{eventcode}
+        WHERE s.event_code=#{eventcode} AND s.state='1'
         <if test="pointname!=null and pointname!=''">AND isi.point_name LIKE concat('%',#{pointname},'%')</if>
         <if test="entrepotname!=null and entrepotname!=''">AND isi.entrepot_name=#{entrepotname}</if>
     </select>

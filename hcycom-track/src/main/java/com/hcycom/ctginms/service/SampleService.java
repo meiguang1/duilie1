@@ -41,12 +41,6 @@ public interface SampleService {
 
    int addSample(List<PostSampletwo> sampleList);
 
-<<<<<<< Updated upstream
-
-
-
-=======
    int updateSample(Sample sample);
->>>>>>> Stashed changes
 
 }

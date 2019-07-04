@@ -187,12 +187,8 @@ public class SampleServiceImpl implements SampleService {
         return sampleMapper.addSample(sampleList);
     }
 
-<<<<<<< Updated upstream
-
-=======
     @Override
     public int updateSample(Sample sample){
         return sampleMapper.updateSample(sample);
     }
->>>>>>> Stashed changes
 }
