@@ -3,9 +3,10 @@ package com.hcycom.ctginms.web.rest;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.hcycom.ctginms.domain.Researcher;
+import com.alibaba.fastjson.JSONObject;
 import com.hcycom.ctginms.postdomain.Tada;
 import com.hcycom.ctginms.web.rest.util.CsvUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.codahale.metrics.annotation.Timed;
 import com.hcycom.ctginms.domain.Person;
-import com.hcycom.ctginms.postdomain.PostPerson;
 import com.hcycom.ctginms.service.PersonService;
 
 import io.swagger.annotations.Api;
@@ -150,7 +150,7 @@ public class PersonRest {
 
 
 
-    /*可以删除，暂时性测试*/
+    /*项目中人员管理文件上传(把数据插入数据库中以后调用删除方法把上传的文件删除)*/
     /**
      * 删除
      *
@@ -166,8 +166,11 @@ public class PersonRest {
 
 
     @PostMapping("/files")
-    @ApiOperation(value="aaa", notes="aaa")
-    public List<String> files(@RequestParam(value="multipartFile",required=false) MultipartFile multipartFile, HttpServletRequest request) throws Exception{
+    @ApiOperation(value="项目下人员管理的文件上传", notes="数据库person表的新增数据操作")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
+    })
+    public List<String> files(@RequestParam(value="multipartFile",required=false) MultipartFile multipartFile, HttpServletRequest request,String projectcode) throws Exception{
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String path = request.getSession().getServletContext().getRealPath("/upload");
         File filePath = new File(path);
@@ -197,30 +200,27 @@ public class PersonRest {
                 System.out.println(data);
                 Person person=new Person();
                 String[] aa = data.split(",");
-                System.out.println(aa[0]);
-                System.out.println(aa[1]);
-                System.out.println(aa[2]);
-                System.out.println(aa[3]);
-                System.out.println(aa[4]);
-                System.out.println(aa[5]);
-                System.out.println(aa[6]);
-                System.out.println(aa[7]);
-                System.out.println(aa[8]);
-                person.setId(Integer.parseInt(aa[0]));
-                person.setResearchcode(aa[1]);
-                person.setResearchname(aa[2]);
-                person.setCountycode(aa[3]);
-                person.setProjectcode(aa[4]);
-                person.setState(Integer.parseInt(aa[5]));
-                person.setCreattime(aa[6]);
-                person.setAge(Integer.parseInt(aa[8]));
-                person.setSex(aa[7]);
+                person.setResearchcode(aa[2]);
+                person.setResearchname(aa[3]);
+                String str=aa[6].toString();
+                String countycode=""+str;
+                while (countycode.length()<3) {
+                    countycode= "0"+countycode;
+                }
+                person.setCountycode(countycode);
+                person.setProjectcode(projectcode);
+                person.setState(1);
+                String creattime=df.format(new Date());
+                person.setCreattime(creattime);
+                person.setAge(Integer.parseInt(aa[5]));
+                person.setSex(aa[4]);
                 importList.add(person);
                 System.out.println(person);
-                System.out.println(person.getCreattime());
             }
         }
-        //int aa = ps.importSample(importList);
+        int aa = ps.importSample(importList);
+        System.out.println("-----------------------------------------"+ JSONObject.toJSONString(importList));
+        System.out.println("--------------aa-------------------------"+aa);
         deleteFile(targerFile);
         return samplelist;
     }

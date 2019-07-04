@@ -1,9 +1,13 @@
 package com.hcycom.ctginms.web.rest;
 
+import java.io.File;
+import java.util.Date;
+import com.alibaba.fastjson.JSONObject;
 import com.hcycom.ctginms.domain.County;
 import com.hcycom.ctginms.postdomain.PostCounty;
 import com.hcycom.ctginms.postdomain.Tada;
 import com.hcycom.ctginms.service.CountyService;
+import com.hcycom.ctginms.web.rest.util.CsvUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -13,7 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -112,5 +120,82 @@ public class CountyRest {
     public  ResponseEntity<Object> likeCountyBy(String projectcode,String countyname,String countycode, int page ,int pageSize){
         Tada tada = countyService.likeCountyBy(projectcode, countyname, countycode, page, pageSize);
         return new ResponseEntity<Object>(tada, HttpStatus.OK);
+    }
+
+
+
+    /*项目中区县管理文件上传(把数据插入数据库中然后后调用删除方法把上传的文件删除)*/
+    /**
+     * 删除
+     *
+     * @param files
+     */
+    private void deleteFile(File... files) {
+        for (File file : files) {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
+
+
+    @PostMapping("/files")
+    @ApiOperation(value="项目下区县管理的文件上传", notes="数据库county表的新增数据操作")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
+    })
+    public List<String> files(@RequestParam(value="multipartFile",required=false) MultipartFile multipartFile, HttpServletRequest request, String projectcode) throws Exception{
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String path = request.getSession().getServletContext().getRealPath("/upload");
+        File filePath = new File(path);
+        System.out.println("文件保存的路径"+path);
+        if(!filePath.exists()&&!filePath.isDirectory()) {
+
+            System.out.println("目录不存在，创建路径"+filePath);
+            filePath.mkdir();
+        }
+        //获取原始文件名称
+        String originalFileName = multipartFile.getOriginalFilename();
+        System.out.println("原始文件的名称"+originalFileName);
+
+        //获取文件的类型，以“.”作为标识
+        String type = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+        System.out.println("文件类型"+type);
+        //在指定的路径下面创建一个新的文件
+        File targerFile = new File(path,originalFileName);
+
+        multipartFile.transferTo(targerFile);
+
+        CsvUtils csvUtils=new CsvUtils();
+        List<String> samplelist =csvUtils.importCsv(targerFile);
+        List<County> importList=new ArrayList<County>();
+        if(samplelist!=null && !samplelist.isEmpty()){
+            for(String data : samplelist){
+                System.out.println("-----------data-------------"+data);
+                County county=new County();
+                String[] aa = data.split(",");
+                /*System.out.println(aa[0]);
+                System.out.println(aa[1]);
+                System.out.println(aa[2]);*/
+                String str=aa[1].toString();
+                String countycode=""+str;
+                while (countycode.length()<3) {
+                    countycode= "0"+countycode;
+                }
+                county.setCountycode(countycode);
+                county.setCountyname(aa[2]);
+                county.setProjectcode(projectcode);
+                county.setState(1);
+                String creattime=df.format(new Date());
+                county.setCreattime(creattime);
+                importList.add(county);
+                //System.out.println("------------county---------------"+county);
+            }
+        }
+        int aa = countyService.importSample(importList);
+        System.out.println("----------------importList-------------------------"+ JSONObject.toJSONString(importList));
+        System.out.println("--------------aa-------------------------"+aa);
+        deleteFile(targerFile);
+        return samplelist;
     }
 }

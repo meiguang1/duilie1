@@ -97,4 +97,9 @@ public class CountyServiceImpl implements CountyService{
         tada.setPages(likeTable);
         return tada;
     }
+
+    @Override
+    public int importSample(List<County> payFeeList) {
+        return countyMapper.importSample(payFeeList);
+    }
 }

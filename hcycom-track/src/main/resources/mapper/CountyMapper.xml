@@ -141,4 +141,19 @@
 
 
 
+    <!--项目中区县管理的上传文件-->
+    <insert id="importSample" parameterType="java.util.List">
+        INSERT INTO county(countycode,countyname,projectcode,state,creattime)
+        VALUES
+        <foreach item="item" collection="payFeeList" separator=","  index="index">
+            (
+            '${item.countycode}',
+            '${item.countyname}',
+            '${item.projectcode}',
+             ${item.state},
+            '${item.creattime}'
+            )
+        </foreach>
+    </insert>
+
 </mapper>

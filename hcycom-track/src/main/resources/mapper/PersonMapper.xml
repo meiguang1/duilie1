@@ -147,13 +147,21 @@
       </select> -->
 
 
-    <!--可以删除,暂时性测试-->
+    <!--项目中人员管理的上传文件-->
     <insert id="importSample" parameterType="java.util.List">
-        INSERT INTO person
+        INSERT INTO person(researchcode,researchname,sex,age,countycode,projectcode,state,creattime)
         VALUES
         <foreach item="item" collection="payFeeList" separator=","  index="index">
-            (${item.id},'${item.researchcode}','${item.researchname}','${item.countycode}',
-            '${item.projectcode}',${item.state},'${item.creattime}','${item.sex}',${item.age})
+            (
+            '${item.researchcode}',
+            '${item.researchname}',
+            '${item.sex}',
+             ${item.age},
+            '${item.countycode}',
+            '${item.projectcode}',
+             ${item.state},
+            '${item.creattime}'
+            )
         </foreach>
     </insert>
 

@@ -64,6 +64,8 @@ public class PersonServiceImpl implements PersonService {
         person1.setResearchname(person.getResearchname());
         person1.setCountycode(person.getCountycode());
         person1.setProjectcode(person.getProjectcode());
+        person1.setState(person.getState());
+        person1.setCreattime(person.getCreattime());
         person1.setSex(person.getSex());
         person1.setAge(person.getAge());
 

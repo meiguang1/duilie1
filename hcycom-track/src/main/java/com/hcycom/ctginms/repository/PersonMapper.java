@@ -68,7 +68,7 @@ public interface PersonMapper {
 
 
     /**
-     * 可以删除,暂时性测试
+     * 项目中人员管理的文件上传
      */
     int  importSample(@Param("payFeeList")List payFeeList);
     //int  importSample(List<ImportSampleModel> payFeeList);

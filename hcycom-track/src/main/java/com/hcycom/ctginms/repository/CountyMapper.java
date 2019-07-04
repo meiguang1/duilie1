@@ -94,4 +94,9 @@ public interface CountyMapper {
     int likegetTable(@Param("projectcode")String projectcode,
                      @Param("countyname")String countyname,
                      @Param("countycode")String countycode);
+
+    /**
+     * 项目中区县管理的文件上传
+     */
+    int  importSample(@Param("payFeeList")List payFeeList);
 }

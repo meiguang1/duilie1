@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Test {
     public static void main(String[] args) {
@@ -45,6 +46,22 @@ public class Test {
         String result = numberFormat.format((float) num1 / (float) num2 * 100);
 
         System.out.println("num1和num2的百分比为:" + result + "%");
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+        System.out.println("输入数字查看数字有几位");
+        String n=new Scanner(System.in).next();
+        String str=n.toString();
+        //int a=str.length();
+        String bb=""+n;
+        while (bb.length()<3) {
+            bb= "0"+bb;
+        }
+        String a=df.format(new Date());
+        System.out.println(a);
+        System.out.println(bb);
+        System.out.println(n+"是"+str.length()+"位");
+
 
     }
 

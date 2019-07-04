@@ -34,4 +34,6 @@ public interface CountyService {
     Tada likeCountyBy(String projectcode, String countyname, String countycode, int page, int pageSize);
 
 
+    /*项目中区县管理文件上传*/
+    int  importSample(List<County> payFeeList);
 }

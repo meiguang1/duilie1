@@ -47,6 +47,6 @@ public interface PersonService {
     Tada likeSelect(String projectcode, String researchname, String researchcode, int page, int pageSize);
 
 
-    /*可以删除，暂时性测试*/
+    /*项目中人员管理文件上传*/
     int  importSample(List<Person> payFeeList);
 }
