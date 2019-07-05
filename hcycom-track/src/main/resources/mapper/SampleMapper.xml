@@ -111,14 +111,9 @@
         </foreach>
     </insert>
 
-<<<<<<< Updated upstream
-
-
-=======
     <update id="updateSample" parameterType="com.hcycom.ctginms.domain.Sample">
         UPDATE sample
         SET state=#{sample.state}
         WHERE code=#{sample.code}
     </update>
->>>>>>> Stashed changes
 </mapper>
