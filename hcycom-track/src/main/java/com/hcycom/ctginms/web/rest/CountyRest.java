@@ -1,6 +1,7 @@
 package com.hcycom.ctginms.web.rest;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Date;
 import com.alibaba.fastjson.JSONObject;
 import com.hcycom.ctginms.domain.County;
@@ -13,6 +14,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import com.codahale.metrics.annotation.Timed;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hcycom.ctginms.web.rest.util.FileUtil.subZeroAndDot;
 
 /**
  * @ClassName: CountyRest
@@ -144,58 +152,104 @@ public class CountyRest {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectcode", value = "项目编码", required = true, dataType = "String",paramType="query"),
     })
-    public List<String> files(@RequestParam(value="multipartFile",required=false) MultipartFile multipartFile, HttpServletRequest request, String projectcode) throws Exception{
+    public List<County> files(@RequestParam(value="multipartFile",required=false) MultipartFile multipartFile, HttpServletRequest request, String projectcode) throws Exception{
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        String path = request.getSession().getServletContext().getRealPath("/upload");
-        File filePath = new File(path);
-        System.out.println("文件保存的路径"+path);
-        if(!filePath.exists()&&!filePath.isDirectory()) {
+        String path1 = request.getSession().getServletContext().getRealPath("/upload");
+        File filePath = new File(path1);
+        System.out.println("文件保存的路径" + path1);
+        if (!filePath.exists() && !filePath.isDirectory()) {
 
-            System.out.println("目录不存在，创建路径"+filePath);
+            System.out.println("目录不存在，创建路径" + filePath);
             filePath.mkdir();
         }
         //获取原始文件名称
         String originalFileName = multipartFile.getOriginalFilename();
-        System.out.println("原始文件的名称"+originalFileName);
+        System.out.println("原始文件的名称" + originalFileName);
 
-        //获取文件的类型，以“.”作为标识
-        String type = originalFileName.substring(originalFileName.lastIndexOf(".")+1);
-        System.out.println("文件类型"+type);
-        //在指定的路径下面创建一个新的文件
-        File targerFile = new File(path,originalFileName);
-
+        File targerFile = new File(path1, originalFileName);
         multipartFile.transferTo(targerFile);
-
-        CsvUtils csvUtils=new CsvUtils();
-        List<String> samplelist =csvUtils.importCsv(targerFile);
-        List<County> importList=new ArrayList<County>();
-        if(samplelist!=null && !samplelist.isEmpty()){
-            for(String data : samplelist){
-                System.out.println("-----------data-------------"+data);
-                County county=new County();
-                String[] aa = data.split(",");
-                /*System.out.println(aa[0]);
-                System.out.println(aa[1]);
-                System.out.println(aa[2]);*/
-                String str=aa[1].toString();
-                String countycode=""+str;
-                while (countycode.length()<3) {
-                    countycode= "0"+countycode;
+        String path=path1+File.separator+originalFileName;
+        List<County> importList = new ArrayList<County>();
+        try {
+            //String encoding = "GBK";
+            File excel = new File(path);
+            if (excel.isFile() && excel.exists()) {   //判断文件是否存在
+                String[] split = excel.getName().split("\\.");  //.是特殊字符，需要转义！！！！！
+                Workbook wb = null;
+                //根据文件后缀（xls/xlsx）进行判断
+                if ( "xls".equals(split[1])){
+                    FileInputStream fis = new FileInputStream(excel);   //文件流对象
+                    wb = new HSSFWorkbook(fis);
+                }else if ("xlsx".equals(split[1])){
+                    wb = new XSSFWorkbook(excel);
+                }else if("csv".equals(split[1])){
+                    wb = new XSSFWorkbook(excel);
+                }else{
+                    System.out.println("文件类型错误！！！");
                 }
-                county.setCountycode(countycode);
-                county.setCountyname(aa[2]);
-                county.setProjectcode(projectcode);
-                county.setState(1);
-                String creattime=df.format(new Date());
-                county.setCreattime(creattime);
-                importList.add(county);
-                //System.out.println("------------county---------------"+county);
+
+                //开始解析
+                Sheet sheet = wb.getSheetAt(0);     //读取sheet 0
+
+                int firstRowIndex = sheet.getFirstRowNum()+1;   //第一行是列名，所以不读
+                int lastRowIndex = sheet.getLastRowNum();
+                System.out.println("firstRowIndex: "+firstRowIndex);
+                System.out.println("lastRowIndex: "+lastRowIndex);
+
+
+                for(int rIndex = firstRowIndex; rIndex <= lastRowIndex; rIndex++) {   //遍历行
+                    System.out.println("rIndex: " + rIndex);
+                    Row row = sheet.getRow(rIndex);
+                    if (row != null) {
+                        int firstCellIndex = row.getFirstCellNum();
+                        int lastCellIndex = row.getLastCellNum();
+                        County county = new County();
+                        System.out.println("------------------"+subZeroAndDot(String.valueOf(row.getCell(0))));
+                        System.out.println("------------------"+row.getCell(1));
+                        System.out.println("------------------"+row.getCell(2));
+                        String str= subZeroAndDot(String.valueOf(row.getCell(1)));
+                        String countycode=""+str;
+                        while (countycode.length()<3) {
+                            countycode= "0"+countycode;
+                        }
+                        if (String.valueOf(row.getCell(2)).equals("null")) {
+                            county.setCountyname(String.valueOf(""));
+                        }else {
+                            county.setCountyname(String.valueOf(row.getCell(2)));
+                        }
+                        if(countycode.length()==0||countycode.equals("null")){
+                            county.setCountycode("");
+                        }else{
+                            county.setCountycode(countycode);
+                        }
+                        county.setProjectcode(projectcode);
+                        county.setState(1);
+                        String creattime=df.format(new Date());
+                        county.setCreattime(creattime);
+                        importList.add(county);
+                        //System.out.println(county);
+
+
+                       /* for (int cIndex = firstCellIndex; cIndex < lastCellIndex; cIndex++) {   //遍历列
+                            Cell cell = row.getCell(cIndex);
+                            if (cell != null) {
+                                System.out.println("数据："+cell.toString());
+                            }
+                        }*/
+                    }
+                }
+                int aa = countyService.importSample(importList);
+                System.out.println("-----------------------------------------" + JSONObject.toJSONString(importList));
+                System.out.println("--------------aa-------------------------"+aa);
+                wb.close();
+            } else {
+                System.out.println("找不到指定的文件");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            deleteFile(targerFile);
         }
-        int aa = countyService.importSample(importList);
-        System.out.println("----------------importList-------------------------"+ JSONObject.toJSONString(importList));
-        System.out.println("--------------aa-------------------------"+aa);
-        deleteFile(targerFile);
-        return samplelist;
+        return importList;
     }
 }

@@ -2,6 +2,7 @@ package com.hcycom.ctginms.web.rest.Test;
 
 import org.joda.time.DateTime;
 
+import java.io.File;
 import java.sql.Time;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -63,6 +64,29 @@ public class Test {
         System.out.println(n+"是"+str.length()+"位");
 
 
+        String path = "D:\\aa.xlsx";
+        boolean b = delFile(path);
+        System.out.println(b);
+
+
+    }
+
+
+    static boolean delFile(String filename) {
+        File file = new File(filename);
+        if (!file.exists()) {
+            return false;
+        }
+
+        if (file.isFile()) {
+            return file.delete();
+        } else {
+            String[] filenames = file.list();
+            for (String f : filenames) {
+                delFile(f);
+            }
+            return file.delete();
+        }
     }
 
 }

@@ -4,7 +4,9 @@ import groovy.util.logging.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 //import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -239,12 +241,49 @@ public class FileUtil {
 
 
 
+    /**
+     * @TODO spring mvc 方式文件上传
+     * @param multipartFile
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static String uploadFileCSV(MultipartFile multipartFile,
+                                       HttpServletRequest request, String realPath) throws Exception {
+        // String realPath =
+        // request.getSession().getServletContext().getRealPath(_path);
+        String newFileName = System.currentTimeMillis() + ".csv";
+
+        File path = new File(realPath);
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+        String fileName = multipartFile.getOriginalFilename();
+        fileName = realPath + File.separator + newFileName;
+        File restore = new File(fileName);
+        multipartFile.transferTo(restore);
+        return newFileName;
+    }
+
+
+
     /*public static byte[] readFileToByteArray(String fileUrl) throws FileNotFoundException{
         FileInputStream fis = new FileInputStream(new File(fileUrl));
         byte[] bytes = new byte[1024];
         return bytes;
     }*/
 
-
+    /**
+     * 使用java正则表达式去掉多余的.与0
+     * @param s
+     * @return
+     */
+    public static String subZeroAndDot(String s){
+        if(s.indexOf(".") > 0){
+            s = s.replaceAll("0+?$", "");//去掉多余的0
+            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
+        }
+        return s;
+    }
 
 }
