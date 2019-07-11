@@ -265,7 +265,7 @@ public class PersonRest {
                             countycode= "0"+countycode;
                         }
                         if(countycode.equals("null")){
-                            person.setCountycode("''");
+                            person.setCountycode("");
                         }else{
                             person.setCountycode(countycode);
                         }
