@@ -48,54 +48,31 @@
 
     <!--按照项目编码对调查对象编号以及姓名进行查询并进行分页-->
     <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.Person" resultType="com.hcycom.ctginms.postdomain.PostPerson">
-        <if test="researchname == null and researchcode == null">
             SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
             FROM person p LEFT JOIN county c
             on p.`countycode`=c.`countycode`
             where (p.projectcode=#{projectcode} AND p.state=1)
+            <if test="researchcode != null">
+                AND p.researchcode LIKE CONCAT('%',#{researchcode},'%')
+            </if>
+            <if test="researchname != null">
+                AND p.researchname LIKE CONCAT('%',#{researchname},'%')
+            </if>
             limit #{page},#{pageSize}
-        </if>
-        <if test="researchcode != null and researchname ==null">
-            SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
-            FROM person p LEFT JOIN county c
-            on p.`countycode`=c.`countycode`
-            where (p.projectcode=#{projectcode} AND p.state=1)
-            AND p.researchcode LIKE CONCAT('%',#{researchcode},'%')
-            limit #{page},#{pageSize}
-        </if>
-        <if test="researchname != null and researchcode ==null">
-            SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
-            FROM person p LEFT JOIN county c
-            on p.`countycode`=c.`countycode`
-            where (p.projectcode=#{projectcode} AND p.state=1)
-            AND p.researchname LIKE CONCAT('%',#{researchname},'%')
-            limit #{page},#{pageSize}
-        </if>
-        <if test="researchname != null and researchcode != null">
-            SELECT p.`id`,p.`researchcode`,p.`researchname`,c.`countyname` as position,p.`projectcode`,p.`state`,p.`creattime`,p.`sex`,p.`age`
-            FROM person p LEFT JOIN county c
-            on p.`countycode`=c.`countycode`
-            where (p.projectcode=#{projectcode} AND p.state=1)
-            AND p.researchname LIKE CONCAT('%',#{researchname},'%')
-            AND p.researchname LIKE CONCAT('%',#{researchname},'%')
-            limit #{page},#{pageSize}
-        </if>
+
     </select>
 
     <!--按照项目编码对调查对象编号以及姓名进行查询并进行分页 总条数-->
     <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.Person" resultType="int">
-        <if test="researchname == null and researchcode == null">
-            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) or researchname LIKE concat('%',#{researchname},'%') or researchcode LIKE concat('%',#{researchcode},'%')
-        </if>
-        <if test="researchcode != null and researchname ==null">
-            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchcode LIKE CONCAT('%',#{researchcode},'%') OR researchname LIKE CONCAT('%',#{researchname},'%'))
-        </if>
-        <if test="researchname != null and researchcode ==null">
-            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) AND (researchname LIKE CONCAT('%',#{researchname},'%') OR researchcode LIKE CONCAT('%',#{researchcode},'%'))
-        </if>
-        <if test="researchname != null and researchcode != null">
-            SELECT count(*) FROM person WHERE (projectcode=#{projectcode} AND state=1) and (researchname LIKE concat('%',#{researchname},'%') and researchcode LIKE concat('%',#{researchcode},'%'))
-        </if>
+
+            SELECT count(*) FROM person
+            WHERE (projectcode=#{projectcode} AND state=1)
+            <if test="researchname != null ">
+                and (researchname LIKE concat('%',#{researchname},'%')
+            </if>
+            <if test="researchcode != null">
+                and researchcode LIKE concat('%',#{researchcode},'%'))
+            </if>
     </select>
     <!--
     <select id="selectEventById" resultType="com.hcycom.ctginms.domain.Event">

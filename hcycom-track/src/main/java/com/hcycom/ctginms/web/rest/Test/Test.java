@@ -32,9 +32,9 @@ public class Test {
 
 
 
-        int num1 =10;
+        int num1 =  24;
 
-        int num2 = 13 ;
+        int num2 =  80;
 
         // 创建一个数值格式化对象
 
@@ -46,7 +46,7 @@ public class Test {
 
         String result = numberFormat.format((float) num1 / (float) num2 * 100);
 
-        System.out.println("num1和num2的百分比为:" + result + "%");
+        System.out.println("num1是num2的百分比为:" + result + "%");
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         System.out.println(df.format(new Date()));// new Date()为获取当前系统时间

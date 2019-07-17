@@ -45,42 +45,18 @@
        limit #{page},#{pageSize}-->
 
     <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.PointLocation" resultType="com.hcycom.ctginms.domain.PointLocation">
-        <if test="countyname == null and countycode == null">
             SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
             FROM level_management l LEFT JOIN county c
             on l.countycode=c.`countycode`
             where l.eventcode=#{eventcode}
+            <if test="countyname != null">
+                AND  c.countyname LIKE concat('%',#{countyname},'%')
+            </if>
+            <if test="countycode != null">
+                AND  l.countycode LIKE concat('%',#{countycode},'%')
+            </if>
             GROUP BY l.countycode
             limit #{page},#{pageSize}
-        </if>
-        <if test="countycode != null and countyname ==null">
-            SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
-            FROM level_management l LEFT JOIN county c
-            on l.countycode=c.`countycode`
-            where l.eventcode=#{eventcode}
-            AND  l.countycode LIKE concat('%',#{countycode},'%')
-            GROUP BY l.countycode
-            limit #{page},#{pageSize}
-        </if>
-        <if test="countyname != null and countycode ==null">
-            SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
-            FROM level_management l LEFT JOIN county c
-            on l.countycode=c.`countycode`
-            where l.eventcode=#{eventcode}
-            AND  c.countyname LIKE concat('%',#{countyname},'%')
-            GROUP BY l.countycode
-            limit #{page},#{pageSize}
-        </if>
-        <if test="countyname != null and countycode != null">
-            SELECT l.id,l.pid,l.countycode,c.`countyname`,l.eventcode,l.personCount,l.healthForm,l.creattime,l.predict_number,COUNT(DISTINCT l.countycode)
-            FROM level_management l LEFT JOIN county c
-            on l.countycode=c.`countycode`
-            where l.eventcode=#{eventcode}
-            AND  c.countyname LIKE concat('%',#{countyname},'%')
-            AND  l.countycode LIKE concat('%',#{countycode},'%')
-            GROUP BY l.countycode
-            limit #{page},#{pageSize}
-        </if>
     </select>
 
     <!--查询，按照事件编码对点位编码以及点位名称进行模糊查询并进行分页 总条数-->
@@ -99,30 +75,15 @@
         </if>
     </select>-->
     <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.PointLocation" resultType="int">
-        <if test="countyname == null and countycode == null">
             SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
             on l.countycode=c.`countycode`
             where l.eventcode=#{eventcode}
-        </if>
-        <if test="countycode != null and countyname ==null">
-            SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
-            on l.countycode=c.`countycode`
-            where l.eventcode=#{eventcode}
-            AND l.countycode LIKE concat('%',#{countycode},'%')
-        </if>
-        <if test="countyname != null and countycode ==null">
-            SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
-            on l.countycode=c.`countycode`
-            where l.eventcode=#{eventcode}
-            AND c.countyname LIKE concat('%',#{countyname},'%')
-        </if>
-        <if test="countyname != null and countycode != null">
-            SELECT COUNT(DISTINCT l.countycode) FROM level_management l LEFT JOIN county c
-            on l.countycode=c.`countycode`
-            where l.eventcode=#{eventcode}
-            AND c.countyname LIKE concat('%',#{countyname},'%')
-            AND l.countycode LIKE concat('%',#{countycode},'%')
-        </if>
+            <if test="countyname != null">
+                AND c.countyname LIKE concat('%',#{countyname},'%')
+            </if>
+            <if test="countycode != null">
+                AND l.countycode LIKE concat('%',#{countycode},'%')
+            </if>
     </select>
 
 

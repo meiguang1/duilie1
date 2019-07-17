@@ -78,7 +78,7 @@ public class SampleServiceImpl implements SampleService {
 
     @Override
     public List<Map<String,?>> getQueryPagetwo(List<String> list,String eventcode,String starttime,String endtime){
-        List<Map<String,?>> sampleList = sampleMapper.getQueryPagetwo(list,eventcode,starttime,endtime);
+         List<Map<String,?>> sampleList = sampleMapper.getQueryPagetwo(list,eventcode,starttime,endtime);
         return sampleList;
     }
 

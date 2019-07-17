@@ -132,7 +132,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    /*可以删除，暂时性测试*/
+    /*人员管理中文件上传*/
     @Override
     public int importSample(List<Person> payFeeList) {
         return pm.importSample(payFeeList);

@@ -30,77 +30,33 @@
     </select>
 
     <select id="likeCountyBy" parameterType="com.hcycom.ctginms.domain.County" resultType="com.hcycom.ctginms.domain.County">
-        <if test="countyname == null and countycode == null">
+
             SELECT c.`countycode`,c.`countyname` FROM county c
             LEFT JOIN level_management
             ON c.`countycode` = level_management.`countycode`
             WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
             IS NULL
+            <if test="countyname != null">
+                AND c.`countyname`  LIKE concat('%',#{countyname},'%')
+            </if>
+            <if test="countycode != null">
+                AND c.`countycode`  LIKE concat('%',#{countycode},'%')
+            </if>
             limit #{page},#{pageSize}
-        </if>
-        <if test="countycode != null and countyname ==null">
-            SELECT c.`countycode`,c.`countyname` FROM county c
-            LEFT JOIN level_management
-            ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
-            IS NULL
-            AND c.`countycode`  LIKE concat('%',#{countycode},'%')
-            limit #{page},#{pageSize}
-        </if>
-        <if test="countyname != null and countycode ==null">
-            SELECT c.`countycode`,c.`countyname` FROM county c
-            LEFT JOIN level_management
-            ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
-            IS NULL
-            AND c.`countyname`  LIKE concat('%',#{countyname},'%')
-            limit #{page},#{pageSize}
-        </if>
-        <if test="countyname != null and countycode != null">
-            SELECT c.`countycode`,c.`countyname` FROM county c
-            LEFT JOIN level_management
-            ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
-            IS NULL
-            AND c.`countyname`  LIKE concat('%',#{countyname},'%')
-            AND c.`countycode`  LIKE concat('%',#{countycode},'%')
-            limit #{page},#{pageSize}
-        </if>
     </select>
 
     <select id="likegetTable" parameterType="com.hcycom.ctginms.domain.County" resultType="int">
-        <if test="countyname == null and countycode == null">
             SELECT count(*) FROM county c
             LEFT JOIN level_management
             ON c.`countycode` = level_management.`countycode`
             WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
             IS NULL
-        </if>
-        <if test="countycode != null and countyname ==null">
-            SELECT count(*) FROM county c
-            LEFT JOIN level_management
-            ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
-            IS NULL
-            AND c.`countycode`  LIKE concat('%',#{countycode},'%')
-        </if>
-        <if test="countyname != null and countycode ==null">
-            SELECT count(*) FROM county c
-            LEFT JOIN level_management
-            ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
-            IS NULL
-            AND c.`countyname`  LIKE concat('%',#{countyname},'%')
-        </if>
-        <if test="countyname != null and countycode != null">
-            SELECT count(*) FROM county c
-            LEFT JOIN level_management
-            ON c.`countycode` = level_management.`countycode`
-            WHERE (level_management.countycode AND c.`state`=1 AND c.`projectcode`=#{projectcode})
-            IS NULL
-            AND c.`countyname`  LIKE concat('%',#{countyname},'%')
-            AND c.`countycode`  LIKE concat('%',#{countycode},'%')
-        </if>
+            <if test="countyname != null">
+                AND c.`countyname`  LIKE concat('%',#{countyname},'%')
+            </if>
+            <if test="countycode != null">
+                AND c.`countycode`  LIKE concat('%',#{countycode},'%')
+            </if>
     </select>
 
 
@@ -109,34 +65,27 @@
 
     <!--按照项目编码对区县编号和区县名称进行查询并进行分页-->
     <select id="likeSelect" parameterType="com.hcycom.ctginms.domain.County" resultType="com.hcycom.ctginms.domain.County">
-        <if test="countyname == null and countycode == null">
-            SELECT * FROM county WHERE (projectcode=#{projectcode} AND state=1) or countyname LIKE concat('%',#{countyname},'%') or countycode LIKE concat('%',#{countycode},'%') limit #{page},#{pageSize}
-        </if>
-        <if test="countycode != null and countyname ==null">
-            SELECT * FROM county WHERE (projectcode=#{projectcode} AND state=1) AND (countyname LIKE CONCAT('%',#{countyname},'%') OR countycode LIKE CONCAT('%',#{countycode},'%')) limit #{page},#{pageSize}
-        </if>
-        <if test="countyname != null and countycode ==null">
-            SELECT * FROM county WHERE (projectcode=#{projectcode} AND state=1) AND (countyname LIKE CONCAT('%',#{countyname},'%') OR countycode LIKE CONCAT('%',#{countycode},'%')) limit #{page},#{pageSize}
-        </if>
-        <if test="countyname != null and countycode != null">
-            SELECT * FROM county WHERE (projectcode=#{projectcode} AND state=1) and (countyname LIKE concat('%',#{countyname},'%') and countycode LIKE concat('%',#{countycode},'%')) limit #{page},#{pageSize}
-        </if>
+            SELECT * FROM county
+            WHERE (projectcode=#{projectcode} AND state=1)
+            <if test="countyname != null">
+                and (countyname LIKE concat('%',#{countyname},'%')
+            </if>
+            <if test="countycode != null">
+                and countycode LIKE concat('%',#{countycode},'%'))
+            </if>
+            limit #{page},#{pageSize}
     </select>
 
     <!--按照项目编码对区县编号和区县名称进行查询并进行分页 总条数-->
     <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.County" resultType="int">
-        <if test="countyname == null and countycode == null">
-            SELECT count(*) FROM county WHERE (projectcode=#{projectcode} AND state=1) or countyname LIKE concat('%',#{countyname},'%') or countycode LIKE concat('%',#{countycode},'%')
-        </if>
-        <if test="countycode != null and countyname ==null">
-            SELECT count(*) FROM county WHERE (projectcode=#{projectcode} AND state=1) AND (countyname LIKE CONCAT('%',#{countyname},'%') OR countycode LIKE CONCAT('%',#{countycode},'%'))
-        </if>
-        <if test="countyname != null and countycode ==null">
-            SELECT count(*) FROM county WHERE (projectcode=#{projectcode} AND state=1) AND (countyname LIKE CONCAT('%',#{countyname},'%') OR countycode LIKE CONCAT('%',#{countycode},'%'))
-        </if>
-        <if test="countyname != null and countycode != null">
-            SELECT count(*) FROM county WHERE (projectcode=#{projectcode} AND state=1) and (countyname LIKE concat('%',#{countyname},'%') and countycode LIKE concat('%',#{countycode},'%'))
-        </if>
+            SELECT count(*) FROM county
+            WHERE (projectcode=#{projectcode} AND state=1)
+            <if test="countyname != null">
+                and (countyname LIKE concat('%',#{countyname},'%')
+            </if>
+            <if test="countycode != null ">
+                and countycode LIKE concat('%',#{countycode},'%'))
+            </if>
     </select>
 
 

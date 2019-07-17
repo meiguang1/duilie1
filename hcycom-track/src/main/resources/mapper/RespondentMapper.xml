@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcycom.ctginms.repository.RespondentMapper">
+
+    <!--调查对象信息:测试查询全部,待改-->
+    <select id="getAll" resultType="com.hcycom.ctginms.domain.Respondent">
+       SELECT
+            r.`id`,
+            r.`researchcode`,
+            r.`researchname`,
+            p.`projectname` AS projectcode,
+            e.`eventname` AS eventcode,
+            c.`countyname` AS countycode,
+            r.`sex`,
+            r.`date_of_birth`,
+            r.`into_group`,
+            r.`id_number`,
+            r.`contact_way`,
+            r.`signature_date`,
+            r.`detailed_address`,
+            r.`postal_code`,
+            r.`email_address`,
+            r.`sample_size`,
+            r.`sample_type`,
+            r.`quantity_in_stock`,
+            r.`inventory_type`,
+            r.`the_delivery`,
+            r.`outbound_type`,
+            r.`lock_the_number`,
+            r.`the_lock_type`,
+            r.`questionnaire`,
+            r.`medical_examination_report`,
+            r.`a_medical_file`
+            FROM
+            respondent r
+            LEFT JOIN county c
+            ON r.`countycode` = c.`countycode`
+            LEFT JOIN project p
+            ON r.`projectcode`=p.`projectcode`
+            LEFT JOIN EVENT e
+            ON r.`eventcode`=e.`eventcode`
+    </select>
+
+    <!--按照项目编码对调查对象编号以及姓名进行查询并进行分页-->
+    <select id="paging" parameterType="com.hcycom.ctginms.domain.Respondent" resultType="com.hcycom.ctginms.domain.Respondent">
+            SELECT
+            r.`id`,
+            r.`researchcode`,
+            r.`researchname`,
+            p.`projectname` AS projectcode,
+            e.`eventname` AS eventcode,
+            c.`countyname` AS countycode,
+            r.`sex`,
+            r.`date_of_birth`,
+            r.`into_group`,
+            r.`id_number`,
+            r.`contact_way`,
+            r.`signature_date`,
+            r.`detailed_address`,
+            r.`postal_code`,
+            r.`email_address`,
+            r.`sample_size`,
+            r.`sample_type`,
+            r.`quantity_in_stock`,
+            r.`inventory_type`,
+            r.`the_delivery`,
+            r.`outbound_type`,
+            r.`lock_the_number`,
+            r.`the_lock_type`,
+            r.`questionnaire`,
+            r.`medical_examination_report`,
+            r.`a_medical_file`
+            FROM
+            respondent r
+            LEFT JOIN county c
+            ON r.`countycode` = c.`countycode`
+            LEFT JOIN project p
+            ON r.`projectcode`=p.`projectcode`
+            LEFT JOIN EVENT e
+            ON r.`eventcode`=e.`eventcode`
+            WHERE 1=1
+            <if test="researchname != null">
+                and r.`researchname` LIKE CONCAT('%',#{researchname},'%')
+            </if>
+            <if test="researchcode != null">
+                AND r.`researchcode` LIKE CONCAT('%',#{researchcode},'%')
+            </if>
+            <if test="projectcode != null">
+                AND r.`projectcode`=#{projectcode}
+            </if>
+            <if test="countycode != null">
+                AND r.`countycode`=#{countycode}
+            </if>
+            <if test="start != null">
+                AND (CAST(r.`into_group` AS DATETIME) BETWEEN #{start} AND #{finish})
+            </if>
+            limit #{page},#{pageSize}
+    </select>
+
+    <!--按照项目编码对调查对象编号以及姓名进行查询并进行分页 总条数-->
+    <select id="getLikeTable" parameterType="com.hcycom.ctginms.domain.Respondent" resultType="int">
+            SELECT COUNT(*) FROM respondent
+            WHERE 1=1
+            <if test="researchname != null">
+                and researchname LIKE CONCAT('%',#{researchname},'%')
+            </if>
+            <if test="researchcode != null">
+                AND researchcode LIKE CONCAT('%',#{researchcode},'%')
+            </if>
+            <if test="projectcode != null">
+                AND projectcode=#{projectcode}
+            </if>
+            <if test="countycode != null">
+                AND countycode=#{countycode}
+            </if>
+            <if test="start != null">
+                AND (CAST(into_group AS DATETIME) BETWEEN #{start} AND #{finish})
+            </if>
+    </select>
+
+    <!--样本库存信息:暂时测试,待改-->
+
+
+
+
+</mapper>
