@@ -68,10 +68,10 @@
             SELECT * FROM county
             WHERE (projectcode=#{projectcode} AND state=1)
             <if test="countyname != null">
-                and (countyname LIKE concat('%',#{countyname},'%')
+                and countyname LIKE concat('%',#{countyname},'%')
             </if>
             <if test="countycode != null">
-                and countycode LIKE concat('%',#{countycode},'%'))
+                and countycode LIKE concat('%',#{countycode},'%')
             </if>
             limit #{page},#{pageSize}
     </select>
@@ -81,10 +81,10 @@
             SELECT count(*) FROM county
             WHERE (projectcode=#{projectcode} AND state=1)
             <if test="countyname != null">
-                and (countyname LIKE concat('%',#{countyname},'%')
+                and countyname LIKE concat('%',#{countyname},'%')
             </if>
             <if test="countycode != null ">
-                and countycode LIKE concat('%',#{countycode},'%'))
+                and countycode LIKE concat('%',#{countycode},'%')
             </if>
     </select>
 

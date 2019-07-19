@@ -68,10 +68,10 @@
             SELECT count(*) FROM person
             WHERE (projectcode=#{projectcode} AND state=1)
             <if test="researchname != null ">
-                and (researchname LIKE concat('%',#{researchname},'%')
+                and researchname LIKE concat('%',#{researchname},'%')
             </if>
             <if test="researchcode != null">
-                and researchcode LIKE concat('%',#{researchcode},'%'))
+                and researchcode LIKE concat('%',#{researchcode},'%')
             </if>
     </select>
     <!--

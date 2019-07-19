@@ -242,24 +242,23 @@ public class PersonRest {
                         int firstCellIndex = row.getFirstCellNum();
                         int lastCellIndex = row.getLastCellNum();
                         Person person = new Person();
-                        /*System.out.println("------------------"+subZeroAndDot(String.valueOf(row.getCell(0))));
+                        System.out.println("------------------"+subZeroAndDot(String.valueOf(row.getCell(0))));
                         System.out.println("------------------"+subZeroAndDot(String.valueOf(row.getCell(1))));
                         System.out.println("------------------"+row.getCell(2));
                         System.out.println("------------------"+row.getCell(3));
-                        System.out.println("------------------"+row.getCell(4));
+                        System.out.println("------------------"+subZeroAndDot(String.valueOf(row.getCell(4))));
                         System.out.println("------------------"+subZeroAndDot(String.valueOf(row.getCell(5))));
-                        System.out.println("------------------"+subZeroAndDot(String.valueOf(row.getCell(6))));*/
-                        if(String.valueOf(row.getCell(2)).equals("null")){
+                        if(String.valueOf(row.getCell(1)).equals("null")){
                             person.setResearchcode("");
                         } else {
-                            person.setResearchcode(String.valueOf(row.getCell(2)));
+                            person.setResearchcode(subZeroAndDot(String.valueOf(row.getCell(1))));
                         }
-                        if(String.valueOf(row.getCell(3)).equals("null")){
+                        if(String.valueOf(row.getCell(2)).equals("null")){
                             person.setResearchname("");
                         }else{
-                            person.setResearchname(String.valueOf(row.getCell(3)));
+                            person.setResearchname(String.valueOf(row.getCell(2)));
                         }
-                        String str= subZeroAndDot(String.valueOf(row.getCell(6)));
+                        String str= subZeroAndDot(String.valueOf(row.getCell(5)));
                         String countycode=""+str;
                         while (countycode.length()<3) {
                             countycode= "0"+countycode;
@@ -273,15 +272,15 @@ public class PersonRest {
                         person.setState(1);
                         String creattime=df.format(new Date());
                         person.setCreattime(creattime);
-                        if(String.valueOf(row.getCell(5)).equals("null")){
+                        if(String.valueOf(row.getCell(4)).equals("null")){
                            person.setAge(0);
                         }else{
-                            person.setAge(Integer.parseInt(subZeroAndDot(String.valueOf(row.getCell(5)))));
+                            person.setAge(Integer.parseInt(subZeroAndDot(String.valueOf(row.getCell(4)))));
                         }
-                        if(String.valueOf(row.getCell(4)).equals("null")){
+                        if(String.valueOf(row.getCell(3)).equals("null")){
                             person.setSex("");
                         }else {
-                            person.setSex(String.valueOf(row.getCell(4)));
+                            person.setSex(String.valueOf(row.getCell(3)));
                         }
                         importList.add(person);
                         System.out.println(person);

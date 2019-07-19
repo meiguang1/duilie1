@@ -65,10 +65,10 @@
             SELECT count(*) FROM researcher
             WHERE eventcode=#{eventcode}
             <if test="researchname != null">
-                and (researchname LIKE concat('%',#{researchname},'%')
+                and researchname LIKE concat('%',#{researchname},'%')
             </if>
             <if test="researchcode != null">
-                and (researchcode LIKE concat('%',#{researchcode},'%')
+                and researchcode LIKE concat('%',#{researchcode},'%')
             </if>
     </select>
     

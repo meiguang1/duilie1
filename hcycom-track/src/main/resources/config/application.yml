@@ -34,7 +34,7 @@ eureka:
         lease-renewal-interval-in-seconds: 5
         lease-expiration-duration-in-seconds: 10
         prefer-ip-address: true
-        ip-address: 192.168.0.97
+        ip-address: 192.168.0.28
         status-page-url-path: ${management.context-path}/info
         health-check-url-path: ${management.context-path}/health
         metadata-map:
@@ -65,8 +65,8 @@ spring:
     http:
         multipart:
             enabled: true
-            max-file-size: 900MB
-            max-request-size: 900MB
+            max-file-size: 1024MB
+            max-request-size: 2048MB
     application:
         name: hcycom-track
     jackson:
